@@ -24,8 +24,8 @@ export interface IListenerConfig {
 }
 
 export class Event {
-  public key: string;
-  public listeners: IListener[] = [];
+  key: string;
+  listeners: IListener[] = [];
 
   constructor (key: string) {
     this.key = key;
@@ -36,7 +36,7 @@ export class Event {
    *
    * @returns Last callback's result
    */
-  public async propagate (...payload: any[]) {
+  async propagate (...payload: any[]) {
     const context: IEventContext = {
       key: this.key,
       propagation: true,
@@ -68,7 +68,7 @@ export class Event {
     return result;
   }
 
-  public remove (listener: IListener) {
+  remove (listener: IListener) {
     const index = this.listeners.indexOf(listener);
 
     if (index > -1) { this.listeners.splice(index, 1); }
@@ -76,11 +76,11 @@ export class Event {
     this.sort();
   }
 
-  public get (callback: IEventCallback) {
+  get (callback: IEventCallback) {
     return this.listeners.find((listener: IListener) => listener.callback === callback);
   }
 
-  public add (input: IListenerConfig): IListener {
+  add (input: IListenerConfig): IListener {
     const listener = <IListener> {
       ...input,
       hits: 0,

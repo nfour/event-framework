@@ -2,6 +2,6 @@
   "extends":[ "tslint-config-temando" ],
   "rules": {
     "max-classes-per-file": false,
-    "member-access": true
+    "member-access": [true, "no-public"]
   }
 }

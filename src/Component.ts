@@ -48,53 +48,53 @@ export class Component<
   //
 
   /** Input call signatures for emitters */
-  public Emit: any;
+  Emit: any;
 
   /** Input call signatures for listeners */
-  public On: any;
+  On: any;
 
   /** Declared event names by this component */
-  public Declared: S['Declared'];
+  Declared: S['Declared'];
 
   /** List of subscribed event names */
-  public Subscribed: S['Subscribed'];
+  Subscribed: S['Subscribed'];
 
   //
   // Generated types
   //
 
   /** Merged call signatures for all emitters */
-  public _AllEmit: S['Emit'] & E['Emit'] & IComponent['Emit'];
+  _AllEmit: S['Emit'] & E['Emit'] & IComponent['Emit'];
 
   /** Merged call signatures for all listeners */
-  public _AllOn: IComponent['On'] & E['On'] & S['On'];
+  _AllOn: IComponent['On'] & E['On'] & S['On'];
 
   /** Merged list of event name that can be subscribed to */
-  public _Subscribable: IComponent['Declared'] | E['Declared'];
+  _Subscribable: IComponent['Declared'] | E['Declared'];
 
-  public components: Set<Component> = new Set();
-  public declarations: Set<this['Declared']> = new Set();
-  public subscriptions: Set<this['Subscribed']> = new Set();
+  components: Set<Component> = new Set();
+  declarations: Set<this['Declared']> = new Set();
+  subscriptions: Set<this['Subscribed']> = new Set();
 
   /**
    * Declare that this component will emit an event.
    * When a component is connected via .connect(), the delcarations are listened to.
    */
-  public declare (eventName: this['Declared']) {
+  declare (eventName: this['Declared']) {
     this.declarations.add(eventName);
   }
 
   /**
    * Subscribe to an event
    */
-  public subscribe (eventName: this['_Subscribable']) {
+  subscribe (eventName: this['_Subscribable']) {
     this.subscriptions.add(eventName);
   }
 
   /**
    * Relays an event from the **input** component to **this** component.
    */
-  public relay<C extends Component> (component: C, eventName: C['Declared']) {
+  relay<C extends Component> (component: C, eventName: C['Declared']) {
     component.on(<any> eventName, (...args: any[]) => (<any> this.emit)(eventName, ...args));
   }
 
@@ -106,7 +106,7 @@ export class Component<
    * // this could then check if they match, thus forcing component middlewares
    * // to be consistantly declared and allowing full control over action execution interfaces
    */
-  public use (middleware: IMiddlewareInterface<Component<any, this>>) {
+  use (middleware: IMiddlewareInterface<Component<any, this>>) {
     middleware(this);
 
     return this;
@@ -117,7 +117,7 @@ export class Component<
    * - Relaying events from the input component's **declared** events to this component.
    * - Relaying events from this component matching the **subscribed** events on the input component.
    */
-  public connect<C extends Component<any, any>> (component: C) {
+  connect<C extends Component<any, any>> (component: C) {
     this.components.add(component);
 
     component.declarations.forEach((eventName: Component['Declared']) => {
@@ -129,7 +129,7 @@ export class Component<
     });
   }
 
-  public disconnect (component: Component) {
+  disconnect (component: Component) {
     this.components.delete(component);
 
   }
@@ -144,7 +144,7 @@ export class Component<
   /**
    * Emit an event, asynchronously.
    */
-  public emit: this['_AllEmit'] = async (key, ...payload): Promise<any> => {
+  emit: this['_AllEmit'] = async (key, ...payload): Promise<any> => {
     const event = this._events[key];
 
     if (!event) { return; }
@@ -156,7 +156,7 @@ export class Component<
     });
   }
 
-  public on: this['_AllOn'] = (key, callback, options: IOnConfig = {}): Event => {
+  on: this['_AllOn'] = (key, callback, options: IOnConfig = {}): Event => {
     const event = this._events[key] || new Event(key);
 
     event.add({ ...options, callback });
@@ -171,20 +171,20 @@ export class Component<
    *
    * Also returns a promise which resolves only when the callback is executed.
    */
-  public once: this['_AllOn'] = (key, callback, options: IOnceConfig = {}) => {
+  once: this['_AllOn'] = (key, callback, options: IOnceConfig = {}) => {
     const on = this.on as any;
 
     return on(key, callback, { ...options, limit: 1 });
   }
 
-  public priority<A extends this = this> (priority: number) {
+  priority<A extends this = this> (priority: number) {
     return {
       on: <A['_AllOn']> ((key, callback, options = {}) => (<any> this.on)(key, callback, { ...options, priority })),
     };
   }
 
   /** Remove a listener which matches `callback` */
-  public off = (key: string, callback) => {
+  off = (key: string, callback) => {
     const event = this._events[key];
 
     if (!event) { return false; }

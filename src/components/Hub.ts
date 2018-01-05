@@ -1,16 +1,16 @@
 import { Component, IOn } from '../Component';
 
 export class Hub extends Component<any, Hub> {
-  public Emit: {
+  Emit: {
     (name: 'start');
   };
 
-  public On: (
+  On: (
     IOn<{ name: 'start' }>
   );
 
-  public Declared: 'start';
-  public Subscribed;
+  Declared: 'start';
+  Subscribed;
 
   constructor () {
     super();
@@ -19,7 +19,7 @@ export class Hub extends Component<any, Hub> {
   }
 
   /** Emits a start event */
-  public start () {
+  start () {
     return this.emit('start');
   }
 }

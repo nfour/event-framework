@@ -19,7 +19,7 @@ export interface IRouteConfig {
  * and specifically emitting to those components based on routes
  */
 export class HttpServer extends Component<Hub, HttpServer> {
-  public Emit: {
+  Emit: {
     (name: 'HttpServer.ready', component: HttpServer);
     (
       name: (
@@ -30,7 +30,7 @@ export class HttpServer extends Component<Hub, HttpServer> {
     );
   };
 
-  public On: (
+  On: (
     IOn<{ name: 'HttpServer.ready', event: HttpServer }> &
     IOn<{
       name: 'HttpServer.request' | 'HttpServer.request.response',
@@ -43,17 +43,17 @@ export class HttpServer extends Component<Hub, HttpServer> {
     }>
   );
 
-  public Declared: (
+  Declared: (
     'http.request' | 'http.request.response' |
     'HttpServer.request' | 'HttpServer.request.response' |
     'HttpServer.ready'
   );
 
-  public Subscribed: 'start';
+  Subscribed: 'start';
 
-  public port: number;
-  public host: string;
-  public protocol: 'http' | 'https' = 'http';
+  port: number;
+  host: string;
+  protocol: 'http' | 'https' = 'http';
 
   protected app: Koa;
   protected router: Router;
@@ -95,7 +95,7 @@ export class HttpServer extends Component<Hub, HttpServer> {
     return `${this.protocol}://${this.host}${port}`;
   }
 
-  public route (routePath: string) {
+  route (routePath: string) {
     const matches = routePath.match(/((?:[A-Z]+(?:,\s*)?){1,}) (.+)/);
 
     if (!matches) { throw new Error(`Invalid routePath: ${routePath}`); }

@@ -4,7 +4,7 @@ import { Action } from '../Action';
 import { createHttpEventFromLambda } from './lib';
 
 export class HttpLambda extends Component<IComponent, HttpLambda> {
-  public Emit: {
+  Emit: {
     (name: 'HttpLambda.ready', component: HttpLambda);
     (
       name: (
@@ -15,7 +15,7 @@ export class HttpLambda extends Component<IComponent, HttpLambda> {
     );
   };
 
-  public On: (
+  On: (
     IOn<{ name: 'HttpLambda.ready', event: HttpLambda }> &
     IOn<{
       name: 'HttpLambda.request' | 'HttpLambda.request.response',
@@ -29,14 +29,14 @@ export class HttpLambda extends Component<IComponent, HttpLambda> {
     }>
   );
 
-  public Declared: (
+  Declared: (
     'http.request' | 'http.request.response' |
     'HttpLambda.request' | 'HttpLambda.request.response'
   );
 
-  public Subscribed;
+  Subscribed;
 
-  public action: Component<HttpLambda, Action>;
+  action: Component<HttpLambda, Action>;
 
   constructor (action: Component<any, Action>) {
     super();
@@ -48,7 +48,7 @@ export class HttpLambda extends Component<IComponent, HttpLambda> {
     this.action = action;
   }
 
-  public handler (): ILambdaHttpHandler {
+  handler (): ILambdaHttpHandler {
     return async (inputEvent, context, done) => {
       const event = createHttpEventFromLambda(inputEvent);
 
@@ -74,4 +74,3 @@ export class HttpLambda extends Component<IComponent, HttpLambda> {
     };
   }
 }
-

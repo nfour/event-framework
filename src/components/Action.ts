@@ -3,19 +3,19 @@ import { IComponent, IOn } from '../index';
 
 // TODO: ability to pass through component inheritence
 export class Action extends Component<IComponent, Action> {
-  public Emit: {
+  Emit: {
     (name: 'execute', ...args: any[]);
     (name: 'execute.complete', result: any);
   };
 
-  public On: (
+  On: (
     IOn<{ name: 'execute', event: any, return: any }> &
     IOn<{ name: 'execute.complete', event: any, return: any }>
   );
 
-  public Declared: 'execute' | 'execute.complete';
-  public Subscribed: 'execute';
-  public callback: (...args: any[]) => any;
+  Declared: 'execute' | 'execute.complete';
+  Subscribed: 'execute';
+  callback: (...args: any[]) => any;
 
   constructor (callback: Action['callback']) {
     super();
@@ -28,7 +28,7 @@ export class Action extends Component<IComponent, Action> {
     this.on('execute', this.execute);
   }
 
-  public execute = async (...args) => {
+  execute = async (...args) => {
     const result = await this.callback(...args);
 
     await this.emit('execute.complete', result);
