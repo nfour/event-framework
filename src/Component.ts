@@ -1,3 +1,4 @@
+import { Emitter } from './Emitter';
 import { Event, IEventContext, IListenerConfig } from './Event';
 
 export type IOnCallback = (...args: any[]) => void;
@@ -42,7 +43,7 @@ export interface IOnceConfig { priority?: IListenerConfig['priority']; }
 export class Component<
   E extends IComponentSignaturesGeneric = IComponent,
   S extends IComponentSignaturesGeneric = IComponent
-> implements IComponent {
+> extends Emitter implements IComponent {
   //
   // Input types
   //
@@ -58,6 +59,10 @@ export class Component<
 
   /** List of subscribed event names */
   Subscribed: S['Subscribed'];
+
+  emit: this['_AllEmit'];
+  on: this['_AllOn'];
+  once: this['_AllOn'];
 
   //
   // Generated types
@@ -132,69 +137,5 @@ export class Component<
   disconnect (component: Component) {
     this.components.delete(component);
 
-  }
-
-  //
-  // Events
-  //
-
-  // tslint:disable-next-line:member-ordering
-  private _events: { [key: string]: Event } = {};
-
-  /**
-   * Emit an event, asynchronously.
-   */
-  emit: this['_AllEmit'] = async (key, ...payload): Promise<any> => {
-    const event = this._events[key];
-
-    if (!event) { return; }
-
-    return event.propagate(...payload).catch(async (error) => {
-      await this.emit('error', error);
-
-      throw error;
-    });
-  }
-
-  on: this['_AllOn'] = (key, callback, options: IOnConfig = {}): Event => {
-    const event = this._events[key] || new Event(key);
-
-    event.add({ ...options, callback });
-
-    this._events[key] = event;
-
-    return event;
-  }
-
-  /**
-   * Add listener to an event, but only fire the callback once.
-   *
-   * Also returns a promise which resolves only when the callback is executed.
-   */
-  once: this['_AllOn'] = (key, callback, options: IOnceConfig = {}) => {
-    const on = this.on as any;
-
-    return on(key, callback, { ...options, limit: 1 });
-  }
-
-  priority<A extends this = this> (priority: number) {
-    return {
-      on: <A['_AllOn']> ((key, callback, options = {}) => (<any> this.on)(key, callback, { ...options, priority })),
-    };
-  }
-
-  /** Remove a listener which matches `callback` */
-  off = (key: string, callback) => {
-    const event = this._events[key];
-
-    if (!event) { return false; }
-
-    const listener = event.get(callback);
-
-    if (!listener) { return false; }
-
-    event.remove(listener);
-
-    return true;
   }
 }

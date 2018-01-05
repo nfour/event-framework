@@ -129,9 +129,9 @@ export class HttpServer extends Component<Hub, HttpServer> {
       // Generic event, for things that just want the http request
       const response: IHttpRequestResponse = await component.emit('http.request', event);
 
-      ctx.response.status = response.statusCode;
-      ctx.response.body = response.body;
-      ctx.response.headers = response.headers;
+      ctx.status = response.statusCode;
+      ctx.body = response.body;
+      ctx.set(response.headers || {});
     };
   }
 }
