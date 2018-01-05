@@ -1,0 +1,13 @@
+node_modules
+/npm-*
+/.serverless
+/serverless.env.yml
+/ts-env*
+/dist
+/build
+/yarn-*
+/.coverage
+.directory
+.DS_STORE
+/.ttooling
+/resources/swagger.json
