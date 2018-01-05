@@ -1,7 +1,7 @@
 import * as QueryString from 'qs';
-import { v4 as uuid } from 'uuid';
 import { IHttpBody, IHttpRequestEvent, IInputLambdaHttpEvent } from '../../index';
 import { normalizeHeaders } from '../../lib/http';
+import { HttpRequestEvent } from '../HttpRequestEvent';
 
 /**
  * Transforms lambda-proxy input to a request object
@@ -30,13 +30,10 @@ export function createHttpEventFromLambda (event: IInputLambdaHttpEvent): IHttpR
     }
   }
 
-  return {
-    id: uuid(),
+  return new HttpRequestEvent({
     request: {
       headers, query, params,
       body, method, path,
     },
-    response: undefined,
-    error: undefined,
-  };
+  });
 }

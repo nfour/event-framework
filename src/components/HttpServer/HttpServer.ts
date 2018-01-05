@@ -4,7 +4,7 @@ import * as BodyParser from 'koa-bodyparser';
 import * as Router from 'koa-router';
 import { Component } from '../../Component';
 import { IHttpRequestResponse, IOn } from '../../index';
-import { IHttpRequestEvent } from '../../types/index';
+import { HttpRequestEvent } from '../HttpRequestEvent';
 import { Hub } from '../Hub';
 import { createEventFromKoa } from './lib';
 
@@ -26,7 +26,7 @@ export class HttpServer extends Component<Hub, HttpServer> {
         'http.request' | 'HttpServer.request' |
         'http.request.response' | 'HttpServer.request.response'
       ),
-      event: IHttpRequestEvent,
+      event: HttpRequestEvent,
     );
   };
 
@@ -34,11 +34,11 @@ export class HttpServer extends Component<Hub, HttpServer> {
     IOn<{ name: 'HttpServer.ready', event: HttpServer }> &
     IOn<{
       name: 'HttpServer.request' | 'HttpServer.request.response',
-      event: IHttpRequestEvent,
+      event: HttpRequestEvent,
     }> &
     IOn<{
       name: 'http.request' | 'http.request.response',
-      event: IHttpRequestEvent,
+      event: HttpRequestEvent,
       return: Promise<IHttpRequestResponse>|IHttpRequestResponse,
     }>
   );

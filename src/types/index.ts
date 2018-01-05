@@ -9,6 +9,9 @@ export interface IStringDict { [key: string]: string; }
 //
 
 export interface IRequestEvent {
+  /**
+   * @format uuid
+   */
   id: string;
   error: Error|undefined;
 }
