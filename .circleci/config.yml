@@ -4,30 +4,27 @@ defaults: &defaults
     - image: 'nfour/circleci-node:9'
 
 
-buildSteps: &buildSteps
-  - checkout
-
-  - restore_cache:
-      keys:
-      - dependencies-{{ checksum "package.json" }}
-      - dependencies-
-
-  - run: yarn install
-
-  - save_cache:
-      paths:
-        - node_modules
-      key: dependencies-{{ checksum "package.json" }}
-
-  - run: yarn preversion
-
 version: 2
 jobs:
   build:
     <<: *defaults
 
     steps:
-      <<: *buildSteps
+      - checkout
+
+      - restore_cache:
+          keys:
+          - dependencies-{{ checksum "package.json" }}
+          - dependencies-
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependencies-{{ checksum "package.json" }}
+
+      - run: yarn preversion
 
 
   deploy:
@@ -38,8 +35,6 @@ jobs:
         only: /.+/
 
     steps:
-      <<: *buildSteps
-
       - run: pwd
       - run: yarn release
 
@@ -48,5 +43,4 @@ workflows:
   buildAndDeploy:
     jobs:
       - build
-      - deploy:
-          requires: ['build']
+
