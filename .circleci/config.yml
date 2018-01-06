@@ -1,7 +1,7 @@
 version: 2
 jobs:
   buildAndTest:
-    docker: [image: nfour/circleci-node:9]
+    docker: [{ image: nfour/circleci-node:9 }]
 
     working_directory: ~/repo
 
@@ -23,7 +23,7 @@ jobs:
       - run: yarn preversion
 
   deploy:
-    docker: [image: nfour/circleci-node:9]
+    docker: [{ image: nfour/circleci-node:9 }]
 
     filters:
       tags:
