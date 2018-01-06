@@ -4,7 +4,7 @@ import * as BodyParser from 'koa-bodyparser';
 import * as Router from 'koa-router';
 
 import { Component } from '../../Component';
-import { IHttpRequestResponse, IOn } from '../../index';
+import { IOn } from '../../index';
 import { HttpRequestEvent } from '../HttpRequestEvent';
 import { Hub } from '../Hub';
 import { createEventFromKoa } from './lib';
