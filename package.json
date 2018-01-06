@@ -11,6 +11,7 @@
     "test": "jest src",
     "test:coverage": "yarn test --coverage",
     "lint": "tslint --project tsconfig.json",
+    "release": "cd build && yarn release",
     "build": "bash -v -e scripts/build.bash",
     "build:link": "yarn build && cd build && yarn link",
     "preversion": "yarn lint && yarn build && yarn test:coverage && changelog-verify CHANGELOG.md",

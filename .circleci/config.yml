@@ -21,5 +21,15 @@ jobs:
             - node_modules
           key: dependencies-{{ checksum "package.json" }}
 
+  test:
+    steps:
       - run: yarn preversion
+
+  deploy:
+    filters:
+      tags:
+        only: /.+/
+    steps:
+      - run: yarn release
+
 
