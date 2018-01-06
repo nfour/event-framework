@@ -23,9 +23,8 @@ jobs:
       - run: yarn preversion
 
       - persist_to_workspace:
-          root: /tmp/workspace
-          paths:
-            - '*'
+          root: /home/circleci
+          paths: [repo]
 
 
   deploy:
@@ -34,9 +33,11 @@ jobs:
     filters:
       tags:
         only: /.+/
+
     steps:
       - attach_workspace:
-          at: /tmp/workspace
+          at: /home/circleci
+
       - run: yarn release
 
 
