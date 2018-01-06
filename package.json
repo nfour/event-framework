@@ -1,7 +1,7 @@
 {
   "name": "event-framework",
   "description": "The framework",
-  "version": "0.0.1",
+  "version": "0.0.2-1",
   "license": "MIT",
   "keywords": [
     "library"
@@ -23,14 +23,15 @@
     "@types/koa-router": "^7.0.27",
     "@types/node": "^8.5.2",
     "@types/node-fetch": "^1.6.7",
-    "changelog-verify": "^1.0.4",
+    "changelog-verify": "^1.1.0",
     "jest": "^22.0.4",
     "nodemon": "^1.14.3",
     "ts-jest": "^22.0.0",
     "ts-node": "^3.3.0",
     "tslint": "^5.6.0",
     "tslint-config-temando": "^1.5.0",
-    "typescript": "^2.6.2"
+    "typescript": "^2.6.2",
+    "version-changelog": "^2.1.0"
   },
   "dependencies": {
     "@types/bluebird": "^3.5.8",
