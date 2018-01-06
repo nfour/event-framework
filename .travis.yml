@@ -1,19 +1,13 @@
 language: node_js
 node_js: ["9"]
 
-cache:
-  yarn: true
+cache: { yarn: true }
 
-install:
-  - yarn install
+install: yarn install
 
-script:
-  - yarn lint
-  - yarn build
-  - DEBUG=true yarn coverage
+script: yarn preversion
 
-before_deploy:
-  - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
+before_deploy: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
 
 deploy:
   provider: script
