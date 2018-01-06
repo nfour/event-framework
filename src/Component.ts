@@ -1,7 +1,7 @@
 import { Emitter } from './Emitter';
 import { Event, IEventContext, IListenerConfig } from './Event';
 
-export type IOnCallback = (...args: any[]) => void;
+export type IOnCallback = (this: IEventContext, ...args: any[]) => void;
 
 export interface IComponent {
   Emit: {
@@ -49,10 +49,10 @@ export class Component<
   //
 
   /** Input call signatures for emitters */
-  Emit: any;
+  Emit;
 
   /** Input call signatures for listeners */
-  On: any;
+  On;
 
   /** Declared event names by this component */
   Declared: S['Declared'];
@@ -85,7 +85,7 @@ export class Component<
    * Declare that this component will emit an event.
    * When a component is connected via .connect(), the delcarations are listened to.
    */
-  declare (eventName: this['Declared']) {
+  declare (eventName: S['Declared']) {
     this.declarations.add(eventName);
   }
 

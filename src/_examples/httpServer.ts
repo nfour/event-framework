@@ -21,7 +21,7 @@ const HttpLogger = () => {
   const component = new Component<HttpServer>();
 
   component.subscribe('HttpServer.request');
-  component.on('HttpServer.request', ({ request }) => {
+  component.tap().on('HttpServer.request', ({ request }): any => {
     // tslint:disable-next-line:no-console
     console.dir(request, { colors: true });
   });
@@ -34,7 +34,7 @@ class HttpLoggerAsAClass extends Component<HttpServer> {
     super();
 
     this.subscribe('HttpServer.request');
-    this.on('HttpServer.request', ({ request }) => {
+    this.tap().on('HttpServer.request', ({ request }): any => {
       console.dir(request, { colors: true });
     });
   }

@@ -1,6 +1,5 @@
 import { Component } from '../../Component';
-import { IComponent, ILambdaHttpHandler, IOn } from '../../index';
-import { IOnHttpRequestEvent } from '../../types/events';
+import { IComponent, IHttpRequestResponse, ILambdaHttpHandler, IOn } from '../../index';
 import { Action } from '../Action';
 import { HttpRequestEvent } from '../HttpRequestEvent';
 import { createHttpEventFromLambda } from './lib';
@@ -9,12 +8,9 @@ export class HttpLambda extends Component<IComponent, HttpLambda> {
   Emit: {
     (name: 'HttpLambda.ready', component: HttpLambda);
     (
-      name: (
-        'http.request' | 'HttpLambda.request' |
-        'http.request.response' | 'HttpLambda.request.response'
-      ),
+      name: ('HttpLambda.request' | 'HttpLambda.request.response'),
       event: HttpRequestEvent,
-    );
+    ): Promise<IHttpRequestResponse>|IHttpRequestResponse;
   };
 
   On: (
@@ -22,13 +18,11 @@ export class HttpLambda extends Component<IComponent, HttpLambda> {
     IOn<{
       name: 'HttpLambda.request' | 'HttpLambda.request.response',
       event: HttpRequestEvent,
-      return: void,
-    }> &
-    IOnHttpRequestEvent
+      return: Promise<IHttpRequestResponse>|IHttpRequestResponse;
+    }>
   );
 
   Declared: (
-    'http.request' | 'http.request.response' |
     'HttpLambda.request' | 'HttpLambda.request.response'
   );
 
@@ -39,8 +33,6 @@ export class HttpLambda extends Component<IComponent, HttpLambda> {
   constructor (action: Component<any, Action>) {
     super();
 
-    this.declare('http.request');
-    this.declare('http.request.response');
     this.declare('HttpLambda.request');
 
     this.action = action;
@@ -51,16 +43,13 @@ export class HttpLambda extends Component<IComponent, HttpLambda> {
       const event = createHttpEventFromLambda(inputEvent);
 
       try {
-        await this.emit('HttpLambda.request', event);
-
-        const response = await this.action.emit('http.request', event);
+        const response = await this.emit('HttpLambda.request', event);
 
         event.response = response;
       } catch (error) {
         event.error = error;
       }
       try {
-        await this.emit('http.request.response', event);
         await this.emit('HttpLambda.request.response', event);
       } catch (error) {
         event.error = error;

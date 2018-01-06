@@ -5,7 +5,6 @@ import * as Router from 'koa-router';
 
 import { Component } from '../../Component';
 import { IHttpRequestResponse, IOn } from '../../index';
-import { IOnHttpRequestEvent } from '../../types/events';
 import { HttpRequestEvent } from '../HttpRequestEvent';
 import { Hub } from '../Hub';
 import { createEventFromKoa } from './lib';
@@ -24,12 +23,9 @@ export class HttpServer extends Component<Hub, HttpServer> {
   Emit: {
     (name: 'HttpServer.ready', component: HttpServer);
     (
-      name: (
-        'http.request' | 'HttpServer.request' |
-        'http.request.response' | 'HttpServer.request.response'
-      ),
+      name: ('HttpServer.request' | 'HttpServer.request.response'),
       event: HttpRequestEvent,
-    );
+    ): Promise<IHttpRequestResponse>|IHttpRequestResponse;
   };
 
   On: (
@@ -37,12 +33,11 @@ export class HttpServer extends Component<Hub, HttpServer> {
     IOn<{
       name: 'HttpServer.request' | 'HttpServer.request.response',
       event: HttpRequestEvent,
-    }> &
-    IOnHttpRequestEvent
+      return: Promise<IHttpRequestResponse>|IHttpRequestResponse;
+    }>
   );
 
   Declared: (
-    'http.request' | 'http.request.response' |
     'HttpServer.request' | 'HttpServer.request.response' |
     'HttpServer.ready'
   );
@@ -65,7 +60,6 @@ export class HttpServer extends Component<Hub, HttpServer> {
 
     Object.assign(this, config);
 
-    this.declare('http.request');
     this.declare('HttpServer.request');
     this.declare('HttpServer.ready');
 
@@ -122,9 +116,7 @@ export class HttpServer extends Component<Hub, HttpServer> {
       const event = createEventFromKoa(ctx);
 
       // Component specific event, useful for instrumentation
-      await this.emit('HttpServer.request', event);
-
-      const response: IHttpRequestResponse = await component.emit('http.request', event);
+      const response: IHttpRequestResponse = await component.emit('HttpServer.request', event);
 
       ctx.status = response.statusCode;
       ctx.body = response.body;

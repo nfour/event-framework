@@ -1,4 +1,5 @@
 import { Event, IListenerConfig } from './Event';
+import { IOnCallback } from './index';
 
 export interface IOnConfig { priority?: IListenerConfig['priority']; limit?: IListenerConfig['limit']; }
 export interface IOnceConfig { priority?: IListenerConfig['priority']; }
@@ -7,6 +8,8 @@ export interface IOnceConfig { priority?: IListenerConfig['priority']; }
  * A component acts as both a subscriber and an event emitter.
  */
 export abstract class Emitter {
+  _AllOn;
+
   private _events: { [key: string]: Event } = {};
 
   /**
@@ -24,7 +27,7 @@ export abstract class Emitter {
     });
   }
 
-  on = (key, callback, options: IOnConfig = {}): Event => {
+  on = (key, callback: IOnCallback, options: IOnConfig = {}): Event => {
     const event = this._events[key] || new Event(key);
 
     event.add({ ...options, callback });
@@ -39,15 +42,28 @@ export abstract class Emitter {
    *
    * Also returns a promise which resolves only when the callback is executed.
    */
-  once = (key, callback, options: IOnceConfig = {}) => {
+  once = (key, callback: IOnCallback, options: IOnceConfig = {}) => {
     const on = this.on as any;
 
     return on(key, callback, { ...options, limit: 1 });
   }
 
-  priority (priority: number) {
+  priority <X extends this = this> (priority: number) {
     return {
-      on: <any> ((key, callback, options = {}) => (<any> this.on)(key, callback, { ...options, priority })),
+      on: <X['on']> ((key, callback, options = {}) => this.on(key, callback, { ...options, priority })),
+    };
+  }
+
+  /** Allows execution of emitters without having to return anything */
+  tap <X extends this = this> () {
+    return {
+      on: <X['on']> ((key, callback, options = {}) => {
+        return this.on(key, async function (...args) {
+          await callback.apply(this, args);
+
+          return this.previousValue;
+        }, options);
+      }),
     };
   }
 
