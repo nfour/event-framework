@@ -31,4 +31,9 @@ jobs:
     steps:
       - run: yarn release
 
+workflows:
+  jobs:
+    - buildAndTest
+    - deploy
+
 
