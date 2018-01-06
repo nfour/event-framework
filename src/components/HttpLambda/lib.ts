@@ -1,12 +1,13 @@
 import * as QueryString from 'qs';
-import { IHttpBody, IHttpRequestEvent, IInputLambdaHttpEvent } from '../../index';
+
+import { IHttpBody, IInputLambdaHttpEvent } from '../../index';
 import { normalizeHeaders } from '../../lib/http';
 import { HttpRequestEvent } from '../HttpRequestEvent';
 
 /**
  * Transforms lambda-proxy input to a request object
  */
-export function createHttpEventFromLambda (event: IInputLambdaHttpEvent): IHttpRequestEvent {
+export function createHttpEventFromLambda (event: IInputLambdaHttpEvent) {
   const {
     pathParameters: params,
     httpMethod: method,
