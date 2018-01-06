@@ -2,8 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      # - image: circleci/node:9
-      - image: kkarczmarczyk/node-yarn:latest
+      - image: nfour/circleci-node:9
 
     working_directory: ~/repo
 
