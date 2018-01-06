@@ -1,12 +1,5 @@
 import { IHttpRequestResponse, IInputLambdaHttpContext, IInputLambdaHttpEvent, ILambdaHttpHandler } from '../../index';
-
-const executeLambda = (handler: ILambdaHttpHandler, event: IInputLambdaHttpEvent) =>
-  new Promise<IHttpRequestResponse>((resolve, reject) => {
-    handler(event, context, (err, res) => {
-      if (err) { return reject(err); }
-      return resolve(res);
-    });
-  });
+const context = <IInputLambdaHttpContext> {};
 
 const baseEvent = <IInputLambdaHttpEvent> {
   body: '{}',
@@ -18,7 +11,13 @@ const baseEvent = <IInputLambdaHttpEvent> {
   requestContext: {},
 };
 
-const context = <IInputLambdaHttpContext> {};
+const executeLambda = (handler: ILambdaHttpHandler, event: IInputLambdaHttpEvent) =>
+  new Promise<IHttpRequestResponse>((resolve, reject) => {
+    handler(event, context, (err, res) => {
+      if (err) { return reject(err); }
+      return resolve(res);
+    });
+  });
 
 describe('HttpLambda function plusOne', () => {
   it('executes', async () => {

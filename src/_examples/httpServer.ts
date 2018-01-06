@@ -22,6 +22,7 @@ const HttpLogger = () => {
 
   component.subscribe('HttpServer.request');
   component.on('HttpServer.request', ({ request }) => {
+    // tslint:disable-next-line:no-console
     console.dir(request, { colors: true });
   });
 
@@ -47,11 +48,11 @@ hub.connect(HttpLogger());
 hub.connect(new HttpLoggerAsAClass());
 
 timesFour.on('execute.complete', (result) => {
-  console.log({ timesFour: result });
+  console.dir({ timesFour: result });
 });
 
 plusOne.on('execute.complete', (result) => {
-  console.log({ plusOne: result });
+  console.dir({ plusOne: result });
 });
 
 hub.start();
