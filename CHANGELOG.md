@@ -4,6 +4,10 @@ Based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [0.0.2-2][] - 2018-01-06
+
+- WIP
+
 ## [0.0.2-1][] - 2018-01-06
 
 - CI
@@ -11,5 +15,6 @@ Based on [Keep a Changelog](http://keepachangelog.com/).
 
 
 
-[Unreleased]: https://github.com/nfour/event-framework/compare/v0.0.2-1...HEAD
+[Unreleased]: https://github.com/nfour/event-framework/compare/v0.0.2-2...HEAD
+[0.0.2-2]: https://github.com/nfour/event-framework/compare/v0.0.2-1...v0.0.2-2
 [0.0.2-1]: https://github.com/nfour/event-framework/tree/v0.0.2-1
