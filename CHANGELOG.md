@@ -4,6 +4,8 @@ Based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [0.0.2-5][] - 2018-01-06
+
 ## [0.0.2-4][] - 2018-01-06
 
 ## [0.0.2-3][] - 2018-01-06
@@ -19,7 +21,8 @@ Based on [Keep a Changelog](http://keepachangelog.com/).
 
 
 
-[Unreleased]: https://github.com/nfour/event-framework/compare/v0.0.2-4...HEAD
+[Unreleased]: https://github.com/nfour/event-framework/compare/v0.0.2-5...HEAD
+[0.0.2-5]: https://github.com/nfour/event-framework/compare/v0.0.2-4...v0.0.2-5
 [0.0.2-4]: https://github.com/nfour/event-framework/compare/v0.0.2-3...v0.0.2-4
 [0.0.2-3]: https://github.com/nfour/event-framework/compare/v0.0.2-2...v0.0.2-3
 [0.0.2-2]: https://github.com/nfour/event-framework/compare/v0.0.2-1...v0.0.2-2
