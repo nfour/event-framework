@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       # - image: circleci/node:9
-      - image: mhart/alpine-node:9
+      - image: kkarczmarczyk/node-yarn:9
 
     working_directory: ~/repo
 
