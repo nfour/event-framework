@@ -23,7 +23,10 @@ jobs:
       - run: yarn preversion
 
       - persist_to_workspace:
-          path: /tmp/workspace
+          root: /tmp/workspace
+          paths:
+            - '*'
+
 
   deploy:
     docker: [{ image: 'nfour/circleci-node:9' }]
