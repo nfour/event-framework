@@ -1,7 +1,7 @@
 {
   "name": "event-framework",
   "description": "The framework",
-  "version": "0.0.2-2",
+  "version": "0.0.2-3",
   "license": "MIT",
   "keywords": [
     "library"
@@ -14,8 +14,8 @@
     "release": "cd build && yarn release",
     "build": "bash -v -e scripts/build.bash",
     "build:link": "yarn build && cd build && yarn link",
-    "preversion": "yarn lint && yarn build && yarn test:coverage && changelog-verify CHANGELOG.md",
-    "version": "version-changelog CHANGELOG.md && changelog-verify CHANGELOG.md && git add CHANGELOG.md"
+    "preversion": "yarn lint && yarn build && yarn test:coverage",
+    "version": "version-changelog CHANGELOG.md && git add CHANGELOG.md"
   },
   "devDependencies": {
     "@types/jest": "^21.1.10",
