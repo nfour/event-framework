@@ -1,5 +1,6 @@
-# Framework
+[![CircleCI](https://circleci.com/gh/nfour/event-framework.svg?style=svg)](https://circleci.com/gh/nfour/event-framework)
 
+# Untitled Event Framework
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 <!-- code_chunk_output -->
