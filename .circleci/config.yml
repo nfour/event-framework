@@ -33,6 +33,7 @@ jobs:
 
 
 workflows:
-  jobs:
-    - build
-    - deploy
+  buildAndDeploy:
+    jobs:
+      - build
+      - deploy
