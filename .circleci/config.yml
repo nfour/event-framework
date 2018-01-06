@@ -23,7 +23,7 @@ jobs:
       - run: yarn preversion
 
       - persist_to_workspace:
-          at: /tmp/workspace
+          path: /tmp/workspace
 
   deploy:
     docker: [{ image: 'nfour/circleci-node:9' }]
@@ -33,7 +33,7 @@ jobs:
         only: /.+/
     steps:
       - attach_workspace:
-          path: /tmp/workspace
+          at: /tmp/workspace
       - run: yarn release
 
 
