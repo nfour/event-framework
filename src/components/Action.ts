@@ -1,8 +1,8 @@
-import { Component } from '../Component';
-import { IComponent, IOn } from '../index';
+import { Component, IComponentSignaturesGeneric } from '../Component';
+import { IOn } from '../index';
 
 // TODO: ability to pass through component inheritence
-export class Action extends Component<IComponent, Action> {
+export class Action<E extends IComponentSignaturesGeneric = any> extends Component<E, Action> {
   Emit: {
     (name: 'execute', ...args: any[]);
     (name: 'execute.complete', result: any);
@@ -13,7 +13,7 @@ export class Action extends Component<IComponent, Action> {
     IOn<{ name: 'execute.complete', event: any, return: any }>
   );
 
-  Declared: 'execute' | 'execute.complete';
+  Declared: 'execute.complete';
   Subscribed: 'execute';
   callback: (...args: any[]) => any;
 
@@ -22,7 +22,7 @@ export class Action extends Component<IComponent, Action> {
 
     this.callback = callback;
 
-    this.declare('execute');
+    this.subscribe('execute');
     this.declare('execute.complete');
 
     this.on('execute', this.execute);
