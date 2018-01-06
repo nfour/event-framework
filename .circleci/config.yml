@@ -1,8 +1,7 @@
 version: 2
 jobs:
-  build:
-    docker:
-      - image: nfour/circleci-node:9
+  buildAndTest:
+    docker: [image: nfour/circleci-node:9]
 
     working_directory: ~/repo
 
@@ -21,11 +20,11 @@ jobs:
             - node_modules
           key: dependencies-{{ checksum "package.json" }}
 
-  test:
-    steps:
       - run: yarn preversion
 
   deploy:
+    docker: [image: nfour/circleci-node:9]
+
     filters:
       tags:
         only: /.+/
