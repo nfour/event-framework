@@ -1,9 +1,13 @@
+defaults: &defaults
+    working_directory: ~/project
+    docker:
+      - image: 'nfour/circleci-node:9'
+
+
 version: 2
 jobs:
   build:
-    docker: [{ image: 'nfour/circleci-node:9' }]
-
-    working_directory: ~/repo
+    <<: *defaults
 
     steps:
       - checkout
@@ -23,12 +27,12 @@ jobs:
       - run: yarn preversion
 
       - persist_to_workspace:
-          root: /home/circleci
+          root: ~
           paths: [repo]
 
 
   deploy:
-    docker: [{ image: 'nfour/circleci-node:9' }]
+    <<: *defaults
 
     filters:
       tags:
@@ -36,7 +40,7 @@ jobs:
 
     steps:
       - attach_workspace:
-          at: /home/circleci
+          at: '~'
 
       - run: yarn release
 
