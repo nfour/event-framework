@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  buildAndTest:
+  build:
     docker: [{ image: 'nfour/circleci-node:9' }]
 
     working_directory: ~/repo
@@ -31,10 +31,5 @@ jobs:
     steps:
       - run: yarn release
 
-
-workflows:
-  jobs:
-    - buildAndTest
-    - deploy
 
 
