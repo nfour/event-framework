@@ -1,5 +1,5 @@
 {
-  "name": "event-frame",
+  "name": "event-framework",
   "description": "The framework",
   "version": "0.0.2-5",
   "license": "MIT",
@@ -11,7 +11,7 @@
     "test": "jest src",
     "test:coverage": "yarn test --coverage",
     "lint": "tslint --project tsconfig.json",
-    "release": "cd build && yarn release .",
+    "release": "cd build && yarn publish",
     "build": "bash -v -e scripts/build.bash",
     "build:link": "yarn build && cd build && yarn link",
     "preversion": "yarn lint && yarn build && yarn test:coverage",
