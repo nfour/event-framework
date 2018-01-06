@@ -1,5 +1,6 @@
 import { Component } from '../../Component';
-import { IComponent, IHttpRequestResponse, ILambdaHttpHandler, IOn } from '../../index';
+import { IComponent, ILambdaHttpHandler, IOn } from '../../index';
+import { IOnHttpRequestEvent } from '../../types/events';
 import { Action } from '../Action';
 import { HttpRequestEvent } from '../HttpRequestEvent';
 import { createHttpEventFromLambda } from './lib';
@@ -23,11 +24,7 @@ export class HttpLambda extends Component<IComponent, HttpLambda> {
       event: HttpRequestEvent,
       return: void,
     }> &
-    IOn<{
-      name: 'http.request' | 'http.request.response',
-      event: HttpRequestEvent,
-      return: Promise<IHttpRequestResponse>|IHttpRequestResponse,
-    }>
+    IOnHttpRequestEvent
   );
 
   Declared: (
