@@ -23,17 +23,17 @@ export class HttpServer extends Component<Hub, HttpServer> {
   Emit: {
     (name: 'HttpServer.ready', component: HttpServer);
     (
-      name: ('HttpServer.request' | 'HttpServer.request.response'),
+      name: 'HttpServer.request',
       event: HttpRequestEvent,
-    ): Promise<IHttpRequestResponse>|IHttpRequestResponse;
+    ): Promise<HttpRequestEvent>|HttpRequestEvent;
   };
 
   On: (
     IOn<{ name: 'HttpServer.ready', event: HttpServer }> &
     IOn<{
-      name: 'HttpServer.request' | 'HttpServer.request.response',
+      name: 'HttpServer.request',
       event: HttpRequestEvent,
-      return: Promise<IHttpRequestResponse>|IHttpRequestResponse;
+      return: Promise<HttpRequestEvent>|HttpRequestEvent;
     }>
   );
 
@@ -116,7 +116,11 @@ export class HttpServer extends Component<Hub, HttpServer> {
       const event = createEventFromKoa(ctx);
 
       // Component specific event, useful for instrumentation
-      const response: IHttpRequestResponse = await component.emit('HttpServer.request', event);
+      await component.emit('HttpServer.request', event);
+
+      const { response } = event;
+
+      if (!response) { return; }
 
       ctx.status = response.statusCode;
       ctx.body = response.body;

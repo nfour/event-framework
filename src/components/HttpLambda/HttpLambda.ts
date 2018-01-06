@@ -1,5 +1,5 @@
 import { Component } from '../../Component';
-import { IComponent, IHttpRequestResponse, ILambdaHttpHandler, IOn } from '../../index';
+import { IComponent, ILambdaHttpHandler, IOn } from '../../index';
 import { Action } from '../Action';
 import { HttpRequestEvent } from '../HttpRequestEvent';
 import { createHttpEventFromLambda } from './lib';
@@ -8,17 +8,17 @@ export class HttpLambda extends Component<IComponent, HttpLambda> {
   Emit: {
     (name: 'HttpLambda.ready', component: HttpLambda);
     (
-      name: ('HttpLambda.request' | 'HttpLambda.request.response'),
+      name: 'HttpLambda.request',
       event: HttpRequestEvent,
-    ): Promise<IHttpRequestResponse>|IHttpRequestResponse;
+    ): Promise<HttpRequestEvent>|HttpRequestEvent;
   };
 
   On: (
     IOn<{ name: 'HttpLambda.ready', event: HttpLambda }> &
     IOn<{
-      name: 'HttpLambda.request' | 'HttpLambda.request.response',
+      name: 'HttpLambda.request',
       event: HttpRequestEvent,
-      return: Promise<IHttpRequestResponse>|IHttpRequestResponse;
+      return: Promise<HttpRequestEvent>|HttpRequestEvent;
     }>
   );
 
@@ -43,14 +43,7 @@ export class HttpLambda extends Component<IComponent, HttpLambda> {
       const event = createHttpEventFromLambda(inputEvent);
 
       try {
-        const response = await this.emit('HttpLambda.request', event);
-
-        event.response = response;
-      } catch (error) {
-        event.error = error;
-      }
-      try {
-        await this.emit('HttpLambda.request.response', event);
+        await this.emit('HttpLambda.request', event);
       } catch (error) {
         event.error = error;
       }
