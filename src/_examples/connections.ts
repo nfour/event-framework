@@ -5,8 +5,6 @@ import { Action } from '../components/Action';
 import { HttpRequestEvent } from '../components/HttpRequest/HttpRequestEvent';
 import { HttpServer } from '../components/HttpServer/HttpServer';
 import { Hub } from '../components/Hub';
-import { plusOne } from './functions/plusOne';
-import { timesFour } from './functions/timesFour';
 
 const hub = new Hub();
 
