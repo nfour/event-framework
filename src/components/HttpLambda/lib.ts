@@ -2,7 +2,7 @@ import * as QueryString from 'qs';
 
 import { IHttpBody, IInputLambdaHttpEvent } from '../../index';
 import { normalizeHeaders } from '../../lib/http';
-import { HttpRequestEvent } from '../HttpRequestEvent';
+import { HttpRequestEvent } from '../HttpRequest/HttpRequestEvent';
 
 /**
  * Transforms lambda-proxy input to a request object

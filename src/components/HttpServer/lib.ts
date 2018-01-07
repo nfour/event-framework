@@ -1,6 +1,6 @@
 import { IRouterContext } from 'koa-router';
 import { IHttpMethod } from '../../index';
-import { HttpRequestEvent } from '../HttpRequestEvent';
+import { HttpRequestEvent } from '../HttpRequest/HttpRequestEvent';
 
 export function createEventFromKoa ({
   request: {

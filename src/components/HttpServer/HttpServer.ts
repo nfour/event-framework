@@ -5,7 +5,7 @@ import * as Router from 'koa-router';
 
 import { Component } from '../../Component';
 import { IOn } from '../../index';
-import { HttpRequestEvent } from '../HttpRequestEvent';
+import { HttpRequestEvent } from '../HttpRequest/HttpRequestEvent';
 import { Hub } from '../Hub';
 import { createEventFromKoa } from './lib';
 

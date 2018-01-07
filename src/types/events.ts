@@ -1,5 +1,5 @@
 import { IComponent, IComponentSignaturesGeneric, IOn } from '../';
-import { HttpRequestEvent } from '../components/HttpRequestEvent';
+import { HttpRequestEvent } from '../components/HttpRequest/HttpRequestEvent';
 import { IHttpRequestResponse } from './';
 
 export type IOnHttpRequestEvent = IOn<{
@@ -7,6 +7,12 @@ export type IOnHttpRequestEvent = IOn<{
   event: HttpRequestEvent,
   return: Promise<IHttpRequestResponse>|IHttpRequestResponse,
 }>;
+
+export interface IEventComponent {
+  Emit;
+  Declared;
+  announce (): Promise<any>;
+}
 
 export interface IMergeComponentSignatures<
   A extends IComponentSignaturesGeneric,

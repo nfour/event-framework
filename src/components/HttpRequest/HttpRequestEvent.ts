@@ -1,7 +1,8 @@
 import { v4 as uuid } from 'uuid';
-import { Component } from '../Component';
-import { IHttpRequestEvent } from '../index';
-import { Hub } from './Hub';
+import { Component } from '../../Component';
+import { IHttpRequestEvent } from '../../index';
+import { IEventComponent } from '../../types/events';
+import { Hub } from '../Hub';
 
 export interface IHttpRequestEventInput {
   id?: IHttpRequestEvent['id'];
@@ -10,7 +11,7 @@ export interface IHttpRequestEventInput {
   request: IHttpRequestEvent['request'];
 }
 
-export class HttpRequestEvent extends Component<Hub, HttpRequestEvent> implements IHttpRequestEvent {
+export class HttpRequestEvent extends Component<Hub, HttpRequestEvent> implements IHttpRequestEvent, IEventComponent {
   id: IHttpRequestEvent['id'];
   request: IHttpRequestEvent['request'];
   response: IHttpRequestEvent['response'];

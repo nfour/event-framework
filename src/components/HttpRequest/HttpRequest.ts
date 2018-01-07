@@ -1,9 +1,9 @@
-import { Component } from '../Component';
-import { IHttpRequestResponse } from '../types';
-import { IMergeComponentSignatures, IOnHttpRequestEvent } from '../types/events';
-import { HttpLambda } from './HttpLambda';
+import { Component } from '../../Component';
+import { IHttpRequestResponse } from '../../types';
+import { IMergeComponentSignatures, IOnHttpRequestEvent } from '../../types/events';
+import { HttpLambda } from '../HttpLambda';
+import { HttpServer } from '../HttpServer';
 import { HttpRequestEvent } from './HttpRequestEvent';
-import { HttpServer } from './HttpServer';
 
 export class HttpRequest extends Component<
   IMergeComponentSignatures<HttpServer, HttpLambda, HttpRequestEvent>,

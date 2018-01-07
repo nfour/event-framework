@@ -1,7 +1,7 @@
 import { Component } from '../../Component';
 import { IComponent, ILambdaHttpHandler, IOn } from '../../index';
 import { Action } from '../Action';
-import { HttpRequestEvent } from '../HttpRequestEvent';
+import { HttpRequestEvent } from '../HttpRequest/HttpRequestEvent';
 import { createHttpEventFromLambda } from './lib';
 
 export class HttpLambda extends Component<IComponent, HttpLambda> {
