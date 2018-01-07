@@ -50,12 +50,8 @@ Run `yarn start src/_examples/<filename>` to test examples
 
 ## To Do
 
-- Improve `Event`
-  - Needs to have concept of a `priority` integer for events. `before` and `after` are weak.
-
-- Determine if `Hub` and `Component` are the same thing
-- Components:
-  - Should they start independently once all "dependencies" are met?
-  - Would that require all components to declare themselves `ready`?
-    - And, would that produce a billing-middleware cluster fuck like before?
-  - Perhaps an extra layer of API is needed to calculate dependencies when subscribing to events
+- Action should take in middleware on instantiation via a bulk .connect or just the interfaces
+- Middlewares should be components
+- Errors & all event lifecycle conditions should be moved to HttpRequestEvent for soundness
+  - This is only HttpRequestEvent due to the current Http feature focus, but it would actually
+    be applied to any event component.

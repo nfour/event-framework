@@ -8,9 +8,7 @@ export interface IOnceConfig { priority?: IListenerConfig['priority']; }
  * A component acts as both a subscriber and an event emitter.
  */
 export abstract class Emitter {
-  _AllOn;
-
-  private _events: { [key: string]: Event } = {};
+  protected _events: { [key: string]: Event } = {};
 
   /**
    * Emit an event, asynchronously.

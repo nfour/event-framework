@@ -122,16 +122,18 @@ export class Component<
    * - Relaying events from the input component's **declared** events to this component.
    * - Relaying events from this component matching the **subscribed** events on the input component.
    */
-  connect<C extends Component<any, any>> (component: C) {
-    this.components.add(component);
+  connect<C extends Component<any, any>> (...components: C[]) {
+    for (const component of components) {
+      this.components.add(component);
 
-    component.declarations.forEach((eventName: Component['Declared']) => {
-      this.relay(component, <any> eventName);
-    });
+      component.declarations.forEach((eventName: Component['Declared']) => {
+        this.relay(component, <any> eventName);
+      });
 
-    component.subscriptions.forEach((eventName: Component['Subscribed']) => {
-      component.relay(this, <any> eventName);
-    });
+      component.subscriptions.forEach((eventName: Component['Subscribed']) => {
+        component.relay(this, <any> eventName);
+      });
+    }
   }
 
   disconnect (component: Component) {

@@ -6,7 +6,7 @@ import { HttpRequestEvent } from './HttpRequestEvent';
 import { HttpServer } from './HttpServer';
 
 export class HttpRequest extends Component<
-  IMergeComponentSignatures<HttpServer, HttpLambda>,
+  IMergeComponentSignatures<HttpServer, HttpLambda, HttpRequestEvent>,
   HttpRequest
 > {
   Emit: {
@@ -19,11 +19,12 @@ export class HttpRequest extends Component<
       event: HttpRequestEvent,
     ): Promise<HttpRequestEvent>|HttpRequestEvent;
   };
+
   On: (
     IOnHttpRequestEvent
   );
 
-  Subscribed: 'HttpLambda.request' | 'HttpServer.request';
+  Subscribed: 'HttpLambda.request' | 'HttpServer.request' | 'HttpRequestEvent';
   Declared: 'http.request' | 'http.request.response';
 
   constructor () {
@@ -34,12 +35,18 @@ export class HttpRequest extends Component<
 
     this.subscribe('HttpServer.request');
     this.subscribe('HttpLambda.request');
+    // TODO: make this automated
+    // this.subscribe('HttpRequestEvent');
 
     this.on('HttpLambda.request', this.emitRequest);
     this.on('HttpServer.request', this.emitRequest);
   }
 
   private emitRequest = async (event: HttpRequestEvent) => {
+    this.connect(event);
+
+    await event.announce();
+
     const response = await this.emit('http.request', event);
 
     event.response = response;
