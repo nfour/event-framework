@@ -140,6 +140,14 @@ export class Component<
     }
   }
 
+  connectOn (name: string, ...components: Array<Component<any, any>>) {
+    this.on(name, (event) => {
+      event.connect(...components);
+
+      return event;
+    });
+  }
+
   disconnect (component: Component<any, any>) {
     this.components.delete(component);
   }

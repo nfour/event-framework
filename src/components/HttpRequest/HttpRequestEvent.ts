@@ -37,6 +37,7 @@ export class HttpRequestEvent extends Component<Hub, HttpRequestEvent> implement
   }
 
   announce () {
+    // TODO: this should include http.request.prepare etc. ?????
     return this.emit('HttpRequestEvent', this);
   }
 

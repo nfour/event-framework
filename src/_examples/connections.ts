@@ -25,10 +25,6 @@ class WewMiddleware extends Component<HttpRequestEvent, WewMiddleware> {
 
     this.subscribe('HttpRequestEvent');
 
-    this.priority(9999).on('HttpRequestEvent', (event) => {
-      event.declare('WeW');
-    });
-
     // Runs after BarMiddleware
     this.priority(2).on('HttpRequestEvent', async (event) => {
       event.wew = 100;
@@ -74,7 +70,7 @@ const foo = new Action<BarMiddleware & WewMiddleware & HttpRequest>((event) => {
 const http = new HttpRequest();
 const httpActor = new HttpRequestActor();
 
-http.connect(new WewMiddleware(), new BarMiddleware());
+http.connectOn('HttpRequestEvent', new WewMiddleware(), new BarMiddleware());
 
 // END HTTP BUNDLE
 
