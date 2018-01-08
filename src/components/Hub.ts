@@ -10,7 +10,6 @@ export class Hub extends Component<any, Hub> {
   );
 
   Declared: 'start';
-  Subscribed;
 
   constructor () {
     super();

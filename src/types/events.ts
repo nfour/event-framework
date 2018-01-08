@@ -9,9 +9,7 @@ export type IOnHttpRequestEvent = IOn<{
 }>;
 
 export interface IEventComponent {
-  Emit;
-  Declared;
-  announce (): Promise<any>;
+  announce ();
 }
 
 export interface IMergeComponentSignatures<
