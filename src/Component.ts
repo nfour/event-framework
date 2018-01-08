@@ -78,8 +78,8 @@ export class Component<
   _Subscribable: IComponent['Declared'] | E['Declared'];
 
   components: Set<Component> = new Set();
-  declarations: Set<this['Declared']> = new Set();
-  subscriptions: Set<this['Subscribed']> = new Set();
+  declarations: Set<S['Declared']> = new Set();
+  subscriptions: Set<S['Subscribed']> = new Set();
 
   /**
    * Declare that this component will emit an event.
