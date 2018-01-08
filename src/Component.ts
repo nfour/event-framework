@@ -58,11 +58,7 @@ export class Component<
   Declared: S['Declared'];
 
   /** List of subscribed event names */
-  Subscribed: S['Subscribed'];
-
-  emit: this['_AllEmit'];
-  on: this['_AllOn'];
-  once: this['_AllOn'];
+  Subscribed: IComponent['Subscribed'] | S['Subscribed'];
 
   //
   // Generated types
@@ -78,14 +74,18 @@ export class Component<
   _Subscribable: IComponent['Declared'] | E['Declared'];
 
   components: Set<Component> = new Set();
-  declarations: Set<S['Declared']> = new Set();
-  subscriptions: Set<S['Subscribed']> = new Set();
+  declarations: Set<this['Declared']> = new Set();
+  subscriptions: Set<this['Subscribed']> = new Set();
+
+  emit: this['_AllEmit'];
+  on: this['_AllOn'];
+  once: this['_AllOn'];
 
   /**
    * Declare that this component will emit an event.
    * When a component is connected via .connect(), the delcarations are listened to.
    */
-  declare (eventName: S['Declared']) {
+  declare (eventName: this['Declared']) {
     this.declarations.add(eventName);
   }
 
@@ -99,7 +99,7 @@ export class Component<
   /**
    * Relays an event from the **input** component to **this** component.
    */
-  relay<C extends Component> (component: C, eventName: C['Declared']) {
+  relay<C extends Component<any, any>> (component: C, eventName: C['Declared']) {
     component.on(<any> eventName, (...args: any[]) => (<any> this.emit)(eventName, ...args));
   }
 
@@ -111,7 +111,7 @@ export class Component<
    * // this could then check if they match, thus forcing component middlewares
    * // to be consistantly declared and allowing full control over action execution interfaces
    */
-  use (middleware: IMiddlewareInterface<Component<any, this>>) {
+  use (middleware: IMiddlewareInterface<Component<any, any>>) {
     middleware(this);
 
     return this;
@@ -122,21 +122,27 @@ export class Component<
    * - Relaying events from the input component's **declared** events to this component.
    * - Relaying events from this component matching the **subscribed** events on the input component.
    */
-  connect<C extends Component<any, any>> (...components: C[]) {
+  connect (...components: Array<Component<any, any>>) {
     for (const component of components) {
       this.components.add(component);
 
-      component.declarations.forEach((eventName: Component['Declared']) => {
+      component.declarations.forEach((eventName) => {
         this.relay(component, <any> eventName);
       });
 
-      component.subscriptions.forEach((eventName: Component['Subscribed']) => {
+      component.subscriptions.forEach((eventName) => {
         component.relay(this, <any> eventName);
+      });
+
+      this.components.forEach((sibling) => {
+        sibling.subscriptions.forEach((eventName) => {
+          component.relay(sibling, <any> eventName);
+        });
       });
     }
   }
 
-  disconnect (component: Component) {
+  disconnect (component: Component<any, any>) {
     this.components.delete(component);
 
   }

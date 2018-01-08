@@ -2,6 +2,7 @@ import fetch from 'node-fetch';
 import { setInterval } from 'timers';
 import { Component } from '../Component';
 import { Action } from '../components/Action';
+import { HttpRequest } from '../components/HttpRequest';
 import { HttpRequestEvent } from '../components/HttpRequest/HttpRequestEvent';
 import { HttpServer } from '../components/HttpServer/HttpServer';
 import { Hub } from '../components/Hub';
@@ -57,11 +58,16 @@ class BarMiddleware extends Component<HttpRequestEvent, BarMiddleware> {
   }
 }
 
-const foo = new Action<BarMiddleware & WewMiddleware>((event) => {
+// TODO: unfuck this event flow so it works elegantly
+// TODO: define what elegant is
+const foo = new Action<BarMiddleware & WewMiddleware & HttpRequest>((event) => {
+  console.log('foo', event);
   return event.baz * 5; // 1000
 });
 
-foo.connect(new WewMiddleware(), new BarMiddleware());
+const http = new HttpRequest();
+
+foo.connect(http, new WewMiddleware(), new BarMiddleware());
 
 httpServer.route('PUT, POST /foo').to(foo);
 
@@ -69,11 +75,11 @@ hub.connect(httpServer);
 hub.start();
 
 setInterval(async () => {
-  await fetch(`${httpServer.uri}/baz`, {
+  await fetch(`${httpServer.uri}/foo`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       n: 20,
     }),
   });
-}, 2500);
+}, 250);

@@ -66,7 +66,6 @@ export class HttpServer extends Component<Hub, HttpServer> {
     this.declarations.forEach((k) => k);
 
     this.subscribe('start');
-    this.subscribe('error');
 
     this.router = new Router();
     this.app = new Koa();
@@ -98,6 +97,7 @@ export class HttpServer extends Component<Hub, HttpServer> {
 
     return {
       to: (component: Component<any, any>) => {
+        this.connect(component);
         this.registerRoute({ methods, path, component });
 
         return this;

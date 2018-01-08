@@ -35,8 +35,7 @@ export class HttpRequest extends Component<
 
     this.subscribe('HttpServer.request');
     this.subscribe('HttpLambda.request');
-    // TODO: make this automated
-    // this.subscribe('HttpRequestEvent');
+    this.subscribe('HttpRequestEvent');
 
     this.on('HttpLambda.request', this.emitRequest);
     this.on('HttpServer.request', this.emitRequest);

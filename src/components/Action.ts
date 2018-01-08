@@ -15,6 +15,7 @@ export class Action<E extends IComponentSignaturesGeneric = any> extends Compone
 
   Declared: 'execute.complete';
   Subscribed: 'execute';
+
   callback: (...args: any[]) => any;
 
   constructor (callback: Action['callback']) {
