@@ -8,6 +8,8 @@ export interface IOnceConfig { priority?: IListenerConfig['priority']; }
  * A component acts as both a subscriber and an event emitter.
  */
 export abstract class Emitter {
+  debug?: boolean = !!process.env.DEBUG_EMITTER;
+
   protected _events: { [key: string]: Event } = {};
 
   /**
@@ -15,6 +17,8 @@ export abstract class Emitter {
    */
   emit = async (key: string, ...payload: any[]): Promise<any> => {
     const event = this._events[key];
+
+    if (this.debug) { console.info(`emit\t${this.constructor.name}   ${key}`); }
 
     if (!event) { return; }
 
@@ -27,6 +31,8 @@ export abstract class Emitter {
 
   on = (key, callback: IOnCallback, options: IOnConfig = {}): Event => {
     const event = this._events[key] || new Event(key);
+
+    if (this.debug) { console.info(`on\t${this.constructor.name}   ${key}`); }
 
     event.add({ ...options, callback });
 
@@ -74,6 +80,8 @@ export abstract class Emitter {
     const listener = event.get(callback);
 
     if (!listener) { return false; }
+
+    if (this.debug) { console.info(`off\t${this.constructor.name}   ${key}`); }
 
     event.remove(listener);
 

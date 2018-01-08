@@ -85,15 +85,19 @@ export class Component<
    * Declare that this component will emit an event.
    * When a component is connected via .connect(), the delcarations are listened to.
    */
-  declare (eventName: this['Declared']) {
-    this.declarations.add(eventName);
+  declare (...eventNames: Array<this['Declared']>) {
+    eventNames.forEach((name) => {
+      this.declarations.add(name);
+    });
   }
 
   /**
    * Subscribe to an event
    */
-  subscribe (eventName: this['_Subscribable']) {
-    this.subscriptions.add(eventName);
+  subscribe (...eventNames: Array<this['_Subscribable']>) {
+    eventNames.forEach((name) => {
+      this.subscriptions.add(name);
+    });
   }
 
   /**
@@ -133,17 +137,10 @@ export class Component<
       component.subscriptions.forEach((eventName) => {
         component.relay(this, <any> eventName);
       });
-
-      this.components.forEach((sibling) => {
-        sibling.subscriptions.forEach((eventName) => {
-          component.relay(sibling, <any> eventName);
-        });
-      });
     }
   }
 
   disconnect (component: Component<any, any>) {
     this.components.delete(component);
-
   }
 }

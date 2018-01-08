@@ -3,6 +3,7 @@ import { setInterval } from 'timers';
 import { Component } from '../Component';
 import { Action } from '../components/Action';
 import { HttpRequest } from '../components/HttpRequest';
+import { HttpRequestActor } from '../components/HttpRequest/HttpRequestActor';
 import { HttpRequestEvent } from '../components/HttpRequest/HttpRequestEvent';
 import { HttpServer } from '../components/HttpServer/HttpServer';
 import { Hub } from '../components/Hub';
@@ -24,13 +25,17 @@ class WewMiddleware extends Component<HttpRequestEvent, WewMiddleware> {
 
     this.subscribe('HttpRequestEvent');
 
+    this.priority(9999).on('HttpRequestEvent', (event) => {
+      event.declare('WeW');
+    });
+
     // Runs after BarMiddleware
     this.priority(2).on('HttpRequestEvent', async (event) => {
       event.wew = 100;
 
       console.dir({ wew: event.wew });
 
-      return event.emit('WewMiddleware');
+      await event.emit('WeW');
     });
   }
 }
@@ -45,29 +50,35 @@ class BarMiddleware extends Component<HttpRequestEvent, BarMiddleware> {
 
     // Runs before WewMiddleware
     this.priority(5).on('HttpRequestEvent', (event) => {
-      event.subscribe('WewMiddleware');
+      event.subscribe('WeW');
 
-      event.on('WewMiddleware', () => {
+      event.on('WeW', () => {
         event.baz = event.wew * 2; // 200
 
         console.dir({ baz: event.baz });
 
-        return event.emit('BazMiddleware');
+        return event.emit('BaZ');
       });
     });
   }
 }
 
-// TODO: unfuck this event flow so it works elegantly
-// TODO: define what elegant is
 const foo = new Action<BarMiddleware & WewMiddleware & HttpRequest>((event) => {
-  console.log('foo', event);
+  console.dir(Date.now());
+
   return event.baz * 5; // 1000
 });
 
-const http = new HttpRequest();
+// HTTP BUNDLE
 
-foo.connect(http, new WewMiddleware(), new BarMiddleware());
+const http = new HttpRequest();
+const httpActor = new HttpRequestActor();
+
+http.connect(new WewMiddleware(), new BarMiddleware());
+
+// END HTTP BUNDLE
+
+foo.connect(httpActor, http);
 
 httpServer.route('PUT, POST /foo').to(foo);
 
@@ -82,4 +93,4 @@ setInterval(async () => {
       n: 20,
     }),
   });
-}, 250);
+}, 2000);

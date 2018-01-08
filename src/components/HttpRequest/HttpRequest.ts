@@ -30,12 +30,8 @@ export class HttpRequest extends Component<
   constructor () {
     super();
 
-    this.declare('http.request');
-    this.declare('http.request.response');
-
-    this.subscribe('HttpServer.request');
-    this.subscribe('HttpLambda.request');
-    this.subscribe('HttpRequestEvent');
+    this.declare('http.request', 'http.request.response');
+    this.subscribe('HttpServer.request', 'HttpLambda.request', 'HttpRequestEvent');
 
     this.on('HttpLambda.request', this.emitRequest);
     this.on('HttpServer.request', this.emitRequest);
