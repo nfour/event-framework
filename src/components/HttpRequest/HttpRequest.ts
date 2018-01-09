@@ -4,6 +4,7 @@ import { HttpLambda } from '../HttpLambda';
 import { HttpServer } from '../HttpServer';
 import { HttpRequestEvent } from './HttpRequestEvent';
 
+/** Responsible for ingesting HttpRequestEvents and emitting them to subscribers */
 export class HttpRequest extends Component<
   IMergeComponentSignatures<HttpServer, HttpLambda, HttpRequestEvent>,
   HttpRequest
@@ -37,6 +38,8 @@ export class HttpRequest extends Component<
   }
 
   private emitRequest = async (event: HttpRequestEvent) => {
+    // TODO: should `event` be a request object, offloading HttpRequestEvent entirely to this file?
+
     await this.emit('HttpRequestEvent', event);
 
     await event.broadcast();
