@@ -18,7 +18,6 @@ export class HttpRequestEventRelay extends Component<HttpRequestEvent, HttpReque
  * Connects HttpRequest to Action's
  */
 export class HttpRequestActor extends Component<HttpRequestEvent, HttpRequestActor> {
-  Subscribed: 'HttpRequestEvent';
   Declared: 'execute';
 
   constructor () {

@@ -34,6 +34,7 @@ class HttpLoggerAsAClass extends Component<HttpServer> {
     super();
 
     this.subscribe('HttpServer.request');
+
     this.tap().on('HttpServer.request', ({ request }): any => {
       console.dir(request, { colors: true });
     });

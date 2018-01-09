@@ -20,7 +20,6 @@ export class HttpRequest extends Component<
     IOnHttpRequestEvent
   );
 
-  Subscribed: 'HttpLambda.request' | 'HttpServer.request';
   Declared: 'HttpRequestEvent';
 
   constructor () {

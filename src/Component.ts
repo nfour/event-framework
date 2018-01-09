@@ -11,7 +11,6 @@ export interface IComponent {
   On: IOn<{ name: 'error', event: Error }>;
 
   Declared: 'error';
-  Subscribed;
 }
 
 export interface IOnGeneric {
@@ -29,10 +28,7 @@ export interface IComponentSignaturesGeneric {
   Emit: (name: string, callback: any) => any;
   On: (name: string, callback: any) => any;
   Declared;
-  Subscribed;
 }
-
-export type IMiddlewareInterface<C extends Component> = (component: C) => void;
 
 export interface IOnConfig { priority?: IListenerConfig['priority']; limit?: IListenerConfig['limit']; }
 export interface IOnceConfig { priority?: IListenerConfig['priority']; }
@@ -57,9 +53,6 @@ export class Component<
   /** Declared event names by this component */
   Declared: S['Declared'];
 
-  /** List of subscribed event names */
-  Subscribed: IComponent['Subscribed'] | S['Subscribed'];
-
   //
   // Generated types
   //
@@ -73,13 +66,13 @@ export class Component<
   /** Merged list of event name that can be subscribed to */
   _Subscribable: IComponent['Declared'] | E['Declared'];
 
-  components: Set<Component> = new Set();
-  declarations: Set<this['Declared']> = new Set();
-  subscriptions: Set<this['Subscribed']> = new Set();
-
   emit: this['_AllEmit'];
   on: this['_AllOn'];
   once: this['_AllOn'];
+
+  components: Set<Component> = new Set();
+  declarations: Set<this['Declared']> = new Set();
+  subscriptions: Set<string> = new Set();
 
   /**
    * Declare that this component will emit an event.
@@ -108,20 +101,6 @@ export class Component<
   }
 
   /**
-   * Calls the provided function with this component.
-   * A convenience function.
-   *
-   * // TODO: if instantiating a component meant passing in middleware interfaces
-   * // this could then check if they match, thus forcing component middlewares
-   * // to be consistantly declared and allowing full control over action execution interfaces
-   */
-  use (middleware: IMiddlewareInterface<Component<any, any>>) {
-    middleware(this);
-
-    return this;
-  }
-
-  /**
    * Connects this component to another component by:
    * - Relaying events from the input component's **declared** events to this component.
    * - Relaying events from this component matching the **subscribed** events on the input component.
@@ -140,6 +119,7 @@ export class Component<
     }
   }
 
+  /** Like connect, but first listens for an event and .connect()'s to that instead */
   connectOn (name: string, getComponents: () => Array<Component<any, any>>) {
     this.on(name, (event) => {
       event.connect(...getComponents());

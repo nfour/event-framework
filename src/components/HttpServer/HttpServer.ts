@@ -42,8 +42,6 @@ export class HttpServer extends Component<Hub, HttpServer> {
     'HttpServer.ready'
   );
 
-  Subscribed: 'start';
-
   port: number;
   host: string;
   protocol: 'http' | 'https' = 'http';
@@ -60,12 +58,10 @@ export class HttpServer extends Component<Hub, HttpServer> {
 
     Object.assign(this, config);
 
+    this.subscribe('start');
+
     this.declare('HttpServer.request');
     this.declare('HttpServer.ready');
-
-    this.declarations.forEach((k) => k);
-
-    this.subscribe('start');
 
     this.router = new Router();
     this.app = new Koa();

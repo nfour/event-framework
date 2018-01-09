@@ -46,13 +46,4 @@ export interface IMergeComponentSignatures<
     E['Declared'] |
     F['Declared']
   );
-
-  Subscribed: (
-    A['Subscribed'] |
-    B['Subscribed'] |
-    C['Subscribed'] |
-    D['Subscribed'] |
-    E['Subscribed'] |
-    F['Subscribed']
-  );
 }

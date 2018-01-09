@@ -26,8 +26,6 @@ export class HttpLambda extends Component<IComponent, HttpLambda> {
     'HttpLambda.request' | 'HttpLambda.request.response'
   );
 
-  Subscribed;
-
   action: Component<HttpLambda, Action>;
 
   constructor (action: Component<any, Action>) {

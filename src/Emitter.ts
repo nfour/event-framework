@@ -52,13 +52,14 @@ export abstract class Emitter {
     return on(key, callback, { ...options, limit: 1 });
   }
 
+  /** Applys priority to the next .on() */
   priority <X extends this = this> (priority: number) {
     return {
       on: <X['on']> ((key, callback, options = {}) => this.on(key, callback, { ...options, priority })),
     };
   }
 
-  /** Allows execution of emitters without having to return anything */
+  /** Allows execution of emitters on the next .on() without having to return anything */
   tap <X extends this = this> () {
     return {
       on: <X['on']> ((key, callback, options = {}) => {

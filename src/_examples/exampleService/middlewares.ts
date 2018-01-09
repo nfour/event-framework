@@ -6,7 +6,6 @@ export class WewMiddleware extends Component<
   IMergeComponentSignatures<BarMiddleware, HttpRequestEvent>,
   WewMiddleware
 > {
-  Subscribed: 'http.request';
   Declared: 'wew';
 
   constructor () {
@@ -33,7 +32,6 @@ export class WewMiddleware extends Component<
 
 export class BarMiddleware extends Component<WewMiddleware, BarMiddleware> {
   Declared: 'baz';
-  Subscribed: 'wew';
 
   constructor () {
     super();

@@ -1,5 +1,4 @@
 import { Action } from '../../components/Action';
-import { Http } from '../../middlewares/Http';
 
 const multiply = new Action(({ n, multiplier }) => n * multiplier);
 
@@ -10,5 +9,4 @@ export const timesFour = new Action(async ({ request: { body } }) => {
     statusCode: 200,
     body: multiplied,
   };
-})
-  .use(Http());
+});

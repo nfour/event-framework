@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { Component } from '../../Component';
-import { IHttpRequestEvent, IOnHttpRequestEvent } from '../../index';
+import { IHttpRequestEvent, IHttpRequestResponse, IOnHttpRequestEvent } from '../../index';
 import { IEventComponent } from '../../types/events';
 import { Hub } from '../Hub';
 
@@ -19,9 +19,13 @@ export class HttpRequestEvent extends Component<Hub, HttpRequestEvent> implement
 
   Emit: {
     (
-      name: 'HttpRequestEvent' | 'http.request.prepare' | 'http.request' | 'http.request.response',
+      name: 'HttpRequestEvent' | 'http.request.prepare' | 'http.request.response',
       event: HttpRequestEvent,
     );
+    (
+      name: 'http.request',
+      event: HttpRequestEvent,
+    ): Promise<IHttpRequestResponse>|IHttpRequestResponse;
   };
 
   On: (
@@ -37,9 +41,7 @@ export class HttpRequestEvent extends Component<Hub, HttpRequestEvent> implement
 
     if (!this.id) { this.id = uuid(); }
 
-    this.declare('http.request.prepare');
-    this.declare('http.request');
-    this.declare('http.request.response');
+    this.declare('HttpRequestEvent', 'http.request.prepare', 'http.request', 'http.request.response');
   }
 
   async broadcast () {
