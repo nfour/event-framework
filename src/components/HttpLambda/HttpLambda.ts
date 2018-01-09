@@ -26,9 +26,9 @@ export class HttpLambda extends Component<IComponent, HttpLambda> {
     'HttpLambda.request' | 'HttpLambda.request.response'
   );
 
-  action: Component<HttpLambda, Action>;
+  action: Action<any, any>;
 
-  constructor (action: Component<any, Action>) {
+  constructor (action: Action<any, any>) {
     super();
 
     this.declare('HttpLambda.request');
