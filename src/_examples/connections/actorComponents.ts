@@ -18,7 +18,6 @@ export class WewMiddleware extends Component<
 
     // Runs after BarMiddleware
     this.on('http.request.prepare', async (event) => {
-      console.log('wew', 'http.request.prepare');
       event.wew = 100;
 
       console.dir({ wew: event.wew });

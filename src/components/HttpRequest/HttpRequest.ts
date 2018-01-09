@@ -33,7 +33,6 @@ export class HttpRequest extends Component<
   }
 
   private emitRequest = async (event: HttpRequestEvent) => {
-    console.log('HttpRequest', 'emitRequest');
     await this.emit('HttpRequestEvent', event);
 
     await event.broadcast();

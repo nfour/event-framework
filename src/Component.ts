@@ -142,7 +142,6 @@ export class Component<
 
   connectOn (name: string, getComponents: () => Array<Component<any, any>>) {
     this.on(name, (event) => {
-      console.log('connectOn\t', name);
       event.connect(...getComponents());
 
       return event;
