@@ -53,8 +53,6 @@ export class BarMiddleware extends Component<WewMiddleware, BarMiddleware> {
 const httpRequest = new HttpRequest();
 
 // Connects middlewares to event components
-httpRequest.connectOn('HttpRequestEvent', () =>
-  [new WewMiddleware(), new BarMiddleware()],
-);
+httpRequest.connectToEvent(() => [new WewMiddleware(), new BarMiddleware()]);
 
 export const actorComponents = [httpRequest, new HttpRequestActor()];

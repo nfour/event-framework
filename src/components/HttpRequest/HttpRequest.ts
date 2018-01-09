@@ -19,17 +19,21 @@ export class HttpRequest extends Component<
     IOnHttpRequestEvent
   );
 
-  Subscribed: 'HttpLambda.request' | 'HttpServer.request';
+  Subscribed: 'HttpLambda.request' | 'HttpServer.request' | 'HttpRequestEvent';
   Declared: 'HttpRequestEvent';
 
   constructor () {
     super();
 
     this.declare('HttpRequestEvent');
-    this.subscribe('HttpServer.request', 'HttpLambda.request');
+    this.subscribe('HttpServer.request', 'HttpLambda.request', 'HttpRequestEvent');
 
     this.on('HttpLambda.request', this.emitRequest);
     this.on('HttpServer.request', this.emitRequest);
+  }
+
+  connectToEvent (getComponents: () => Array<Component<any, any>>) {
+    return this.connectOn('HttpRequestEvent', getComponents);
   }
 
   private emitRequest = async (event: HttpRequestEvent) => {
@@ -39,4 +43,5 @@ export class HttpRequest extends Component<
 
     return event;
   }
+
 }

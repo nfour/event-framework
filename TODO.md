@@ -6,6 +6,7 @@
 
 - [To Do](#to-do)
         - [Components](#components)
+            - [Http Components](#http-components)
             - [Action](#action)
             - [Action Components](#action-components)
             - [Inter-System-Communication (ISC) Components](#inter-system-communication-isc-components)
@@ -20,6 +21,11 @@
 
 - Merge `Component.Declared` and `Component.declare()`
   - We can use string literals as a type, thus it's not DRY currently
+
+#### Http Components
+
+- Fix response flow throughout existing examples
+- Get error handling up to par with service-library
 
 #### Action
 
