@@ -1,5 +1,5 @@
 import { Action } from '../../components/Action';
-import { actorComponents } from './actorComponents';
+import { actorComponents } from './middlewares';
 
 export const foo = new Action((event) => {
   console.dir({ fooExecute: Date.now() });
