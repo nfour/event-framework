@@ -37,8 +37,6 @@ export class HttpRequest extends Component<
   }
 
   private emitRequest = async (event: HttpRequestEvent) => {
-    // TODO: should `event` be a request object, offloading HttpRequestEvent entirely to this file?
-
     await this.emit('HttpRequestEvent', event);
 
     await event.broadcast();

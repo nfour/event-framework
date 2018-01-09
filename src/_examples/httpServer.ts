@@ -8,10 +8,6 @@ import { timesFour } from './functions/timesFour';
 
 const hub = new Hub();
 
-// Connect the components to the hub
-hub.connect(plusOne);
-hub.connect(timesFour);
-
 const httpServer = new HttpServer({
   host: '0.0.0.0',
   port: 8888,

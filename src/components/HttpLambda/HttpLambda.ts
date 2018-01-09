@@ -2,6 +2,7 @@ import { Component } from '../../Component';
 import { IComponent, ILambdaHttpHandler, IOn } from '../../index';
 import { Action } from '../Action';
 import { HttpRequestEvent } from '../HttpRequest/HttpRequestEvent';
+import { HttpRequest } from '../HttpRequest/index';
 import { createHttpEventFromLambda } from './lib';
 
 export class HttpLambda extends Component<IComponent, HttpLambda> {
@@ -31,9 +32,15 @@ export class HttpLambda extends Component<IComponent, HttpLambda> {
   constructor (action: Action<any, any>) {
     super();
 
+    this.action = action;
+
     this.declare('HttpLambda.request');
 
-    this.action = action;
+    const httpRequest = Array.from(action.components).find((component) => component instanceof HttpRequest);
+
+    if (!httpRequest) { throw new Error('Missing required component sub-dependency: HttpRequest'); }
+
+    this.connect(httpRequest);
   }
 
   handler (): ILambdaHttpHandler {

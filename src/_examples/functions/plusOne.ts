@@ -8,4 +8,4 @@ export const plusOne = new Action(({ request: { body } }) => {
   };
 });
 
-plusOne.connect(...httpBundle);
+plusOne.connect(httpBundle);

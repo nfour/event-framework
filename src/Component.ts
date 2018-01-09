@@ -110,7 +110,7 @@ export class Component<
   connect (...components: Array<Component<any, any>|Array<Component<any, any>>>) {
     for (const component of components) {
       /** Handle polymorphic input */
-      if (component instanceof Array) { return this.connect(component); }
+      if (component instanceof Array) { return this.connect(...component); }
 
       this.components.add(component);
 

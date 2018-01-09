@@ -1,4 +1,5 @@
 import { IHttpRequestResponse, IInputLambdaHttpContext, IInputLambdaHttpEvent, ILambdaHttpHandler } from '../../index';
+
 const context = <IInputLambdaHttpContext> {};
 
 const baseEvent = <IInputLambdaHttpEvent> {

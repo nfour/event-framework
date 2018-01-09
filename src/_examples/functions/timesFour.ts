@@ -12,4 +12,4 @@ export const timesFour = new Action(async ({ request: { body } }) => {
   };
 });
 
-timesFour.connect(...httpBundle);
+timesFour.connect(httpBundle);
