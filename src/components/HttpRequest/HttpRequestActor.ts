@@ -1,10 +1,10 @@
 import { Component } from '../../Component';
-import { HttpRequest } from './';
+import { HttpRequestEvent } from './';
 
 /**
  * Responsible for passing http events to Actions
  */
-export class HttpRequestActor extends Component<HttpRequest, HttpRequestActor> {
+export class HttpRequestActor extends Component<HttpRequestEvent, HttpRequestActor> {
   Subscribed: 'http.request';
   Declared: 'execute';
 
