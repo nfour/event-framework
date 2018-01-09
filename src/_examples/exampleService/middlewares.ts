@@ -55,4 +55,4 @@ const httpRequest = new HttpRequest();
 // Connects middlewares to event components
 httpRequest.connectToEvent(() => [new WewMiddleware(), new BarMiddleware()]);
 
-export const actorComponents = [httpRequest, new HttpRequestActor()];
+export const middlewares = [httpRequest, new HttpRequestActor()];

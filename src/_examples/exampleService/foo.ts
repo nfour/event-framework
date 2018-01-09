@@ -1,5 +1,5 @@
 import { Action } from '../../components/Action';
-import { actorComponents } from './middlewares';
+import { middlewares } from './middlewares';
 
 export const foo = new Action((event) => {
   console.dir({ fooExecute: Date.now() });
@@ -7,4 +7,4 @@ export const foo = new Action((event) => {
   return event.baz * 5; // 1000
 });
 
-foo.connect(...actorComponents);
+foo.connect(...middlewares);
