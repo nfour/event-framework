@@ -28,7 +28,7 @@ export class Action<E, R> extends Component<any, Action<E, R>> {
   }
 
   execute = async (event: E) => {
-    const result = await this.callback(event);
+    const result = await Promise.resolve(this.callback(event));
 
     await this.emit('execute.complete', result);
 
