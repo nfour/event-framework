@@ -10,6 +10,7 @@ hub.connect(httpServer);
 hub.start();
 
 setInterval(async () => {
+  console.info('-------------------------- FETCH');
   await fetch(`${httpServer.uri}/foo`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
