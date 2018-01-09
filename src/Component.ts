@@ -105,8 +105,13 @@ export class Component<
    * - Relaying events from the input component's **declared** events to this component.
    * - Relaying events from this component matching the **subscribed** events on the input component.
    */
-  connect (...components: Array<Component<any, any>>) {
+  connect (...components: Array<Component<any, any>>);
+  connect (components: Array<Component<any, any>>);
+  connect (...components: Array<Component<any, any>|Array<Component<any, any>>>) {
     for (const component of components) {
+      /** Handle polymorphic input */
+      if (component instanceof Array) { return this.connect(component); }
+
       this.components.add(component);
 
       component.declarations.forEach((eventName) => {

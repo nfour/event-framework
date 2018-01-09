@@ -17,19 +17,19 @@ const httpServer = new HttpServer({
   port: 8888,
 });
 
-const HttpLogger = () => {
+const HttpLoggerAsFactory = () => {
   const component = new Component<HttpServer>();
 
   component.subscribe('HttpServer.request');
+
   component.tap().on('HttpServer.request', ({ request }): any => {
-    // tslint:disable-next-line:no-console
     console.dir(request, { colors: true });
   });
 
   return component;
 };
 
-class HttpLoggerAsAClass extends Component<HttpServer> {
+class HttpLoggerAsClass extends Component<HttpServer> {
   constructor () {
     super();
 
@@ -45,8 +45,8 @@ httpServer.route('PUT, POST /foo/bar').to(plusOne);
 httpServer.route('POST /baz').to(timesFour);
 
 hub.connect(httpServer);
-hub.connect(HttpLogger());
-hub.connect(new HttpLoggerAsAClass());
+hub.connect(HttpLoggerAsFactory());
+hub.connect(new HttpLoggerAsClass());
 
 timesFour.on('execute.complete', (result) => {
   console.dir({ timesFour: result });

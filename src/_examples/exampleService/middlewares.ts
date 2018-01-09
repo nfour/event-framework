@@ -2,10 +2,12 @@ import { HttpRequest, HttpRequestEvent } from '../../components/HttpRequest';
 import { HttpRequestActor } from '../../components/HttpRequest/HttpRequestActor';
 import { Component, IMergeComponentSignatures } from '../../index';
 
-export class WewMiddleware extends Component<
-  IMergeComponentSignatures<BarMiddleware, HttpRequestEvent>,
-  WewMiddleware
+export class Wew extends Component<
+  IMergeComponentSignatures<Bar, HttpRequestEvent>,
+  Wew
 > {
+  wew: number;
+
   Declared: 'wew';
 
   constructor () {
@@ -30,7 +32,9 @@ export class WewMiddleware extends Component<
   }
 }
 
-export class BarMiddleware extends Component<WewMiddleware, BarMiddleware> {
+export class Bar extends Component<Wew, Bar> {
+  baz: number;
+
   Declared: 'baz';
 
   constructor () {
@@ -51,6 +55,8 @@ export class BarMiddleware extends Component<WewMiddleware, BarMiddleware> {
 const httpRequest = new HttpRequest();
 
 // Connects middlewares to event components
-httpRequest.connectToEvent(() => [new WewMiddleware(), new BarMiddleware()]);
+httpRequest.connectToEvent(() => [new Wew(), new Bar()]);
 
-export const middlewares = [httpRequest, new HttpRequestActor()];
+export type IEvent = HttpRequestEvent & Wew & Bar;
+
+export const http = [httpRequest, new HttpRequestActor()];

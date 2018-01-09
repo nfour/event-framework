@@ -1,4 +1,5 @@
 import { Action } from '../../components/Action';
+import { httpBundle } from './middlewares';
 
 const multiply = new Action(({ n, multiplier }) => n * multiplier);
 
@@ -10,3 +11,5 @@ export const timesFour = new Action(async ({ request: { body } }) => {
     body: multiplied,
   };
 });
+
+timesFour.connect(...httpBundle);

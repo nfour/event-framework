@@ -1,10 +1,22 @@
-import { Action } from '../../components/Action';
-import { middlewares } from './middlewares';
+import { HttpAction } from '../../components/HttpRequest/HttpAction';
+import { IHttpRequestResponse } from '../../index';
+import { http, IEvent } from './middlewares';
 
-export const foo = new Action((event) => {
-  console.dir({ fooExecute: Date.now() });
+export interface IMyFancyResponse extends IHttpRequestResponse {
+  body: {
+    foo: number;
+  };
+}
 
-  return event.baz * 5; // 1000
+export const foo = new HttpAction<IEvent, IMyFancyResponse>((event) => {
+  console.dir({ fooExecute: Date.now(), baz: event.baz, wew: event.wew });
+
+  return {
+    statusCode: 200,
+    body: {
+      foo: 1,
+    },
+  };
 });
 
-foo.connect(...middlewares);
+foo.connect(http);

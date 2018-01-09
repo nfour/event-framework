@@ -1,4 +1,5 @@
 import { Action } from '../../components/Action';
+import { httpBundle } from './middlewares';
 
 export const plusOne = new Action(({ request: { body } }) => {
   return {
@@ -6,3 +7,5 @@ export const plusOne = new Action(({ request: { body } }) => {
     body: body.n + 1,
   };
 });
+
+plusOne.connect(...httpBundle);
