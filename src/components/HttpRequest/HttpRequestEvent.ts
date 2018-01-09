@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { Component } from '../../Component';
-import { IHttpRequestEvent } from '../../index';
+import { IHttpRequestEvent, IOnHttpRequestEvent } from '../../index';
 import { IEventComponent } from '../../types/events';
 import { Hub } from '../Hub';
 
@@ -19,12 +19,16 @@ export class HttpRequestEvent extends Component<Hub, HttpRequestEvent> implement
 
   Emit: {
     (
-      name: 'HttpRequestEvent',
+      name: 'HttpRequestEvent' | 'http.request.prepare' | 'http.request' | 'http.request.response',
       event: HttpRequestEvent,
     );
   };
 
-  Declared: 'HttpRequestEvent';
+  On: (
+    IOnHttpRequestEvent
+  );
+
+  Declared: 'HttpRequestEvent' | 'http.request.prepare' | 'http.request' | 'http.request.response';
 
   constructor (fields: IHttpRequestEventInput) {
     super();
@@ -33,11 +37,18 @@ export class HttpRequestEvent extends Component<Hub, HttpRequestEvent> implement
 
     if (!this.id) { this.id = uuid(); }
 
-    this.declare('HttpRequestEvent');
+    this.declare('http.request.prepare');
+    this.declare('http.request');
+    this.declare('http.request.response');
   }
 
-  announce () {
-    return this.emit('HttpRequestEvent', this);
+  async broadcast () {
+    await this.emit('HttpRequestEvent', this);
+    await this.emit('http.request.prepare', this);
+
+    this.response = await this.emit('http.request', this);
+
+    await this.emit('http.request.response', this);
   }
 
 }
