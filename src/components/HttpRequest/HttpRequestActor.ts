@@ -2,7 +2,7 @@ import { Component } from '../../Component';
 import { HttpRequestEvent } from './';
 
 /**
- * Responsible for passing http events to Actions
+ * Connects HttpRequest to Action's
  */
 export class HttpRequestActor extends Component<HttpRequestEvent, HttpRequestActor> {
   Subscribed: 'HttpRequestEvent';
@@ -18,6 +18,7 @@ export class HttpRequestActor extends Component<HttpRequestEvent, HttpRequestAct
   }
 }
 
+/** Connects HttpRequestActor to HttpRequestEvent */
 export class HttpRequestEventRelay extends Component<HttpRequestEvent, HttpRequestActor> {
   Subscribed: 'http.request';
 
