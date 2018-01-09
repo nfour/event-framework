@@ -45,7 +45,7 @@ export interface IHttpRequestResponse {
 
 export interface IHttpRequestEvent extends IRequestEvent {
   request: IHttpRequest;
-  response?: IHttpRequestResponse;
+  response: IHttpRequestResponse;
 }
 
 //

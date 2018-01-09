@@ -1,56 +1,61 @@
 import { HttpRequest, HttpRequestEvent } from '../../components/HttpRequest';
 import { HttpRequestActor } from '../../components/HttpRequest/HttpRequestActor';
-import { Component } from '../../index';
+import { Component, IMergeComponentSignatures } from '../../index';
 
-export class WewMiddleware extends Component<HttpRequestEvent, WewMiddleware> {
-  Subscribed: 'HttpRequestEvent';
+export class WewMiddleware extends Component<
+  IMergeComponentSignatures<BarMiddleware, HttpRequestEvent>,
+  WewMiddleware
+> {
+  Subscribed: 'http.request';
+  Declared: 'wew';
 
   constructor () {
     super();
 
-    this.subscribe('HttpRequestEvent');
+    this.subscribe('http.request.prepare');
+    this.subscribe('baz');
+    this.declare('wew');
 
     // Runs after BarMiddleware
-    this.priority(2).on('HttpRequestEvent', async (event) => {
+    this.on('http.request.prepare', async (event) => {
+      console.log('wew', 'http.request.prepare');
       event.wew = 100;
 
       console.dir({ wew: event.wew });
 
-      await event.emit('WeW');
+      await event.emit('wew', event);
+    });
+
+    this.on('baz', (event) => {
+      console.dir({ baz: event.baz });
     });
   }
 }
 
-export class BarMiddleware extends Component<HttpRequestEvent, BarMiddleware> {
-  Subscribed: 'HttpRequestEvent';
+export class BarMiddleware extends Component<WewMiddleware, BarMiddleware> {
+  Declared: 'baz';
+  Subscribed: 'wew';
 
   constructor () {
     super();
 
-    this.subscribe('HttpRequestEvent');
+    this.subscribe('wew');
 
     // Runs before WewMiddleware
-    this.priority(5).on('HttpRequestEvent', (event) => {
-      event.subscribe('WeW');
+    this.on('wew', (event) => {
+      event.baz = event.wew * 2; // 200
 
-      event.on('WeW', () => {
-        event.baz = event.wew * 2; // 200
-
-        console.dir({ baz: event.baz });
-
-        return event.emit('BaZ');
-      });
+      return event.emit('baz', event);
     });
   }
 }
 
 // Connections HttpLambda & HttpServer to HttpRequest
-const http = new HttpRequest();
-
-// Connects HttpRequest to Actions
-const httpActor = new HttpRequestActor();
+const httpRequest = new HttpRequest();
 
 // Connects middlewares to event components
-http.connectOn('HttpRequestEvent', new WewMiddleware(), new BarMiddleware());
+httpRequest.connectOn('HttpRequestEvent', () =>
+  [new WewMiddleware(), new BarMiddleware(), new HttpRequestActor()],
+);
 
-export const actorComponents = [http, httpActor];
+export const actorComponents = [httpRequest];
