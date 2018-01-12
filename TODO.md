@@ -14,6 +14,8 @@
                 - [Http endpoint (1 way requester)](#http-endpoint-1-way-requester)
                 - [Http endpoints (2 way requester and responder)](#http-endpoints-2-way-requester-and-responder)
                 - [Socket connection (2 way socket connection)](#socket-connection-2-way-socket-connection)
+        - [Testing](#testing)
+                - [Performance](#performance)
 
 <!-- /code_chunk_output -->
 
@@ -67,3 +69,10 @@
 
 ##### Socket connection (2 way socket connection)
 - [ ] Acts directly as a regular inter-process component, just over remote sockets
+
+### Testing
+
+##### Performance
+
+- [ ] Ensure performance is decent
+- [ ] Create a reproducable benchmark to detect regressions
