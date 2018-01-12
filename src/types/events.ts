@@ -1,4 +1,4 @@
-import { IComponent, IComponentSignaturesGeneric, IOn } from '../test';
+import { IComponent, IComponentSignaturesGeneric, IOn } from '../';
 import { HttpRequestEvent } from '../components/HttpRequest/HttpRequestEvent';
 import { IHttpRequestResponse } from './';
 
