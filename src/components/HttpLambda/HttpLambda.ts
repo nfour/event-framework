@@ -38,7 +38,9 @@ export class HttpLambda extends Component<IComponent, HttpLambda> {
 
     const httpRequest = Array.from(action.components).find((component) => component instanceof HttpRequest);
 
-    if (!httpRequest) { throw new Error('Missing required component sub-dependency: HttpRequest'); }
+    if (!httpRequest) {
+      throw new Error(`${this.constructor.name} requires ${action.constructor.name} to be connected to HttpRequest`);
+    }
 
     this.connect(httpRequest);
   }

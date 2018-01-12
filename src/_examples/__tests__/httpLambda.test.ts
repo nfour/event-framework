@@ -30,7 +30,8 @@ describe('HttpLambda function plusOne', () => {
     });
 
     expect(response).toMatchObject({
-      body: 6,
+      statusCode: 200,
+      body: 20,
     });
   });
 });
