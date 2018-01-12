@@ -1,5 +1,5 @@
 import { HttpLambda } from '../';
-import { IHttpRequestResponse, IInputLambdaHttpEvent } from '../../../test';
+import { IHttpRequestResponse, IInputLambdaHttpEvent } from '../../..';
 import { executeLambda } from '../../../test/lib';
 import { HttpRequest, HttpRequestActor, HttpRequestEvent } from '../../HttpRequest';
 import { HttpAction } from '../../HttpRequest/HttpAction';
