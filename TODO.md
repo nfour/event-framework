@@ -9,8 +9,8 @@
             - [Http Components](#http-components)
             - [Action](#action)
             - [Action Components](#action-components)
-            - [Inter-System-Communication (ISC) Components](#inter-system-communication-isc-components)
-                - [Inter-process communcation](#inter-process-communcation)
+            - [(ISC) Inter-System-Communication](#isc-inter-system-communication)
+                - [(IPC) Inter-process communcation](#ipc-inter-process-communcation)
                 - [Http endpoint (1 way requester)](#http-endpoint-1-way-requester)
                 - [Http endpoints (2 way requester and responder)](#http-endpoints-2-way-requester-and-responder)
                 - [Socket connection (2 way socket connection)](#socket-connection-2-way-socket-connection)
@@ -35,20 +35,26 @@
 
 #### Action Components
 
-- Create more useful components
+- Create components
   - [ ] Json Api
   - [ ] Instrumentation
-  - [x] Http
   - [ ] LambdaBatch
   - [ ] Lambda (Non HTTP)
+  - [ ] ISCWrapper
+  - [ ] IPCWrapper
+  - [x] Http
+  - [x] HttpLambda
+  - [x] HttpServer
 
 - Ensure an inter-middleware-component dependency can be resolved in a non-complex manner
 
-#### Inter-System-Communication (ISC) Components
+#### (ISC) Inter-System-Communication
 
 - [ ] Produce a schema for a component registry
 
-##### Inter-process communcation
+##### (IPC) Inter-process communcation
+
+May fall under ISC during implimentation
 
 - [ ] A component should be able to exist in another process
 - [ ] This component should leverage `process.send()` and `process.on()` for message sending
