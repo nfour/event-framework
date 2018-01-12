@@ -1,11 +1,8 @@
 import { HttpLambda } from '../';
-import { IHttpRequestResponse, IInputLambdaHttpContext, IInputLambdaHttpEvent, ILambdaHttpHandler } from '../../../';
+import { IHttpRequestResponse, IInputLambdaHttpEvent } from '../../../';
 import { executeLambda } from '../../../__tests__/lib';
-import { Action } from '../../Action';
 import { HttpRequest, HttpRequestActor, HttpRequestEvent } from '../../HttpRequest';
 import { HttpAction } from '../../HttpRequest/HttpAction';
-
-const context = <IInputLambdaHttpContext> {};
 
 const baseEvent = <IInputLambdaHttpEvent> {
   body: '{}',
