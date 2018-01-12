@@ -31,7 +31,7 @@
 
 #### Action
 
-- Ensure event & return information is passed to actions from connected components somehow
+- [x] ~~Ensure event & return information is passed to actions from connected components somehow~~
 
 #### Action Components
 
@@ -42,7 +42,7 @@
   - [ ] Lambda (Non HTTP)
   - [ ] ISCWrapper
   - [ ] IPCWrapper
-  - [x] Http
+  - [x] Http (Bundle)
   - [x] HttpLambda
   - [x] HttpServer
 
