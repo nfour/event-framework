@@ -1,5 +1,5 @@
-import { HttpLambda } from '../components/HttpLambda';
-import { ILambdaHttpHandler } from '../types/index';
+import { HttpLambda } from '../../components/HttpLambda';
+import { ILambdaHttpHandler } from '../../types/index';
 import { plusOne } from './functions/plusOne';
 import { timesFour } from './functions/timesFour';
 

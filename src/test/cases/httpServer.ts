@@ -1,8 +1,8 @@
 import fetch from 'node-fetch';
 import { setInterval } from 'timers';
-import { Component } from '../Component';
-import { HttpServer } from '../components/HttpServer/HttpServer';
-import { Hub } from '../components/Hub';
+import { Component } from '../../Component';
+import { HttpServer } from '../../components/HttpServer/HttpServer';
+import { Hub } from '../../components/Hub';
 import { plusOne } from './functions/plusOne';
 import { timesFour } from './functions/timesFour';
 

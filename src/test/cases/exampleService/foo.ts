@@ -1,5 +1,5 @@
-import { HttpAction } from '../../components/HttpRequest/HttpAction';
-import { IHttpRequestResponse } from '../../index';
+import { HttpAction } from '../../../components/HttpRequest/HttpAction';
+import { IHttpRequestResponse } from '../../../index';
 import { http, IEvent } from './middlewares';
 
 export interface IMyFancyResponse extends IHttpRequestResponse {

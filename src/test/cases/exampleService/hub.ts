@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import { setInterval } from 'timers';
 
-import { Hub } from '../../components/Hub';
+import { Hub } from '../../../components/Hub';
 import { httpServer } from './server';
 
 const hub = new Hub();

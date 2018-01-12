@@ -1,4 +1,4 @@
-import { IInputLambdaHttpEvent } from '../../index';
+import { IInputLambdaHttpEvent } from '../../../index';
 
 const baseEvent = <IInputLambdaHttpEvent> {
   body: '{}',

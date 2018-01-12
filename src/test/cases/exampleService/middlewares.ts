@@ -1,6 +1,6 @@
-import { HttpRequest, HttpRequestEvent } from '../../components/HttpRequest';
-import { HttpRequestActor } from '../../components/HttpRequest/HttpRequestActor';
-import { Component, IMergeComponentSignatures } from '../../index';
+import { HttpRequest, HttpRequestEvent } from '../../../components/HttpRequest';
+import { HttpRequestActor } from '../../../components/HttpRequest/HttpRequestActor';
+import { Component, IMergeComponentSignatures } from '../../../index';
 
 export class Wew extends Component<
   IMergeComponentSignatures<Bar, HttpRequestEvent>,

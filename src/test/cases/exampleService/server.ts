@@ -1,4 +1,4 @@
-import { HttpServer } from '../../components/HttpServer/HttpServer';
+import { HttpServer } from '../../../components/HttpServer/HttpServer';
 import { foo } from './foo';
 
 export const httpServer = new HttpServer({
