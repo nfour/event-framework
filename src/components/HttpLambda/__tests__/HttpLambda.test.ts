@@ -1,5 +1,6 @@
 import { HttpLambda } from '../';
 import { IHttpRequestResponse, IInputLambdaHttpContext, IInputLambdaHttpEvent, ILambdaHttpHandler } from '../../../';
+import { executeLambda } from '../../../__tests__/lib';
 import { Action } from '../../Action';
 import { HttpRequest, HttpRequestActor, HttpRequestEvent } from '../../HttpRequest';
 import { HttpAction } from '../../HttpRequest/HttpAction';
@@ -31,14 +32,6 @@ const simpleAction = new HttpAction<ISimpleActionEvent, ISimpleActionResponse>((
 simpleAction.connect(httpBundle);
 
 const actionHandler = new HttpLambda(simpleAction).handler();
-
-const executeLambda = (handler: ILambdaHttpHandler, event: IInputLambdaHttpEvent) =>
-  new Promise<IHttpRequestResponse>((resolve, reject) => {
-    handler(event, context, (err, res) => {
-      if (err) { return reject(err); }
-      return resolve(res);
-    });
-  });
 
 it('Executes the handler correctly', async () => {
   const response = await executeLambda(actionHandler, {

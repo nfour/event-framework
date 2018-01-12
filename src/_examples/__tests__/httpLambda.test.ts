@@ -1,6 +1,4 @@
-import { IHttpRequestResponse, IInputLambdaHttpContext, IInputLambdaHttpEvent, ILambdaHttpHandler } from '../../index';
-
-const context = <IInputLambdaHttpContext> {};
+import { IInputLambdaHttpEvent } from '../../index';
 
 const baseEvent = <IInputLambdaHttpEvent> {
   body: '{}',
@@ -12,22 +10,14 @@ const baseEvent = <IInputLambdaHttpEvent> {
   requestContext: {},
 };
 
-const executeLambda = (handler: ILambdaHttpHandler, event: IInputLambdaHttpEvent) =>
-  new Promise<IHttpRequestResponse>((resolve, reject) => {
-    handler(event, context, (err, res) => {
-      if (err) { return reject(err); }
-      return resolve(res);
-    });
-  });
-
 describe('HttpLambda function plusOne', () => {
   it('executes', async () => {
     const { plusOneHandler } = await import('../httpLambda');
 
-    const response = await executeLambda(plusOneHandler, {
+    const response = await plusOneHandler({
       ...baseEvent,
       body: JSON.stringify({ n: 5 }),
-    });
+    }, {}, () => null);
 
     expect(response).toMatchObject({
       statusCode: 200,
@@ -40,10 +30,10 @@ describe('HttpLambda function timesTwo', () => {
   it('executes', async () => {
     const { timesFourHandler } = await import('../httpLambda');
 
-    const response = await executeLambda(timesFourHandler, {
+    const response = await timesFourHandler({
       ...baseEvent,
       body: JSON.stringify({ n: 100 }),
-    });
+    }, {}, () => null);
 
     expect(response).toMatchObject({
       body: 400,
