@@ -12,12 +12,14 @@ module.exports = {
     "tsx",
     "js"
   ],
+  "mapCoverage": true,
   "coverageDirectory": ".coverage",
-  "coverageReporters": ['text', 'text-summary'],
+  "coverageReporters": ['text', 'text-summary', 'json', 'lcov'],
   "coverageThreshold": {
     "global": { statements: 76, lines: 80, functions: 72 }
   },
   "testPathIgnorePatterns": [
-    "/node_modules/"
+    "/node_modules/",
+    "/build/"
   ]
 }
