@@ -3,12 +3,10 @@ import { HttpRequestEvent } from './';
 
 /** Connects HttpRequestActor to HttpRequestEvent */
 export class HttpRequestEventRelay extends Component<HttpRequestEvent, HttpRequestActor> {
-  Subscribed: 'http.request';
-
   constructor (httpRequestActor: HttpRequestActor) {
     super();
 
-    this.subscribe('http.request', 'HttpRequestEvent');
+    this.subscribe('http.request');
 
     this.on('http.request', (event) => httpRequestActor.emit('execute', event));
   }

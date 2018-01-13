@@ -33,7 +33,7 @@ export class HttpRequest extends Component<
   }
 
   connectToEvent (getComponents: () => Array<Component<any, any>>) {
-    return this.connectOn('HttpRequestEvent' as any, getComponents);
+    return this.connectOn('HttpRequestEvent', getComponents);
   }
 
   private emitRequest = async (event: HttpRequestEvent) => {
