@@ -1,24 +1,17 @@
 # To Do
 
-
-<!-- @import "[TOC]" {cmd="toc" depthFrom=0 depthTo=6 orderedList=false} -->
-<!-- code_chunk_output -->
-
-* [To Do](#to-do)
-		* [Components](#components)
-			* [Http Components](#http-components)
-			* [Action](#action)
-			* [Action Components](#action-components)
-			* [(ISC) Inter-System-Communication](#isc-inter-system-communication)
-				* [(IPC) Inter-process communcation](#ipc-inter-process-communcation)
-				* [Http endpoint (1 way requester)](#http-endpoint-1-way-requester)
-				* [Http endpoints (2 way requester and responder)](#http-endpoints-2-way-requester-and-responder)
-				* [Socket connection (2 way socket connection)](#socket-connection-2-way-socket-connection)
-		* [Testing](#testing)
-				* [Performance](#performance)
-
-<!-- /code_chunk_output -->
-
+- [To Do](#to-do)
+    - [Components](#components)
+      - [Http Components](#http-components)
+      - [Action](#action)
+      - [Action Components](#action-components)
+      - [(ISC) Inter-System-Communication](#isc-inter-system-communication)
+        - [(IPC) Inter-process communcation](#ipc-inter-process-communcation)
+        - [Http endpoint (1 way requester)](#http-endpoint-1-way-requester)
+        - [Http endpoints (2 way requester and responder)](#http-endpoints-2-way-requester-and-responder)
+        - [Socket connection (2 way socket connection)](#socket-connection-2-way-socket-connection)
+    - [Testing](#testing)
+        - [Performance](#performance)
 
 ### Components
 
