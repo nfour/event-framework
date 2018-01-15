@@ -1,20 +1,14 @@
-import componentMap from '../components/.map';
-
-export type IComponentNames = keyof typeof componentMap;
-
 export interface IComponentConfig {
-  name?: string;
-  component: IComponentNames;
-
-  dependencies?: IComponentNames[];
+  name: string;
+  connection: 'ipc' | 'local';
 }
 
 export interface IIpcComponentConfig extends IComponentConfig {
-  type: 'local' | 'remote';
+  type: 'ipc';
   host: string;
   port: string;
 }
 
-export interface IComponentRegistryConfig {
-  components: { [name: string]: IComponentConfig };
+export interface IEngineConfig {
+  components: { [name: string]: IComponentConfig|IIpcComponentConfig };
 }
