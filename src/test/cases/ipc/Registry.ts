@@ -38,6 +38,7 @@ export abstract class ProxyComponent {
   }
 
   abstract async initialize ();
+
 }
 
 export class ModuleProxyComponent extends ProxyComponent {
