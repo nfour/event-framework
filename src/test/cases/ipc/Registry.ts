@@ -27,6 +27,10 @@ export class Registry {
   }
 }
 
+// TODO: communication layer between proxy component and actual component
+// all components must undergo a conformance phase to remove method/prop access
+// must use only events for this lifecycle of component
+
 export abstract class ProxyComponent {
   name: IComponentConfig['name'];
   type: IComponentConfig['type'];
