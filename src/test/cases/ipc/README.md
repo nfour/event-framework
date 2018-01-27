@@ -10,25 +10,6 @@
 - HttpAction: foo
   - Http bundle middlewares
 
-### Scenario 1
-
-The http bundle also includes an IPC middleware to act like HttpServer as a HttpRequestEvent source
-
-The registry would instantiate the `httpIpcRelay` component
-
-```ts
-foo.connect(httpRequest)
-```
-
-To route that particular action to the IPC event, we would have to connect to HttpServer
-
-```ts
-httpRequest.connect(httpServer)
-httpServer.connect(httpIpcRelay)
-```
-
-Which would be fed http requests of a post-parsed interface.
-
 ### Scenario 2
 
 A registry of
