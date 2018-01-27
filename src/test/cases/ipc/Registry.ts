@@ -30,7 +30,14 @@ export class Registry {
 // TODO: communication layer between proxy component and actual component
 // all components must undergo a conformance phase to remove method/prop access
 // must use only events for this lifecycle of component
+// - could technically proxy all constructure.prototype methods if the reg becomes
+// aware of various component types eg. Action, allowing it to queue up .execute() till after initialize
 
+/**
+ * TODO:
+ * this needs to truely act as a proxy, passing through all listeners in the
+ * initialize step
+ */
 export abstract class ProxyComponent {
   name: IComponentConfig['name'];
   type: IComponentConfig['type'];
