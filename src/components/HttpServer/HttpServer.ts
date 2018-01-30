@@ -92,7 +92,7 @@ export class HttpServer extends Component<Hub, HttpServer> {
     const methods = method.split(/,\s*/g);
 
     return {
-      to: (component: Component<any, any>) => {
+      to: (component: Component<any, any>): HttpServer => {
         this.connect(component);
         this.registerRoute({ methods, path, component });
 
