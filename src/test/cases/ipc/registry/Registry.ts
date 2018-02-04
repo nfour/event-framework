@@ -1,6 +1,7 @@
-import { Component } from '../../..';
-import { deferredPromise, IDefferedPromise } from '../../lib';
-import { IComponentConfig, IComponentModuleConfig, IRegistryConfig } from './types/registry';
+import { Component } from '../../../..';
+import { deferredPromise, IDefferedPromise } from '../../../lib';
+import { IComponentConfig, IComponentModuleConfig, IRegistryConfig } from '../types/registry';
+import { ModuleProxy } from './ModuleProxy';
 
 export class Registry {
   private components: Map<string, ProxyComponent> = new Map();
@@ -60,40 +61,6 @@ export abstract class ProxyComponent extends Component {
   abstract async initialize ();
 }
 
-export class ModuleProxyComponent extends ProxyComponent {
-  type: 'module';
-  private module: IComponentModuleConfig['module'];
-  private component: IDefferedPromise<Component<any>>;
-
-  constructor (registry: Registry, config: IComponentModuleConfig) {
-    super(registry, config);
-
-    this.module = config.module;
-
-    this.component = deferredPromise();
-  }
-
-  async initialize () {
-    const module = await import(this.module.path);
-
-    const member = this.module.member || 'default';
-
-    this.component.resolve(module[member]);
-  }
-
-  on = async (...args: any[]) => {
-    const component = await this.component;
-
-    component.on(...args);
-  }
-
-  emit = async (...args: any[]) => {
-    const component = await this.component;
-
-    return component.emit(...args);
-  }
-}
-
 export const proxyConstructorMap = new Map([
-  ['module', ModuleProxyComponent],
+  ['module', ModuleProxy],
 ]);

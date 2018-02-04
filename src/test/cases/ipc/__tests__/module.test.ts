@@ -1,17 +1,15 @@
-import { action1 } from './actions';
-import { Registry } from './Registry';
-import { IRegistryConfig } from './types/registry';
-
-const action1Module = {
-  path: './actions',
-  member: 'action1',
-};
+import { action1 } from '../actions';
+import { Registry } from '../registry/Registry';
+import { IRegistryConfig } from '../types/registry';
 
 export const moduleConfig: IRegistryConfig = [
   {
     name: 'foo',
     type: 'module',
-    module: action1Module,
+    module: {
+      path: './actions',
+      member: 'action1',
+    },
   },
 ];
 
