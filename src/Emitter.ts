@@ -1,3 +1,4 @@
+import { delay } from 'bluebird';
 import { Event, IListenerConfig } from './Event';
 import { IOnCallback } from './index';
 
@@ -8,19 +9,39 @@ export interface IOnceConfig { priority?: IListenerConfig['priority']; }
  * A component acts as both a subscriber and an event emitter.
  */
 export abstract class Emitter {
-  debug?: boolean = !!process.env.DEBUG_EMITTER;
+  debug: boolean = !!process.env.DEBUG_EMITTER;
 
-  protected _events: { [key: string]: Event } = {};
+  /**
+   * If nothing has begun listening to an event after this
+   * amount of (ms), the playback history is purged
+   *
+   * When set to `Infinity` this is never purged
+   * When set to `false` no history is kept
+   */
+  playback: false|number = 1;
+
+  /** The event listeners */
+  protected _events: Map<Event['key'], Event> = new Map();
+
+  /**
+   * A dict of event playback to ensure adding listeners can be done after
+   * an event has been emit. This is useful for events like 'ready'.
+   *
+   * These payloads are pruned on a timeout
+   */
+  protected _playback: Map<Event['key'], any[][]> = new Map();
 
   /**
    * Emit an event, asynchronously.
    */
   emit = async (key: string, ...payload: any[]): Promise<any> => {
-    const event = this._events[key];
+    const event = this._events.get(key);
 
     if (this.debug) { console.info(`emit\t${this.constructor.name}   ${key}`); }
 
     if (!event) { return; }
+
+    this.addPlayback(key, payload);
 
     return event.propagate(...payload).catch(async (error) => {
       await this.emit('error', error);
@@ -30,13 +51,19 @@ export abstract class Emitter {
   }
 
   on = (key, callback: IOnCallback, options: IOnConfig = {}) => {
-    const event = this._events[key] || new Event(key);
+    const event = this._events.get(key) || new Event(key);
 
     if (this.debug) { console.info(`on\t${this.constructor.name}   ${key}`); }
 
     event.add({ ...options, callback });
 
-    this._events[key] = event;
+    this._events.set(key, event);
+
+    const playback = this._playback.get(key);
+
+    if (playback) {
+      playback.forEach((args) => event.propagate(...args));
+    }
   }
 
   /**
@@ -70,7 +97,7 @@ export abstract class Emitter {
 
   /** Remove a listener which matches `callback` */
   off = (key: string, callback) => {
-    const event = this._events[key];
+    const event = this._events.get(key);
 
     if (!event) { return false; }
 
@@ -82,6 +109,35 @@ export abstract class Emitter {
 
     event.remove(listener);
 
+    if (event.listeners.length < 1) {
+      this._events.delete(key);
+    }
+
     return true;
+  }
+
+  private addPlayback (key: string, args: any[]) {
+    if (this.playback === false) { return; }
+
+    if (!this._playback.has(key)) {
+      this._playback.set(key, []);
+
+      this.setPlaybackTimeout(key);
+    }
+
+    const playback = this._playback.get(key)!;
+
+    playback.push(args);
+  }
+
+  /** Purge playback after given timeout to prevent memory leaks */
+  private setPlaybackTimeout (key: string): any {
+    if (this.playback === Infinity) { return; }
+
+    return delay(this.playback as number).then(() => {
+      if (this._playback.has(key)) {
+        this._playback.delete(key);
+      }
+    });
   }
 }
