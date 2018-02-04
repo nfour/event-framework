@@ -15,14 +15,14 @@ export const moduleConfig: IRegistryConfig = [
   },
 ];
 
-const reg = new Registry(moduleConfig);
-
-const foo = reg.get<typeof action1>('foo');
-
 test('execution after initialization', async () => {
+  const registry = new Registry(moduleConfig);
+
+  const foo = registry.get<typeof action1>('foo');
+
   const fooExecution = foo.emit('execute', { wew: true });
 
-  await reg.initialize();
+  await registry.initialize();
 
   const result = await fooExecution;
 
