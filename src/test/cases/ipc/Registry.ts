@@ -71,6 +71,10 @@ export class ModuleProxyComponent extends ProxyComponent {
     this.component = module[member];
   }
 
+  on(...args) {
+    this.component.on(...args);
+  }
+
 }
 
 export const proxyConstructorMap = new Map([
