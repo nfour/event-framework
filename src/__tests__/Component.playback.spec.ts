@@ -35,9 +35,29 @@ it('does not exhibit playback after timeout', async () => {
 
   await delay(20);
 
-  component.on('foo', (v: typeof actual) => {
+  component.on('foo', (v: typeof expected) => {
     actual = v;
   });
+
+  expect(actual).toBe(undefined);
+});
+it('does not exhibit playback when disabled', async () => {
+  const component = new Component<any>();
+
+  const expected = 1;
+  let actual: number|undefined;
+
+  component.playback = false;
+
+  await component.emit('foo', expected);
+
+  await delay(1);
+
+  component.on('foo', (v: typeof expected) => {
+    actual = v;
+  });
+
+  await delay(1);
 
   expect(actual).toBe(undefined);
 });
