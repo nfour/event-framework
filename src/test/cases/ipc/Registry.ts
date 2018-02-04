@@ -38,29 +38,32 @@ export class Registry {
  * this needs to truely act as a proxy, passing through all listeners in the
  * initialize step
  */
-export abstract class ProxyComponent {
+export abstract class ProxyComponent extends Component {
   name: IComponentConfig['name'];
   type: IComponentConfig['type'];
-
   protected registry: Registry;
 
   constructor (registry: Registry, { name, type }: IComponentConfig) {
+    super();
     Object.assign(this, { registry, name, type });
   }
 
   abstract async initialize ();
-
 }
 
 export class ModuleProxyComponent extends ProxyComponent {
   type: 'module';
-  module: IComponentModuleConfig['module'];
-  component: Component<any>;
+  private module: IComponentModuleConfig['module'];
+  private component: Promise<Component<any>> & { resolve, reject };
 
   constructor (registry: Registry, config: IComponentModuleConfig) {
     super(registry, config);
 
     this.module = config.module;
+
+    this.component = <ModuleProxyComponent['component']> new Promise((resolve, reject) => {
+      Object.assign(this.component, { resolve, reject });
+    });
   }
 
   async initialize () {
@@ -68,13 +71,14 @@ export class ModuleProxyComponent extends ProxyComponent {
 
     const member = this.module.member || 'default';
 
-    this.component = module[member];
+    this.component.resolve(module[member]);
   }
 
-  on(...args) {
-    this.component.on(...args);
-  }
+  on = async (...args: any[]) => {
+    const component = await this.component;
 
+    component.on(...args);
+  }
 }
 
 export const proxyConstructorMap = new Map([

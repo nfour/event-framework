@@ -29,7 +29,7 @@ export abstract class Emitter {
     });
   }
 
-  on = (key, callback: IOnCallback, options: IOnConfig = {}): Event => {
+  on = (key, callback: IOnCallback, options: IOnConfig = {}) => {
     const event = this._events[key] || new Event(key);
 
     if (this.debug) { console.info(`on\t${this.constructor.name}   ${key}`); }
@@ -37,8 +37,6 @@ export abstract class Emitter {
     event.add({ ...options, callback });
 
     this._events[key] = event;
-
-    return event;
   }
 
   /**
@@ -47,9 +45,7 @@ export abstract class Emitter {
    * Also returns a promise which resolves only when the callback is executed.
    */
   once = (key, callback: IOnCallback, options: IOnceConfig = {}) => {
-    const on = this.on as any;
-
-    return on(key, callback, { ...options, limit: 1 });
+    return this.on(key, callback, { ...options, limit: 1 });
   }
 
   /** Applys priority to the next .on() */

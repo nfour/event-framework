@@ -22,7 +22,7 @@ export interface IOnGeneric {
 export type IOn<G extends IOnGeneric> = (
   name: G['name'],
   callback: (this: IEventContext, event: G['event']) => G['return'],
-) => Event;
+) => void|Promise<void>;
 
 export interface IComponentSignaturesGeneric {
   Emit: (name: string, callback: any) => any;
@@ -70,9 +70,9 @@ export class Component<
   on: this['_AllOn'];
   once: this['_AllOn'];
 
-  components: Set<Component> = new Set();
-  declarations: Set<this['Declared']> = new Set();
-  subscriptions: Set<string> = new Set();
+  protected components: Set<Component> = new Set();
+  protected declarations: Set<this['Declared']> = new Set();
+  protected subscriptions: Set<string> = new Set();
 
   /**
    * Declare that this component will emit an event.
