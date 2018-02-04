@@ -1,8 +1,9 @@
 import { Component } from '../../..';
+import { deferredPromise, IDefferedPromise } from '../../lib';
 import { IComponentConfig, IComponentModuleConfig, IRegistryConfig } from './types/registry';
 
 export class Registry {
-  components: Map<string, ProxyComponent> = new Map();
+  private components: Map<string, ProxyComponent> = new Map();
 
   constructor (
     public config: IRegistryConfig,
@@ -10,6 +11,14 @@ export class Registry {
     this.config = config;
 
     config.forEach(this.add);
+  }
+
+  async initialize () {
+    const components = Array.from(this.components.values());
+
+    await Promise.all(
+      components.map((component) => component.initialize()),
+    );
   }
 
   add = (config: IComponentConfig) => {
@@ -22,8 +31,8 @@ export class Registry {
     this.components.set(component.name, component);
   }
 
-  get (key: string) {
-    return this.components.get(key);
+  get <C extends Component<any, any> = ProxyComponent> (key: string) {
+    return (this.components.get(key) as any) as C;
   }
 }
 
@@ -54,16 +63,14 @@ export abstract class ProxyComponent extends Component {
 export class ModuleProxyComponent extends ProxyComponent {
   type: 'module';
   private module: IComponentModuleConfig['module'];
-  private component: Promise<Component<any>> & { resolve, reject };
+  private component: IDefferedPromise<Component<any>>;
 
   constructor (registry: Registry, config: IComponentModuleConfig) {
     super(registry, config);
 
     this.module = config.module;
 
-    this.component = <ModuleProxyComponent['component']> new Promise((resolve, reject) => {
-      Object.assign(this.component, { resolve, reject });
-    });
+    this.component = deferredPromise();
   }
 
   async initialize () {
@@ -78,6 +85,12 @@ export class ModuleProxyComponent extends ProxyComponent {
     const component = await this.component;
 
     component.on(...args);
+  }
+
+  emit = async (...args: any[]) => {
+    const component = await this.component;
+
+    return component.emit(...args);
   }
 }
 

@@ -9,3 +9,19 @@ export function executeLambda (handler: ILambdaHttpHandler, event: IInputLambdaH
     });
   });
 }
+
+export type IDefferedPromise<V> = Promise<V> & { resolve, reject };
+
+export function deferredPromise<V = any> (): IDefferedPromise<V> {
+  let resolve;
+  let reject;
+
+  const promise = new Promise((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+
+  Object.assign(promise, { resolve, reject });
+
+  return promise as IDefferedPromise<V>;
+}

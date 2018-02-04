@@ -1,5 +1,5 @@
 import { Emitter } from './Emitter';
-import { Event, IEventContext, IListenerConfig } from './Event';
+import { IEventContext, IListenerConfig } from './Event';
 
 export type IOnCallback = (this: IEventContext, ...args: any[]) => void;
 

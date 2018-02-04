@@ -1,7 +1,16 @@
 import { Component } from '../Component';
 import { IOn } from '../index';
 
-export class Action<E, R> extends Component<any, Action<E, R>> {
+export interface IComponentExecutor<E> {
+  Emit: {
+    (name: 'execute', event: E);
+  };
+
+  On;
+  Declared: 'execute';
+}
+
+export class Action<E, R> extends Component<IComponentExecutor<E>, Action<E, R>> {
   Emit: {
     (name: 'execute', ...args: any[]);
     (name: 'execute.complete', result: any);
@@ -35,3 +44,5 @@ export class Action<E, R> extends Component<any, Action<E, R>> {
     return result;
   }
 }
+
+new Action<any, any>(() => {}).emit('execute');

@@ -1,3 +1,5 @@
+import { action1 } from './actions';
+import { Registry } from './Registry';
 import { IRegistryConfig } from './types/registry';
 
 const action1Module = {
@@ -10,13 +12,15 @@ export const moduleConfig: IRegistryConfig = [
     name: 'foo',
     type: 'module',
     module: action1Module,
-  }
-];
-
-export const httpConfig: IRegistryConfig = [
-  {
-    name: 'foo',
-    type: 'http',
-    url: 'http://localhost:8909/foo',
   },
 ];
+
+const reg = new Registry(moduleConfig);
+
+const foo = reg.get<typeof action1>('foo');
+
+foo.emit('execute', { wew: true }).then((result) => {
+  console.dir({ result });
+});
+
+reg.initialize();
