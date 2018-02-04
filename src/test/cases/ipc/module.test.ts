@@ -19,11 +19,12 @@ const reg = new Registry(moduleConfig);
 
 const foo = reg.get<typeof action1>('foo');
 
-void (async () => {
+test('execution after initialization', async () => {
   const fooExecution = foo.emit('execute', { wew: true });
 
   await reg.initialize();
 
   const result = await fooExecution;
-  console.dir({ result });
-})();
+
+  expect(result).toMatchObject({ statusCode: 200 });
+});
