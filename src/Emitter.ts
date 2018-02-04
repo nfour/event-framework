@@ -39,9 +39,9 @@ export abstract class Emitter {
 
     if (this.debug) { console.info(`emit\t${this.constructor.name}   ${key}`); }
 
-    if (!event) { return; }
-
     this.addPlayback(key, payload);
+
+    if (!event) { return; }
 
     return event.propagate(...payload).catch(async (error) => {
       await this.emit('error', error);
