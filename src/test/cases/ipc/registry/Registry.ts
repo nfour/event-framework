@@ -1,6 +1,5 @@
 import { Component } from '../../../..';
-import { deferredPromise, IDefferedPromise } from '../../../lib';
-import { IComponentConfig, IComponentModuleConfig, IRegistryConfig } from '../types/registry';
+import { IComponentConfig, IRegistryConfig } from '../types/registry';
 import { ModuleProxy } from './ModuleProxy';
 
 export class Registry {

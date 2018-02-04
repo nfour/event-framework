@@ -70,9 +70,9 @@ export class Component<
   on: this['_AllOn'];
   once: this['_AllOn'];
 
-  protected components: Set<Component> = new Set();
-  protected declarations: Set<this['Declared']> = new Set();
-  protected subscriptions: Set<string> = new Set();
+  components: Set<Component> = new Set();
+  declarations: Set<this['Declared']> = new Set();
+  subscriptions: Set<string> = new Set();
 
   /**
    * Declare that this component will emit an event.
