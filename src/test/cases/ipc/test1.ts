@@ -19,8 +19,11 @@ const reg = new Registry(moduleConfig);
 
 const foo = reg.get<typeof action1>('foo');
 
-foo.emit('execute', { wew: true }).then((result) => {
-  console.dir({ result });
-});
+void (async () => {
+  const fooExecution = foo.emit('execute', { wew: true });
 
-reg.initialize();
+  await reg.initialize();
+
+  const result = await fooExecution;
+  console.dir({ result });
+})();
