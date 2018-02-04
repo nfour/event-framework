@@ -1,8 +1,10 @@
 import { delay } from 'bluebird';
 import { Component } from '..';
 
+class TestComponent extends Component<any> {}
+
 it('exhibits playback within timeout', async () => {
-  const component = new Component<any>();
+  const component = new TestComponent();
 
   const expected = 1;
   let actual: number;
@@ -24,7 +26,7 @@ it('exhibits playback within timeout', async () => {
 
 });
 it('does not exhibit playback after timeout', async () => {
-  const component = new Component<any>();
+  const component = new TestComponent();
 
   const expected = 1;
   let actual: number|undefined;
@@ -42,7 +44,7 @@ it('does not exhibit playback after timeout', async () => {
   expect(actual).toBe(undefined);
 });
 it('does not exhibit playback when disabled', async () => {
-  const component = new Component<any>();
+  const component = new TestComponent();
 
   const expected = 1;
   let actual: number|undefined;

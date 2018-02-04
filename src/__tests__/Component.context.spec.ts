@@ -1,7 +1,9 @@
 import { Component } from '../Component';
 
+class TestComponent extends Component<any> {}
+
 it('overrides an events value', async () => {
-  const component = new Component<any>();
+  const component = new TestComponent();
 
   component.on('foo', () => {
     return 1;
@@ -14,7 +16,7 @@ it('overrides an events value', async () => {
 });
 
 it('preserves a value via context', async () => {
-  const component = new Component<any>();
+  const component = new TestComponent();
 
   component.on('foo', () => {
     return 1;

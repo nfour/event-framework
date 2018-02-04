@@ -1,7 +1,9 @@
 import { Component } from '../Component';
 
+class TestComponent extends Component<any> {}
+
 it('events are executed in order of priority', async () => {
-  const component = new Component<any>();
+  const component = new TestComponent();
 
   const order: number[] = [];
 

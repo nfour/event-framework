@@ -1,27 +1,38 @@
+import { fork } from 'child_process';
 import { Component } from '../../../..';
 import { deferredPromise, IDefferedPromise } from '../../../lib';
 import { IComponentModuleConfig } from '../types/registry';
-import { ProxyComponent, Registry } from './Registry';
+import { ProxyComponent } from './ProxyComponent';
+import { Registry } from './Registry';
 
 export class ModuleProxy extends ProxyComponent {
   type: 'module';
-  private module: IComponentModuleConfig['module'];
+  private config: IComponentModuleConfig;
   private component: IDefferedPromise<Component<any>>;
 
   constructor (registry: Registry, config: IComponentModuleConfig) {
     super(registry, config);
 
-    this.module = config.module;
+    this.config = config;
 
     this.component = deferredPromise();
   }
 
   async initialize () {
-    const module: Component<any> = await import(this.module.path);
+    const { path, member = 'default' } = this.config.module;
 
-    const member = this.module.member || 'default';
+    if (this.config.spawn) {
+      // Process spawn component
 
-    this.component.resolve(module[member]);
+      // TODO: need to make a spawner file which takes path/member as args
+      const child = fork('./spawn.ts', [path, member], { cwd: __dirname });
+    } else {
+      // Local component
+
+      const module: Component<any> = await import(path);
+
+      this.component.resolve(module[member]);
+    }
   }
 
   on = async (...args: any[]) => {
@@ -37,9 +48,11 @@ export class ModuleProxy extends ProxyComponent {
   }
 }
 
-export class ProcessComponent extends Component {
-  constructor (config: IComponentModuleConfig['module']) {
+export class ProcessModuleComponent extends Component {
+  constructor (child) {
     super();
+
+    this.process = child;
 
   }
 

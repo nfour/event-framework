@@ -14,7 +14,7 @@ const httpServer = new HttpServer({
 });
 
 const HttpLoggerAsFactory = () => {
-  const component = new Component<HttpServer>();
+  const component = new (class extends Component<HttpServer> {})();
 
   component.subscribe('HttpServer.request');
 
