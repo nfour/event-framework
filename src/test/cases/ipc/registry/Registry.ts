@@ -22,26 +22,22 @@ export class Registry {
     );
   }
 
-  add = (config: IComponentConfig) => {
+  add = (config: IComponentConfig): ProxyComponent => {
     const { type } = config;
 
     const Constructor = proxyConstructorMap.get(type)!;
 
-    const component = new Constructor(this, config as any);
+    const component = new Constructor(config as any);
 
     this.components.set(component.name, component);
+
+    return component;
   }
 
   get <C extends Component<any, any> = ProxyComponent> (key: string) {
     return (this.components.get(key) as any) as C;
   }
 }
-
-// TODO: communication layer between proxy component and actual component
-// all components must undergo a conformance phase to remove method/prop access
-// must use only events for this lifecycle of component
-// - could technically proxy all constructure.prototype methods if the reg becomes
-// aware of various component types eg. Action, allowing it to queue up .execute() till after initialize
 
 export const proxyConstructorMap = new Map([
   ['module', ModuleProxy],

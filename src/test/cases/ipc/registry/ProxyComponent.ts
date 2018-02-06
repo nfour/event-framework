@@ -11,11 +11,10 @@ import { Registry } from './Registry';
 export abstract class ProxyComponent extends Component {
   name: IComponentConfig['name'];
   type: IComponentConfig['type'];
-  protected registry: Registry;
 
-  constructor (registry: Registry, { name, type }: IComponentConfig) {
+  constructor ({ name, type }: IComponentConfig) {
     super();
-    Object.assign(this, { registry, name, type });
+    Object.assign(this, { name, type });
   }
 
   abstract async initialize ();

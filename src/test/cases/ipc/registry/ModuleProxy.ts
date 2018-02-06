@@ -1,17 +1,16 @@
-import { fork } from 'child_process';
+import { ChildProcess, fork } from 'child_process';
 import { Component } from '../../../..';
 import { deferredPromise, IDefferedPromise } from '../../../lib';
 import { IComponentModuleConfig } from '../types/registry';
 import { ProxyComponent } from './ProxyComponent';
-import { Registry } from './Registry';
 
 export class ModuleProxy extends ProxyComponent {
   type: 'module';
   private config: IComponentModuleConfig;
   private component: IDefferedPromise<Component<any>>;
 
-  constructor (registry: Registry, config: IComponentModuleConfig) {
-    super(registry, config);
+  constructor (config: IComponentModuleConfig) {
+    super(config);
 
     this.config = config;
 
@@ -25,7 +24,9 @@ export class ModuleProxy extends ProxyComponent {
       // Process spawn component
 
       // TODO: need to make a spawner file which takes path/member as args
-      const child = fork('./spawn.ts', [path, member], { cwd: __dirname });
+      const child = fork('./spawn.ts', [path, member, this.name, this.type], { cwd: __dirname });
+
+      this.component.resolve(new ProcessComponent(child));
     } else {
       // Local component
 
@@ -48,12 +49,30 @@ export class ModuleProxy extends ProxyComponent {
   }
 }
 
-export class ProcessModuleComponent extends Component {
-  constructor (child) {
+export interface IProcessComponentMessage {
+  eventName: string;
+  payload: any[];
+}
+
+export class ProcessComponent extends Component<any> { // FIXME: any
+  private child: ChildProcess;
+
+  constructor (child: ChildProcess) {
     super();
 
-    this.process = child;
+    this.child = child;
 
+    this.child.on('message', (msg?: IProcessComponentMessage) => {
+      if (!msg || !(msg instanceof Object)) { return; }
+
+      const { eventName, payload } = msg;
+
+      return this.emit.call(this, eventName, ...payload);
+    });
   }
 
+  emit = (...args) => {
+    // TODO: impliment async await here
+    (this.child.emit as any)(...args);
+  }
 }
