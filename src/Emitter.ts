@@ -75,6 +75,15 @@ export abstract class Emitter {
     return this.on(key, callback, { ...options, limit: 1 });
   }
 
+  /**
+   * Listen on any and all events
+   */
+  all () {
+    return {
+      on: ((callback, options?) => this.on('*', callback, options)),
+    };
+  }
+
   /** Applys priority to the next .on() */
   priority <X extends this = this> (priority: number) {
     return {
