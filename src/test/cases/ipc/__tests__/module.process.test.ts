@@ -1,3 +1,4 @@
+import { resolve } from 'path';
 import { action1 } from '../actions';
 import { Registry } from '../registry/Registry';
 import { IRegistryConfig } from '../types/registry';
@@ -8,7 +9,7 @@ export const moduleConfig: IRegistryConfig = [
     type: 'module',
     spawn: true,
     module: {
-      path: './actions',
+      path: resolve(__dirname, '..', './actions'),
       member: 'action1',
     },
   },

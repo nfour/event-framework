@@ -3,30 +3,30 @@ import { ChildProcess } from 'child_process';
 import { Component } from '../../../..';
 
 export interface IProcessComponentMessage {
-  eventName: string;
+  event: string;
   payload: any[];
 }
 
 export class ProcessComponent extends Component<any> { // FIXME: any
   private process: ChildProcess;
 
-  constructor (emitter: ChildProcess) {
+  constructor (emitter: NodeJS.Process|ChildProcess) {
     super();
 
-    this.process = emitter;
+    this.process = <ChildProcess> emitter;
 
     this.process.on('message', (msg?: IProcessComponentMessage) => {
       if (!msg || !(msg instanceof Object)) { return; }
 
-      const { eventName, payload } = msg;
+      const { event, payload } = msg;
 
-      return this.emit(eventName, ...payload);
+      return super.emit(event, ...payload);
     });
   }
 
-  send = (eventName, ...args) => {
+  emit = (event, ...payload) => {
+    const message: IProcessComponentMessage = { event, payload };
 
-    const message: IProcessComponentMessage = {};
     // TODO: impliment async await here
     return this.process.send(message);
   }

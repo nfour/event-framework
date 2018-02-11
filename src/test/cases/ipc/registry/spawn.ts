@@ -4,20 +4,17 @@ import { ProcessComponent } from './ProcessComponent';
 const [path, member, name] = process.argv;
 
 void (async () => {
-  const module = new ModuleProxy({
+  const component = new ModuleProxy({
     name,
     type: 'module',
     spawn: false,
     module: { path, member },
   });
 
-  await module.initialize();
+  await component.initialize();
 
   const processProxy = new ProcessComponent(process);
 
-  module.all().on(processProxy.emit);
-
-  // TODO: use a component here to wrap this component and push events through `process`
-  // must listen on all events and pipe through all subscribed events
-  // or, a whitelist of events could be passed in argv thus supporting .connect()
+  component.all().on(processProxy.emit);
+  processProxy.all().on(component.emit);
 })();

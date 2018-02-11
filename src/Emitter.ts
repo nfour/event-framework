@@ -55,7 +55,9 @@ export abstract class Emitter {
 
     if (allEvent) { propagations.push(sendEvent(event, [key, ...payload])); }
 
-    return Promise.all(propagations);
+    const [result] = await Promise.all(propagations);
+
+    return result;
   }
 
   on = (key, callback: IOnCallback, options: IOnConfig = {}) => {
