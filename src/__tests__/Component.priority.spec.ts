@@ -16,7 +16,7 @@ it('events are executed in order of priority', async () => {
   ];
 
   listeners.forEach((listener) => {
-    component.priority(listener.priority).on('foo', listener.callback);
+    component.prioritize(listener.priority).on('foo', listener.callback);
   });
 
   await component.emit('foo');

@@ -1,4 +1,5 @@
-import { EventEmitter } from 'events';
+import { ChildProcess } from 'child_process';
+
 import { Component } from '../../../..';
 
 export interface IProcessComponentMessage {
@@ -7,9 +8,9 @@ export interface IProcessComponentMessage {
 }
 
 export class ProcessComponent extends Component<any> { // FIXME: any
-  private process: EventEmitter;
+  private process: ChildProcess;
 
-  constructor (emitter: EventEmitter) {
+  constructor (emitter: ChildProcess) {
     super();
 
     this.process = emitter;
@@ -19,12 +20,14 @@ export class ProcessComponent extends Component<any> { // FIXME: any
 
       const { eventName, payload } = msg;
 
-      return this.emit.call(this, eventName, ...payload);
+      return this.emit(eventName, ...payload);
     });
   }
 
-  emit = (...args) => {
+  send = (eventName, ...args) => {
+
+    const message: IProcessComponentMessage = {};
     // TODO: impliment async await here
-    (this.process.emit as any)(...args);
+    return this.process.send(message);
   }
 }

@@ -36,6 +36,7 @@ export abstract class Emitter {
    */
   emit = async (key: string, ...payload: any[]): Promise<any> => {
     const event = this._events.get(key);
+    const allEvent = this._events.get('*');
 
     if (this.debug) { console.info(`emit\t${this.constructor.name}   ${key}`); }
 
@@ -43,11 +44,18 @@ export abstract class Emitter {
 
     if (!event) { return; }
 
-    return event.propagate(...payload).catch(async (error) => {
-      await this.emit('error', error);
+    const sendEvent = (e: Event, args: any[]) =>
+      event.propagate(...args).catch(async (error) => {
+        await this.emit('error', error);
 
-      throw error;
-    });
+        throw error;
+      });
+
+    const propagations = [sendEvent(event, payload)];
+
+    if (allEvent) { propagations.push(sendEvent(event, [key, ...payload])); }
+
+    return Promise.all(propagations);
   }
 
   on = (key, callback: IOnCallback, options: IOnConfig = {}) => {
@@ -85,7 +93,7 @@ export abstract class Emitter {
   }
 
   /** Applys priority to the next .on() */
-  priority <X extends this = this> (priority: number) {
+  prioritize <X extends this = this> (priority: number) {
     return {
       on: <X['on']> ((key, callback, options = {}) => this.on(key, callback, { ...options, priority })),
     };
