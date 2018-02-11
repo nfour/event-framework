@@ -25,9 +25,20 @@ export class ModuleProxy extends ProxyComponent {
     if (this.config.spawn) {
       // Process spawn component
 
-      const child = fork('./spawn.ts', [path, member, this.name, this.type], { cwd: __dirname });
+      const child = fork('spawn.ts', [path, member, this.name, this.type], {
+        cwd: __dirname,
+        // stdio: [process.stdin, process.stdout, process.stderr, 'ipc'],
+        execArgv: ['-r', 'ts-node/register'],
+      });
 
       this.component.resolve(new ProcessComponent(child));
+
+      await this.component.then(async (component) => {
+        await component.once('ready');
+
+        console.log('its ready');
+
+      });
     } else {
       // Local component
 

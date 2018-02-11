@@ -36,10 +36,12 @@
   "dependencies": {
     "@types/bluebird": "^3.5.8",
     "@types/chalk": "^0.4.31",
+    "@types/execa": "^0.8.1",
     "@types/koa-bodyparser": "^3.0.26",
     "@types/qs": "^6.5.1",
     "bluebird": "^3.5.0",
     "chalk": "^2.1.0",
+    "execa": "^0.9.0",
     "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",
     "koa-router": "^7.3.0",

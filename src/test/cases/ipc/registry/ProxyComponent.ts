@@ -1,7 +1,5 @@
 import { Component } from '../../../..';
 import { IComponentConfig } from '../types/registry';
-import { ModuleProxy } from './ModuleProxy';
-import { Registry } from './Registry';
 
 /**
  * TODO:

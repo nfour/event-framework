@@ -20,9 +20,10 @@ test('execution after initialization', async () => {
 
   const foo = registry.get<typeof action1>('foo');
 
+  await registry.initialize();
   const fooExecution = foo.emit('execute', { wew: true });
 
-  await registry.initialize();
+  console.log('init');
 
   const result = await fooExecution;
 
