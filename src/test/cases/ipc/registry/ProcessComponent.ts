@@ -28,7 +28,7 @@ export class ProcessComponent extends Component<any> { // FIXME: any
 
   send = (event, ...payload) => {
     const message: IProcessComponentMessage = { event, payload };
-    console.dir(this.process.send);
+    console.log({ s: 'sending', message });
     // TODO: impliment async await here
     return this.process.send(message);
   }

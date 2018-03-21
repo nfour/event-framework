@@ -1,5 +1,5 @@
 module.exports = {
-  "verbose": true,
+  "verbose": false,
   "transform": {
     ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
   },
@@ -12,7 +12,6 @@ module.exports = {
     "tsx",
     "js"
   ],
-  "mapCoverage": true,
   "coverageDirectory": ".coverage",
   "coverageReporters": ['text', 'text-summary', 'json', 'lcov'],
   "coverageThreshold": {

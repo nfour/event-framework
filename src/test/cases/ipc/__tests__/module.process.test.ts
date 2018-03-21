@@ -23,9 +23,11 @@ test('execution after initialization', async () => {
   await registry.initialize();
   const fooExecution = foo.emit('execute', { wew: true });
 
-  console.log('init');
+  console.dir('init');
 
   const result = await fooExecution;
+
+  console.dir('awaited');
 
   expect(result).toMatchObject({ statusCode: 200 });
 });
