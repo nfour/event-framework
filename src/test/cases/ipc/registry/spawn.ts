@@ -6,9 +6,7 @@ import { ProcessComponent } from './ProcessComponent';
 const [, , path, member, name] = process.argv;
 
 void (async () => {
-  console.dir(process.argv);
-  console.dir(process.send);
-  console.dir('');
+  const processProxy = new ProcessComponent(process);
 
   const component = new ModuleProxy({
     name,
@@ -19,28 +17,16 @@ void (async () => {
 
   await component.initialize();
 
-  const processProxy = new ProcessComponent(process);
-
-  /**
-   * TODO:
-   * - This should work as per PoC for IPC
-   * - Must be an issue with the event chaining. Need a simpler example and intrumentation throughout
-   */
-
-  process.on('message', (...args) => {
-    console.log('process got', ...args);
-  });
-
   processProxy.all().on((...args) => {
-    console.log('processProxy got', ...args);
+    console.log('[[[CHILD]]]\n', ...args);
   });
 
   component.all().on((...args) => {
-    console.log('component got', ...args);
+    console.log('[[[CHILD]]]\t[[[[COMPONENT]]]\n', ...args);
   });
 
-  component.all().on(processProxy.send);
+  component.all().on(processProxy.emitToProcess);
   processProxy.all().on(component.emit);
 
-  processProxy.send('ready');
+  processProxy.emit('ready');
 })();

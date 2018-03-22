@@ -1,3 +1,4 @@
+import { delay } from 'bluebird';
 import { resolve } from 'path';
 import { action1 } from '../actions';
 import { Registry } from '../registry/Registry';
@@ -20,14 +21,14 @@ test('execution after initialization', async () => {
 
   const foo = registry.get<typeof action1>('foo');
 
+  foo.all().on((event, ...args) => {
+    console.log('[[[MASTER]]]\n', event, ...args);
+  });
+
   await registry.initialize();
-  const fooExecution = foo.emit('execute', { wew: true });
 
-  console.dir('init');
-
-  const result = await fooExecution;
-
-  console.dir('awaited');
+  const result = await foo.emit('execute', { wew: true });
 
   expect(result).toMatchObject({ statusCode: 200 });
+
 });

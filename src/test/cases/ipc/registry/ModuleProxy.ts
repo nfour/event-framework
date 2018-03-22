@@ -34,7 +34,6 @@ export class ModuleProxy extends ProxyComponent {
 
       await this.component.then(async (component) => {
         await new Promise((resolve) => component.once('ready', resolve));
-        console.log('component ready');
       });
     } else {
       // Local component
@@ -48,7 +47,7 @@ export class ModuleProxy extends ProxyComponent {
   on = async (...args: any[]) => {
     const component = await this.component;
 
-    component.on(...args);
+    return component.on(...args);
   }
 
   emit = async (...args: any[]) => {
