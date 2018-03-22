@@ -34,7 +34,7 @@ export abstract class Emitter {
   /**
    * Emit an event, asynchronously.
    */
-  emit = async (key: string, ...payload: any[]): Promise<any> => {
+  async emit (key: string, ...payload: any[]): Promise<any> {
     const event = this._events.get(key);
     const allEvent = this._events.get('*');
 
@@ -42,25 +42,31 @@ export abstract class Emitter {
 
     this.addPlayback(key, payload);
 
-    if (!event) { return; }
+    if (!(event || allEvent)) { return; }
 
     const sendEvent = (e: Event, args: any[]) =>
-      event.propagate(...args).catch(async (error) => {
+      e.propagate(...args).catch(async (error) => {
         await this.emit('error', error);
 
         throw error;
       });
 
-    const propagations = [sendEvent(event, payload)];
+    const propagations: Array<Promise<void>> = [];
 
-    if (allEvent) { propagations.push(sendEvent(event, [key, ...payload])); }
+    if (event) {
+      propagations.push(sendEvent(event, payload));
+    }
+
+    if (allEvent) {
+      propagations.push(sendEvent(allEvent, [key, ...payload]));
+    }
 
     const [result] = await Promise.all(propagations);
 
     return result;
   }
 
-  on = (key, callback: IOnCallback, options: IOnConfig = {}) => {
+  async on (key, callback: IOnCallback, options: IOnConfig = {}) {
     const event = this._events.get(key) || new Event(key);
 
     if (this.debug) { console.info(`on\t${this.constructor.name}   ${key}`); }
