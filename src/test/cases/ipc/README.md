@@ -15,14 +15,16 @@
 A registry of
 
 ```ts
-const config = {
-  fooBarRemote: {
+const remoteConfig = {
+  fooBar: {
     type: 'netIpc',
     host: '0.0.0.0',
     port: 1338,
     component: 'fooBar'
   },
-  fooBarLocal: {
+}
+const localConfig = {
+  fooBa: {
     type: 'local',
     path: 'components/fooBar.fooBar',
     component: 'fooBar
@@ -36,39 +38,11 @@ Should mean that `foo` and `bar` will resolve to a unique component which ideall
 // Local
 const registry = new Registry(config)
 
-const fooBar = registry.get('fooBarRemote')
+const fooBar = registry.get('fooBar')
 
-new HttpServer().route('GET /fooBar').to(fooBar)
+new HttpServer().route('GET /fooBar').to(fooBar).start()
 
-registry.resolve();
+await registry.initialize();
 ```
 
-To break this down for the `netIpc` component:
-- A new registry config points to the location of components
-- .get() retrieves a component by unique name which acts as a relay between the remote and local source
-- `HttpServer` emits a `HttpRequestEvent` to `fooBar`
-- `fooBar` then emits `HttpRequestEvent` to the `netIpc` relay, which sends a new event to `0.0.0.0:1338`
-  - Shaped like `{ name: 'HttpRequestEvent', component: 'fooBar', args: [{ <serializedStuff> }] }`
-- At that address another registry is listening for events and eventually executes:
-
-```ts
-// Remote
-const wrappedComponent: IpcComponent = components.get('fooBar')
-
-// Passes the event to the underlying `fooBar` Action component in a way which does not trigger an infinite loop of events
-wrappedComponent.passEvent('HttpRequestEvent', ...event.args);
-```
-
-- The remote `fooBar` then parses the request with its middlewares etc. and they eventually emit a `http.request.response`
-- `http.request.response` is sent back to the `local` registry and `.passEvent()` to `fooBar`
-- `HttpServer` is listening for a response and then returns.
-
-In the above examples, `args` would be serializable and NOT an emitter itself. This must be handled one layer down, http server would emit a payload which act as arguments to the HttpRequestEvent component, which would be constructed when necessary. The entire lifecycle of such a event component would exist on the `remote` side.
-
-The `local` version could be achieved with
-
-```ts
-const fooBar = registry.get('fooBarLocal')
-```
-
-Where the above would execute entirely locally.
+In the above example, the `fooBar` component is not actually the component, but a proxy to it, sharing all events.
