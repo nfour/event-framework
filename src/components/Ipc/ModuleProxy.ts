@@ -2,7 +2,7 @@ import { fork } from 'child_process';
 
 import { Component } from '../..';
 import { deferredPromise, IDefferedPromise } from '../../test/lib';
-import { IComponentModuleConfig } from '../../test/cases/ipc/types/registry';
+import { IComponentModuleConfig } from '../../types';
 import { ProcessComponent } from './ProcessComponent';
 import { ProxyComponent } from './ProxyComponent';
 

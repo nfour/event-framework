@@ -1,5 +1,5 @@
 import { Component } from '..';
-import { IComponentConfig, IRegistryConfig } from '../test/cases/ipc/types/registry';
+import { IComponentConfig, IRegistryConfig } from '../types';
 import { ModuleProxy } from './Ipc/ModuleProxy';
 import { ProxyComponent } from './Ipc/ProxyComponent';
 
