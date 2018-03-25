@@ -1,33 +1,27 @@
 # IPC
 
-## Requirements
-
-- Have mutliple registry configurations which depict components being in different locations
-- Should be able to construct & connect to components in a config regardless of location
-
-### Resources
-
-- HttpAction: foo
-  - Http bundle middlewares
-
-### Scenario 2
-
-A registry of
+A configuration looks like:
 
 ```ts
 const remoteConfig = {
   fooBar: {
-    type: 'netIpc',
-    host: '0.0.0.0',
-    port: 1338,
-    component: 'fooBar'
+    name: 'foo',
+    type: 'module',
+    spawn: true,
+    module: {
+      path: resolve(__dirname, '..', './actions'),
+      member: 'action1',
+    },
   },
 }
 const localConfig = {
-  fooBa: {
-    type: 'local',
-    path: 'components/fooBar.fooBar',
-    component: 'fooBar
+  fooBar: {
+    name: 'foo',
+    type: 'module',
+    module: {
+      path: resolve(__dirname, '..', './actions'),
+      member: 'action1',
+    },
   },
 }
 ```
