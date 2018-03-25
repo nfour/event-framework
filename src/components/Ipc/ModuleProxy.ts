@@ -1,8 +1,8 @@
 import { fork } from 'child_process';
 
-import { Component } from '../../../..';
-import { deferredPromise, IDefferedPromise } from '../../../lib';
-import { IComponentModuleConfig } from '../types/registry';
+import { Component } from '../..';
+import { deferredPromise, IDefferedPromise } from '../../test/lib';
+import { IComponentModuleConfig } from '../../test/cases/ipc/types/registry';
 import { ProcessComponent } from './ProcessComponent';
 import { ProxyComponent } from './ProxyComponent';
 
@@ -25,7 +25,7 @@ export class ModuleProxy extends ProxyComponent {
     if (this.config.spawn) {
       // Process spawn component
 
-      const child = fork('spawn.ts', [path, member, this.name, this.type], {
+      const child = fork('spawnProcess.ts', [path, member, this.name, this.type], {
         cwd: __dirname,
         execArgv: ['-r', 'ts-node/register'],
       });

@@ -1,7 +1,7 @@
-import { Component } from '../../../..';
-import { IComponentConfig, IRegistryConfig } from '../types/registry';
-import { ModuleProxy } from './ModuleProxy';
-import { ProxyComponent } from './ProxyComponent';
+import { Component } from '../..';
+import { IComponentConfig, IRegistryConfig } from '../../test/cases/ipc/types/registry';
+import { ModuleProxy } from '../Ipc/ModuleProxy';
+import { ProxyComponent } from '../Ipc/ProxyComponent';
 
 export class Registry {
   private components: Map<string, ProxyComponent> = new Map();

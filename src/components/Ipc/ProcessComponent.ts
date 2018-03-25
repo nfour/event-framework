@@ -2,7 +2,7 @@ import { ChildProcess } from 'child_process';
 import * as uuid from 'uuid';
 
 import { isObject } from 'lodash';
-import { Component } from '../../../..';
+import { Component } from '../..';
 
 export interface IProcessComponentMessage {
   event: string;

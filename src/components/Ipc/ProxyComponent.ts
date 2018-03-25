@@ -1,5 +1,5 @@
-import { Component } from '../../../..';
-import { IComponentConfig } from '../types/registry';
+import { Component } from '../..';
+import { IComponentConfig } from '../../test/cases/ipc/types/registry';
 
 /**
  * TODO:
