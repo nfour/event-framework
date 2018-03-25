@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import { action1 } from '../actions';
-import { Registry } from '../../../../components/Registry/Registry';
+import { Registry } from '../../../../components/Registry';
 import { IRegistryConfig } from '../types/registry';
 
 export const moduleConfig: IRegistryConfig = [
