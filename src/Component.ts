@@ -124,6 +124,15 @@ export abstract class Component<
     }
   }
 
+  disconnect (...components: Array<Component<any, any>>) {
+    if (!components.length) { this.disconnectFromComponents(); }
+
+    components.forEach((component) => {
+      this.components.delete(component);
+      component.disconnect(this);
+    });
+  }
+
   /** Like connect, but first listens for an event and .connect()'s to that instead */
   connectOn (name: string, getComponents: () => Array<Component<any, any>>) {
     this.on(name, (event) => {
@@ -133,7 +142,7 @@ export abstract class Component<
     });
   }
 
-  disconnect (component: Component<any, any>) {
-    this.components.delete(component);
+  private disconnectFromComponents () {
+    this.components.forEach((component) => component.disconnect(this));
   }
 }
