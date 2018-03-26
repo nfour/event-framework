@@ -34,7 +34,7 @@ export abstract class Emitter {
   /**
    * Emit an event, asynchronously.
    */
-  async emit (key: string, ...payload: any[]): Promise<any> {
+  emit = async (key: string, ...payload: any[]): Promise<any> => {
     const event = this._events.get(key);
     const allEvent = this._events.get('*');
 
@@ -66,7 +66,7 @@ export abstract class Emitter {
     return result;
   }
 
-  async on (key, callback: IOnCallback, options: IOnConfig = {}) {
+  on = async (key, callback: IOnCallback, options: IOnConfig = {}) => {
     const event = this._events.get(key) || new Event(key);
 
     if (this.debug) { console.info(`on\t${this.constructor.name}   ${key}`); }

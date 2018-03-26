@@ -1,4 +1,5 @@
 import { resolve } from 'path';
+
 import { action1 } from '../../../test/cases/ipc/actions';
 import { IRegistryConfig } from '../../../types';
 import { Registry } from '../../Registry';
