@@ -34,12 +34,12 @@ export class ProcessComponent extends Component<any> {
     });
   }
 
-  emit = (event, ...payload) => {
+  emit = (event: string, ...payload) => {
     this.emitToSelf(event, ...payload);
     return this.emitToProcessWithReply(event, ...payload);
   }
 
-  emitToProcess = (event, ...payload) => {
+  emitToProcess = (event: string, ...payload) => {
     const message: IProcessComponentMessage = {
       event, payload,
       reply: event.endsWith(REPLY_SUFFIX)
@@ -52,7 +52,7 @@ export class ProcessComponent extends Component<any> {
     return message;
   }
 
-  emitToProcessWithReply = (event, ...payload) => {
+  emitToProcessWithReply = (event: string, ...payload) => {
     const { reply } = this.emitToProcess(event, ...payload);
 
     if (!reply) { return; }
@@ -62,7 +62,7 @@ export class ProcessComponent extends Component<any> {
     });
   }
 
-  emitToSelf = (event, ...payload) => {
+  emitToSelf = (event: string, ...payload) => {
     return emit.call(this, event, ...payload);
   }
 }
