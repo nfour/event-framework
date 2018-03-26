@@ -1,15 +1,15 @@
 import { resolve } from 'path';
 
-import { action1 } from '../../../test/cases/ipc/actions';
 import { IRegistryConfig } from '../../../types';
 import { Registry } from '../../Registry';
+import { action1 } from './actions';
 
 export const moduleConfig: IRegistryConfig = [
   {
     name: 'foo',
     type: 'module',
     module: {
-      path: resolve(__dirname, '..', './actions'),
+      path: resolve(__dirname, './actions'),
       member: 'action1',
     },
   },

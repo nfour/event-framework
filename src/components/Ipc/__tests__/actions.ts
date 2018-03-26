@@ -1,4 +1,4 @@
-import { HttpAction } from '../../../components/HttpRequest/HttpAction';
+import { HttpAction } from '../../HttpRequest/HttpAction';
 
 export const action1 = new HttpAction<any, any>(() => {
   return { statusCode: 200, body: 1 };

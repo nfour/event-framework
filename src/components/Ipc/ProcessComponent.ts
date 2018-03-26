@@ -3,6 +3,7 @@ import * as uuid from 'uuid';
 
 import { isObject } from 'lodash';
 import { Component } from '../..';
+import { emit } from '../../Emitter';
 
 export interface IProcessComponentMessage {
   event: string;
@@ -10,9 +11,9 @@ export interface IProcessComponentMessage {
   payload: any[];
 }
 
-const REPLY_SUFFIX = '::<<REPLY>>';
+const REPLY_SUFFIX = '<<REPLY>>';
 
-export class ProcessComponent extends Component<any> { // FIXME: any
+export class ProcessComponent extends Component<any> {
   private process: ChildProcess;
 
   constructor (emitter: NodeJS.Process|ChildProcess) {
@@ -62,6 +63,6 @@ export class ProcessComponent extends Component<any> { // FIXME: any
   }
 
   emitToSelf = (event, ...payload) => {
-    return super.emit(event, ...payload);
+    return emit.call(this, event, ...payload);
   }
 }

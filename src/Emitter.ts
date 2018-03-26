@@ -5,10 +5,62 @@ import { IOnCallback } from './index';
 export interface IOnConfig { priority?: IListenerConfig['priority']; limit?: IListenerConfig['limit']; }
 export interface IOnceConfig { priority?: IListenerConfig['priority']; }
 
+export async function emit (this: Emitter, key: string, ...payload: any[]): Promise<any> {
+  const event = this._events.get(key);
+  const allEvent = this._events.get('*');
+
+  if (this.debug) { console.info(`emit\t${this.constructor.name}   ${key}`); }
+
+  this.addPlayback(key, payload);
+
+  if (!(event || allEvent)) { return; }
+
+  const sendEvent = (e: Event, args: any[]) =>
+    e.propagate(...args).catch(async (error) => {
+      await this.emit('error', error);
+
+      throw error;
+    });
+
+  const propagations: Array<Promise<void>> = [];
+
+  if (event) {
+    propagations.push(sendEvent(event, payload));
+  }
+
+  if (allEvent) {
+    propagations.push(sendEvent(allEvent, [key, ...payload]));
+  }
+
+  const [result] = await Promise.all(propagations);
+
+  return result;
+}
+
+export function once (this: Emitter, key: string, callback: IOnCallback, options: IOnceConfig = {}) {
+  return this.on(key, callback, { ...options, limit: 1 });
+}
+
+export async function on (this: Emitter, key: string, callback: IOnCallback, options: IOnConfig = {}) {
+  const event = this._events.get(key) || new Event(key);
+
+  if (this.debug) { console.info(`on\t${this.constructor.name}   ${key}`); }
+
+  event.add({ ...options, callback });
+
+  this._events.set(key, event);
+
+  const playback = this._playback.get(key);
+
+  if (playback) {
+    playback.forEach((args) => event.propagate(...args));
+  }
+}
+
 /**
  * A component acts as both a subscriber and an event emitter.
  */
-export abstract class Emitter {
+export class Emitter {
   debug: boolean = !!process.env.DEBUG_EMITTER;
 
   /**
@@ -20,8 +72,21 @@ export abstract class Emitter {
    */
   playback: false|number = 1;
 
+  /**
+   * Emit an event, asynchronously.
+   */
+  emit = emit;
+  on = on;
+
+  /**
+   * Add listener to an event, but only fire the callback once.
+   *
+   * Also returns a promise which resolves only when the callback is executed.
+   */
+  once = once;
+
   /** The event listeners */
-  protected _events: Map<Event['key'], Event> = new Map();
+  _events: Map<Event['key'], Event> = new Map();
 
   /**
    * A dict of event playback to ensure adding listeners can be done after
@@ -29,67 +94,7 @@ export abstract class Emitter {
    *
    * These payloads are pruned on a timeout
    */
-  protected _playback: Map<Event['key'], any[][]> = new Map();
-
-  /**
-   * Emit an event, asynchronously.
-   */
-  emit = async (key: string, ...payload: any[]): Promise<any> => {
-    const event = this._events.get(key);
-    const allEvent = this._events.get('*');
-
-    if (this.debug) { console.info(`emit\t${this.constructor.name}   ${key}`); }
-
-    this.addPlayback(key, payload);
-
-    if (!(event || allEvent)) { return; }
-
-    const sendEvent = (e: Event, args: any[]) =>
-      e.propagate(...args).catch(async (error) => {
-        await this.emit('error', error);
-
-        throw error;
-      });
-
-    const propagations: Array<Promise<void>> = [];
-
-    if (event) {
-      propagations.push(sendEvent(event, payload));
-    }
-
-    if (allEvent) {
-      propagations.push(sendEvent(allEvent, [key, ...payload]));
-    }
-
-    const [result] = await Promise.all(propagations);
-
-    return result;
-  }
-
-  on = async (key, callback: IOnCallback, options: IOnConfig = {}) => {
-    const event = this._events.get(key) || new Event(key);
-
-    if (this.debug) { console.info(`on\t${this.constructor.name}   ${key}`); }
-
-    event.add({ ...options, callback });
-
-    this._events.set(key, event);
-
-    const playback = this._playback.get(key);
-
-    if (playback) {
-      playback.forEach((args) => event.propagate(...args));
-    }
-  }
-
-  /**
-   * Add listener to an event, but only fire the callback once.
-   *
-   * Also returns a promise which resolves only when the callback is executed.
-   */
-  once = (key, callback: IOnCallback, options: IOnceConfig = {}) => {
-    return this.on(key, callback, { ...options, limit: 1 });
-  }
+  _playback: Map<Event['key'], any[][]> = new Map();
 
   /**
    * Listen on any and all events
@@ -141,7 +146,7 @@ export abstract class Emitter {
     return true;
   }
 
-  private addPlayback (key: string, args: any[]) {
+  addPlayback (key: string, args: any[]) {
     if (this.playback === false) { return; }
 
     if (!this._playback.has(key)) {
