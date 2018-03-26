@@ -5,7 +5,10 @@ export interface IComponentConfig {
 
 export interface IComponentModuleConfig extends IComponentConfig {
   type: 'module';
-  spawn?: boolean;
+  /** When set, this module may be forked as a child process */
+  fork?: boolean;
+
+  /** The module path details */
   module: {
     path: string;
     member?: string;

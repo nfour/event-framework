@@ -2,6 +2,8 @@ import { Component } from '../..';
 import { IComponentConfig } from '../../types';
 
 /**
+ * Acts as a standard interface for ProxyComponents
+ *
  * TODO:
  * this needs to truely act as a proxy, passing through all listeners in the
  * initialize step

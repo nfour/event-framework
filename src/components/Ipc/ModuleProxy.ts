@@ -6,6 +6,11 @@ import { IComponentModuleConfig } from '../../types';
 import { ProcessComponent } from './ProcessComponent';
 import { ProxyComponent } from './ProxyComponent';
 
+/**
+ * Provides an abstraction to a component via a module import based on a config.
+ *
+ * If the config describes `fork`, which causes the module to be forked as a child process instead.
+ */
 export class ModuleProxy extends ProxyComponent {
   type: 'module';
   private config: IComponentModuleConfig;
@@ -22,7 +27,7 @@ export class ModuleProxy extends ProxyComponent {
   async initialize () {
     const { path, member = 'default' } = this.config.module;
 
-    if (this.config.spawn) {
+    if (this.config.fork) {
       // Process spawn component
 
       const child = fork('spawnProcess.ts', [path, member, this.name, this.type], {

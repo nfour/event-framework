@@ -13,6 +13,9 @@ export interface IProcessComponentMessage {
 
 const REPLY_SUFFIX = '<<REPLY>>';
 
+/**
+ * The ProcessComponent provides an abstraction on a `process` which holds another ProcessComponent via IPC.
+ */
 export class ProcessComponent extends Component<any> {
   private process: ChildProcess;
 

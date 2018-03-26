@@ -8,7 +8,7 @@ export const moduleConfig: IRegistryConfig = [
   {
     name: 'foo',
     type: 'module',
-    spawn: true,
+    fork: true,
     module: {
       path: resolve(__dirname, './actions'),
       member: 'action1',

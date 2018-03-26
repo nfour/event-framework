@@ -11,7 +11,7 @@ void (async () => {
   const component = new ModuleProxy({
     name,
     type: 'module',
-    spawn: false,
+    fork: false,
     module: { path, member },
   });
 
