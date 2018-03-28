@@ -1,7 +1,7 @@
 {
   "name": "event-framework",
   "description": "The framework",
-  "version": "0.0.2-6",
+  "version": "0.1.0-beta",
   "license": "MIT",
   "keywords": [
     "library"
