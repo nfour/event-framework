@@ -59,6 +59,8 @@ export class ProcessComponent extends Component<any> {
     this.on('process.state', (state) => { this.syncState(state); });
   }
 
+  // TODO: edit the forkProcess.ts file to use all this stuff now
+
   get state (): IProcessState {
     return {
       declarations: Array.from(this.declarations),
