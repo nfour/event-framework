@@ -22,6 +22,7 @@ test('execution after initialization', async () => {
   const foo = registry.get<typeof action1>('foo');
 
   foo.all().on((event, ...args) => {
+    // tslint:disable-next-line:no-console
     console.log('[[[MASTER]]]\n', event, ...args);
   });
 

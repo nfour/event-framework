@@ -3,6 +3,10 @@ import { IComponentConfig, IRegistryConfig } from '../types';
 import { ModuleProxy } from './Ipc/ModuleProxy';
 import { ProxyComponent } from './Ipc/ProxyComponent';
 
+export const proxyConstructorMap = new Map([
+  ['module', ModuleProxy],
+]);
+
 export class Registry {
   private components: Map<string, ProxyComponent> = new Map();
 
@@ -38,7 +42,3 @@ export class Registry {
     return (this.components.get(key) as any) as C;
   }
 }
-
-export const proxyConstructorMap = new Map([
-  ['module', ModuleProxy],
-]);

@@ -45,4 +45,4 @@ export class Action<E, R> extends Component<IComponentExecutor<E>, Action<E, R>>
   }
 }
 
-new Action<any, any>(() => {}).emit('execute');
+new Action<any, any>(() => { /**/ }).emit('execute');

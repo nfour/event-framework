@@ -32,6 +32,11 @@ export class ProcessComponent extends Component<any> {
 
     this.process = <ChildProcess> emitter;
 
+    /**
+     * `message` event is the only event emit by `process` for IPC
+     * This pulls out the actual event from the payload and emits it locally.
+     * In addition, emits a reply with the result, if necessary
+     */
     this.process.on('message', async (msg?: IProcessComponentMessage) => {
       if (!msg || !isObject(msg)) { return; }
 
@@ -56,11 +61,12 @@ export class ProcessComponent extends Component<any> {
     });
 
     /** The reply for `process.state.request` */
-    this.on('process.state', (state) => { this.syncState(state); });
+    this.on('process.state', (state) => this.syncState(state));
   }
 
   // TODO: edit the forkProcess.ts file to use all this stuff now
 
+  /** Serializable component state */
   get state (): IProcessState {
     return {
       declarations: Array.from(this.declarations),
@@ -69,6 +75,9 @@ export class ProcessComponent extends Component<any> {
     };
   }
 
+  /**
+   * Takes state or requests it, then reads that state into this component
+   */
   async syncState (state?: IProcessState) {
     if (!state) {
       state = <IProcessState> await this.emitToProcessWithReply('process.state.request');
@@ -78,13 +87,15 @@ export class ProcessComponent extends Component<any> {
     this.relaySubscriptionsToProcess();
   }
 
+  /** Emits to self and to the process */
   emit = (event: string, ...payload) => {
     this.emitToSelf(event, ...payload);
 
     return this.emitToProcessWithReply(event, ...payload);
   }
 
-  emitToProcess = (event: string, ...payload) => {
+  /** Emits only to the process */
+  emitToProcess = (event: string, ...payload): IProcessComponentMessage => {
     const message: IProcessComponentMessage = {
       event, payload,
       reply: event.endsWith(REPLY_SUFFIX)
@@ -97,6 +108,7 @@ export class ProcessComponent extends Component<any> {
     return message;
   }
 
+  /** Emits to the process, and waits for a reply back */
   emitToProcessWithReply = (event: string, ...payload): Promise<any> => {
     const { reply } = this.emitToProcess(event, ...payload);
 
@@ -105,15 +117,18 @@ export class ProcessComponent extends Component<any> {
     return new Promise((resolve) => { this.once(reply, resolve); });
   }
 
+  /** Emits to self */
   emitToSelf = (event: string, ...payload) => {
     return emit.call(this, event, ...payload);
   }
 
+  /** Reconstructs component Set's based on input */
   private readProcessComponentState ({ subscriptions = [], declarations = [] }: IProcessState) {
     if (subscriptions.length) { this.subscriptions = new Set(subscriptions); }
     if (declarations.length) { this.declarations = new Set(declarations as any[]); }
   }
 
+  /** Sets up listeners for subscribed events to the process */
   private relaySubscriptionsToProcess () {
     this.subscriptions.forEach((event) => {
       if (this.relaying.has(event)) { return; }

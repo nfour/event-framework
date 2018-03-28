@@ -41,7 +41,7 @@ export function once (this: Emitter, key: string, callback: IOnCallback, options
   return this.on(key, callback, { ...options, limit: 1 });
 }
 
-export async function on (this: Emitter, key: string, callback: IOnCallback, options: IOnConfig = {}) {
+export function on (this: Emitter, key: string, callback: IOnCallback, options: IOnConfig = {}) {
   const event = this._events.get(key) || new Event(key);
 
   if (this.debug) { console.info(`on\t${this.constructor.name}   ${key}`); }
@@ -55,6 +55,8 @@ export async function on (this: Emitter, key: string, callback: IOnCallback, opt
   if (playback) {
     playback.forEach((args) => event.propagate(...args));
   }
+
+  return event;
 }
 
 /**

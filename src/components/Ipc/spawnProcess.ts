@@ -3,6 +3,8 @@
 import { ModuleProxy } from './ModuleProxy';
 import { ProcessComponent } from './ProcessComponent';
 
+// tslint:disable:no-console
+
 const [, , path, member, name] = process.argv;
 
 void (async () => {
@@ -28,5 +30,5 @@ void (async () => {
   component.all().on(processProxy.emitToProcess);
   processProxy.all().on(component.emit);
 
-  processProxy.emit('ready');
+  await processProxy.emit('ready');
 })();
