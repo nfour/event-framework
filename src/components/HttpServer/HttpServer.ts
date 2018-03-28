@@ -71,7 +71,7 @@ export class HttpServer extends Component<Hub, HttpServer> {
 
     this.on('start', () => {
       this.server = this.app.listen({ port: this.port, host: this.host }, async () => {
-        await this.emit('HttpServer.ready', this);
+        return this.emit('HttpServer.ready', this);
       });
     });
   }
@@ -82,6 +82,11 @@ export class HttpServer extends Component<Hub, HttpServer> {
     return `${this.protocol}://${this.host}${port}`;
   }
 
+  /**
+   * Routes a path to a component
+   *
+   * @param routePath A path resembling `POST, PUT /foo/bar` format
+   */
   route (routePath: string) {
     const matches = routePath.match(/((?:[A-Z]+(?:,\s*)?){1,}) (.+)/);
 
