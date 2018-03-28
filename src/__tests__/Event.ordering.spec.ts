@@ -6,11 +6,11 @@ it('sorts by priority', async () => {
   const order: number[] = [];
 
   const listeners = [
-    { callback: jest.fn(() => order.push(4)), priority: 1 },
-    { callback: jest.fn(() => order.push(1)), priority: 122 },
-    { callback: jest.fn(() => order.push(3)), priority: 33 },
-    { callback: jest.fn(() => order.push(2)), priority: 99 },
-    { callback: jest.fn(() => order.push(5)), priority: Infinity },
+    { callback: () => order.push(4), priority: 1 },
+    { callback: () => order.push(1), priority: 122 },
+    { callback: () => order.push(3), priority: 33 },
+    { callback: () => order.push(2), priority: 99 },
+    { callback: () => order.push(5), priority: Infinity },
   ];
 
   listeners.forEach((listener) => event.add(listener));
@@ -26,9 +26,9 @@ it('should sort by insertion order by default', async () => {
   const order: number[] = [];
 
   const listeners = [
-    { callback: jest.fn(() => order.push(1)) },
-    { callback: jest.fn(() => order.push(2)) },
-    { callback: jest.fn(() => order.push(3)) },
+    { callback: () => order.push(1) },
+    { callback: () => order.push(2) },
+    { callback: () => order.push(3) },
   ];
 
   listeners.forEach((listener) => event.add(listener));

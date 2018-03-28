@@ -8,11 +8,11 @@ it('events are executed in order of priority', async () => {
   const order: number[] = [];
 
   const listeners = [
-    { callback: jest.fn(() => order.push(4)), priority: 1 },
-    { callback: jest.fn(() => order.push(1)), priority: 122 },
-    { callback: jest.fn(() => order.push(3)), priority: 33 },
-    { callback: jest.fn(() => order.push(2)), priority: 99 },
-    { callback: jest.fn(() => order.push(5)), priority: Infinity },
+    { callback: () => order.push(4), priority: 1 },
+    { callback: () => order.push(1), priority: 122 },
+    { callback: () => order.push(3), priority: 33 },
+    { callback: () => order.push(2), priority: 99 },
+    { callback: () => order.push(5), priority: Infinity },
   ];
 
   listeners.forEach((listener) => {
