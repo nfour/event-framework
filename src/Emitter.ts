@@ -5,6 +5,9 @@ import { IOnCallback } from './index';
 export interface IOnConfig { priority?: IListenerConfig['priority']; limit?: IListenerConfig['limit']; }
 export interface IOnceConfig { priority?: IListenerConfig['priority']; }
 
+/**
+ * Emit an event, asynchronously.
+ */
 export async function emit (this: Emitter, key: string, ...payload: any[]): Promise<any> {
   const event = this._events.get(key);
   const allEvent = this._events.get('*');
@@ -37,10 +40,9 @@ export async function emit (this: Emitter, key: string, ...payload: any[]): Prom
   return result;
 }
 
-export function once (this: Emitter, key: string, callback: IOnCallback, options: IOnceConfig = {}) {
-  return this.on(key, callback, { ...options, limit: 1 });
-}
-
+/**
+ * Listen to an event
+ */
 export function on (this: Emitter, key: string, callback: IOnCallback, options: IOnConfig = {}) {
   const event = this._events.get(key) || new Event(key);
 
@@ -60,6 +62,15 @@ export function on (this: Emitter, key: string, callback: IOnCallback, options: 
 }
 
 /**
+ * Add listener to an event, but only fire the callback once.
+ *
+ * Also returns a promise which resolves only when the callback is executed.
+ */
+export function once (this: Emitter, key: string, callback: IOnCallback, options: IOnceConfig = {}) {
+  return this.on(key, callback, { ...options, limit: 1 });
+}
+
+/**
  * A component acts as both a subscriber and an event emitter.
  */
 export class Emitter {
@@ -74,17 +85,8 @@ export class Emitter {
    */
   playback: false|number = 1;
 
-  /**
-   * Emit an event, asynchronously.
-   */
   emit = emit;
   on = on;
-
-  /**
-   * Add listener to an event, but only fire the callback once.
-   *
-   * Also returns a promise which resolves only when the callback is executed.
-   */
   once = once;
 
   /** The event listeners */
