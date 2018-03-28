@@ -5,6 +5,13 @@ import { IOnCallback } from './index';
 export interface IOnConfig { priority?: IListenerConfig['priority']; limit?: IListenerConfig['limit']; }
 export interface IOnceConfig { priority?: IListenerConfig['priority']; }
 
+export type IEmitterDebug = boolean;
+export type IEmitterPlayback = false|number;
+export interface IEmitterConstructor {
+  debug?: IEmitterDebug;
+  playback?: IEmitterPlayback;
+}
+
 export async function emit (this: Emitter, key: string, ...payload: any[]): Promise<any> {
   const event = this._events.get(key);
   const allEvent = this._events.get('*');
@@ -61,7 +68,7 @@ export async function on (this: Emitter, key: string, callback: IOnCallback, opt
  * A component acts as both a subscriber and an event emitter.
  */
 export class Emitter {
-  debug: boolean = !!process.env.DEBUG_EMITTER;
+  debug: IEmitterDebug = !!process.env.DEBUG_EMITTER;
 
   /**
    * If nothing has begun listening to an event after this
@@ -70,7 +77,7 @@ export class Emitter {
    * When set to `Infinity` this is never purged
    * When set to `false` no history is kept
    */
-  playback: false|number = 1;
+  playback: IEmitterPlayback = 1;
 
   /**
    * Emit an event, asynchronously.
@@ -95,6 +102,14 @@ export class Emitter {
    * These payloads are pruned on a timeout
    */
   _playback: Map<Event['key'], any[][]> = new Map();
+
+  /**
+   * Apply debug and playback options that are passed into the constructor
+   */
+  constructor ({ debug, playback }: IEmitterConstructor = {}) {
+    if (debug !== undefined) { this.debug = debug; }
+    if (playback !== undefined) { this.playback = playback; }
+  }
 
   /**
    * Listen on any and all events
