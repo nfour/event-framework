@@ -1,5 +1,10 @@
 #!/usr/bin/env ts-node
 
+/**
+ * This file serves to provide a Node JS child process stage for
+ * proxied components.
+ */
+
 import { ModuleProxy } from './ModuleProxy';
 import { ProcessComponent } from './ProcessComponent';
 

@@ -1,5 +1,11 @@
 import { Component, IOn } from '../Component';
 
+/**
+ * Merely responsibly for emitting a `ready` event.
+ *
+ * This component should be used to "start" a set of components which
+ * rely on such a workflow
+ */
 export class Hub extends Component<any, Hub> {
   Emit: {
     (name: 'start');

@@ -22,6 +22,8 @@ export class HttpRequest extends Component<
 
   Declared: 'HttpRequestEvent';
 
+  // TODO: this is bad and shouldnt exist. HttpLambda and HttpServer should do this themselves
+  // using a shared emitRequest function
   constructor () {
     super();
 

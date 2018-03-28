@@ -7,6 +7,11 @@ export const proxyConstructorMap = new Map([
   ['module', ModuleProxy],
 ]);
 
+/**
+ * The Registry acts as a component dispenser, specifically
+ * a ProxyComponent dispenser. This means components can physically be anywhere
+ * yet when retrieved from the Registry will act like the real thing.
+ */
 export class Registry {
   private components: Map<string, ProxyComponent> = new Map();
 

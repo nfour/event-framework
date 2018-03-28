@@ -5,6 +5,7 @@ import { HttpRequestEvent } from '../HttpRequest/HttpRequestEvent';
 import { HttpRequest } from '../HttpRequest/index';
 import { createHttpEventFromLambda } from './lib';
 
+/** A HttpRequest emitter fed by AWS Lambda handlers */
 export class HttpLambda extends Component<IComponent, HttpLambda> {
   Emit: {
     (name: 'HttpLambda.ready', component: HttpLambda);
