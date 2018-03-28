@@ -12,7 +12,7 @@ const baseEvent = <IInputLambdaHttpEvent> {
 
 describe('HttpLambda function plusOne', () => {
   it('executes', async () => {
-    const { plusOneHandler } = await import('../httpLambda');
+    const { plusOneHandler } = await import('../httpLambda.example');
 
     const response = await plusOneHandler({
       ...baseEvent,
@@ -28,7 +28,7 @@ describe('HttpLambda function plusOne', () => {
 
 describe('HttpLambda function timesTwo', () => {
   it('executes', async () => {
-    const { timesFourHandler } = await import('../httpLambda');
+    const { timesFourHandler } = await import('../httpLambda.example');
 
     const response = await timesFourHandler({
       ...baseEvent,

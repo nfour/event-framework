@@ -1,1 +1,1 @@
-export * from './hub';
+export * from './hub.example';

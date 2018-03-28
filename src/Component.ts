@@ -35,6 +35,9 @@ export interface IOnceConfig { priority?: IListenerConfig['priority']; }
 
 /**
  * A component acts as both a subscriber and an event emitter.
+ *
+ * It can be connected to other components, which means exchanging event subscriptions
+ * as necessary.
  */
 export abstract class Component<
   E extends IComponentSignaturesGeneric = IComponent,
