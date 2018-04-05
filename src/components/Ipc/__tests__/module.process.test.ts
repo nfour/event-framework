@@ -6,12 +6,16 @@ import { action1 } from './actions';
 
 export const moduleConfig: IRegistryConfig = [
   {
-    name: 'foo',
     type: 'module',
+    name: 'foo',
     fork: true,
     module: {
       path: resolve(__dirname, './actions'),
       member: 'action1',
+    },
+    component: {
+      subscriptions: ['execute'],
+      declarations: ['execute.complete'],
     },
   },
 ];
@@ -31,5 +35,4 @@ test('execution after initialization', async () => {
   const result = await foo.emit('execute', { wew: true });
 
   expect(result).toMatchObject({ statusCode: 200 });
-
 });

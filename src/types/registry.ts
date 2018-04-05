@@ -3,6 +3,13 @@ export interface IComponentConfig {
   type: string;
 }
 
+export interface IComponentExternalConfig {
+  component: {
+    subscriptions: string[];
+    declarations: string[];
+  };
+}
+
 export interface IComponentModuleConfig extends IComponentConfig {
   type: 'module';
   /** When set, this module may be forked as a child process */
@@ -15,6 +22,10 @@ export interface IComponentModuleConfig extends IComponentConfig {
   };
 }
 
+export type IComponentExternalModuleConfig = IComponentModuleConfig & IComponentExternalConfig & {
+  fork: true;
+};
+
 export interface IComponentHttpConfig extends IComponentConfig {
   type: 'http';
   url: string;
@@ -22,6 +33,7 @@ export interface IComponentHttpConfig extends IComponentConfig {
 
 export type IComponentConfigs = (
   IComponentModuleConfig |
+  IComponentExternalModuleConfig |
   IComponentHttpConfig
 );
 

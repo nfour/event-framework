@@ -61,7 +61,7 @@ export class ProcessComponent extends Component<any> {
     });
 
     /** The reply for `process.state.request` */
-    this.on('process.state', (state) => this.syncState(state));
+    this.on('process.state', (state) => this.loadState(state));
   }
 
   // TODO: edit the forkProcess.ts file to use all this stuff now
@@ -78,11 +78,15 @@ export class ProcessComponent extends Component<any> {
   /**
    * Takes state or requests it, then reads that state into this component
    */
-  async syncState (state?: IProcessState) {
+  async loadState (state?: IProcessState) {
     if (!state) {
       state = <IProcessState> await this.emitToProcessWithReply('process.state.request');
     }
 
+    return this.readState(state);
+  }
+
+  readState (state: IProcessState) {
     this.readProcessComponentState(state);
     this.relaySubscriptionsToProcess();
   }
@@ -120,6 +124,10 @@ export class ProcessComponent extends Component<any> {
   /** Emits to self */
   emitToSelf = (event: string, ...payload) => {
     return emit.call(this, event, ...payload);
+  }
+
+  destroy () {
+    return this.process.kill();
   }
 
   /** Reconstructs component Set's based on input */

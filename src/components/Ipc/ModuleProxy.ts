@@ -37,9 +37,11 @@ export class ModuleProxy extends ProxyComponent {
 
       this.component.resolve(new ProcessComponent(child));
 
-      await this.component.then(async (component) => {
-        await new Promise((resolve) => component.once('ready', resolve));
-      });
+      const component = <ProcessComponent> await this.component;
+
+      await new Promise((resolve) => component.once('ready', resolve));
+
+      await component.loadState();
     } else {
       // Local component
 
