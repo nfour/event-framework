@@ -46,7 +46,13 @@ export class HttpServer extends Component<Hub, HttpServer> {
   host: string;
   protocol: 'http' | 'https' = 'http';
 
-  protected app: Koa;
+  routes: Map<string, {
+    methods: string[],
+    path: string,
+    component: Component<any, any>,
+  }>;
+
+  protected; app: Koa;
   protected router: Router;
   protected server: Server;
 
@@ -108,6 +114,8 @@ export class HttpServer extends Component<Hub, HttpServer> {
 
   private registerRoute ({ component, methods, path }: IRouteConfig) {
     const middleware = this.createRequestMiddleware(component);
+
+    this.routes.set(`${methods} ${path}`, { methods, path, component });
 
     this.router.register(path, methods, middleware);
   }

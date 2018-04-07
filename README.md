@@ -1,22 +1,29 @@
 [![CircleCI](https://circleci.com/gh/nfour/event-framework.svg?style=svg)](https://circleci.com/gh/nfour/event-framework)
 
-# Untitled Event Framework
+# Event Framework
 
-- [Untitled Event Framework](#untitled-event-framework)
-  - [Contributing](#contributing)
+- [Event Framework](#event-framework)
   - [About](#about)
+  - [Contributing](#contributing)
   - [To Do & Concepts](#to-do-concepts)
 
 
 ----------
 
-## Contributing
-
-To contribute to the project, please read: [CONTRIBUTING.md](./CONTRIBUTING.md)
-
 ## About
 
-> Currently WIP
+A framework designed to:
+- Leverage TypeScript to make event signatures clear
+- Be fundamentally simple
+- Support cross-process messaging for arbitrary code
+
+See:
+- [Introduction](./docs/Introduction.md)
+
+## Contributing
+
+Want to contribute? Read: [CONTRIBUTING.md](./CONTRIBUTING.md)
+
 
 ## To Do & Concepts
 
