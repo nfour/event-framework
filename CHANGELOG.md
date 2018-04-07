@@ -25,11 +25,11 @@ Based on [Keep a Changelog](http://keepachangelog.com/).
 
 
 
-[Unreleased]: https://github.com/nfour/event-framework/compare/v0.1.0-beta...HEAD
-[0.1.0-beta]: https://github.com/nfour/event-framework/compare/v0.0.2-6...v0.1.0-beta
-[0.0.2-6]: https://github.com/nfour/event-framework/compare/v0.0.2-5...v0.0.2-6
-[0.0.2-5]: https://github.com/nfour/event-framework/compare/v0.0.2-4...v0.0.2-5
-[0.0.2-4]: https://github.com/nfour/event-framework/compare/v0.0.2-3...v0.0.2-4
-[0.0.2-3]: https://github.com/nfour/event-framework/compare/v0.0.2-2...v0.0.2-3
-[0.0.2-2]: https://github.com/nfour/event-framework/compare/v0.0.2-1...v0.0.2-2
-[0.0.2-1]: https://github.com/nfour/event-framework/tree/v0.0.2-1
+[Unreleased]: https://github.com/nfour/reaco/compare/v0.1.0-beta...HEAD
+[0.1.0-beta]: https://github.com/nfour/reaco/compare/v0.0.2-6...v0.1.0-beta
+[0.0.2-6]: https://github.com/nfour/reaco/compare/v0.0.2-5...v0.0.2-6
+[0.0.2-5]: https://github.com/nfour/reaco/compare/v0.0.2-4...v0.0.2-5
+[0.0.2-4]: https://github.com/nfour/reaco/compare/v0.0.2-3...v0.0.2-4
+[0.0.2-3]: https://github.com/nfour/reaco/compare/v0.0.2-2...v0.0.2-3
+[0.0.2-2]: https://github.com/nfour/reaco/compare/v0.0.2-1...v0.0.2-2
+[0.0.2-1]: https://github.com/nfour/reaco/tree/v0.0.2-1

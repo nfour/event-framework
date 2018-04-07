@@ -28,7 +28,7 @@ Components are the base of the framework.
 This is a basic component:
 
 ```ts
-import { Component } from 'event-framework';
+import { Component } from 'reaco';
 
 class Animal extends Component<any, Animal> {
   constructor () {

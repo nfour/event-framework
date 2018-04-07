@@ -1,8 +1,10 @@
-[![CircleCI](https://circleci.com/gh/nfour/event-framework.svg?style=svg)](https://circleci.com/gh/nfour/event-framework)
+[![CircleCI](https://circleci.com/gh/nfour/reaco.svg?style=svg)](https://circleci.com/gh/nfour/reaco)
 
-# Event Framework
+# Reaco
 
-- [Event Framework](#event-framework)
+**Rea**active **Co**mponent framework
+
+- [Reaco](#reaco)
   - [About](#about)
   - [Contributing](#contributing)
   - [To Do & Concepts](#to-do-concepts)

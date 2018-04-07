@@ -1,6 +1,6 @@
 {
-  "name": "event-framework",
-  "description": "The framework",
+  "name": "reaco",
+  "description": "A reactive component evented framework",
   "version": "0.1.0-beta",
   "license": "MIT",
   "keywords": [
