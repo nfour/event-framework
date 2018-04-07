@@ -38,6 +38,10 @@ export interface IOnceConfig { priority?: IListenerConfig['priority']; }
  *
  * It can be connected to other components, which means exchanging event subscriptions
  * as necessary.
+ *
+ * TypeScript generics explained:
+ * - The first generic is used to supply extended component signatures. Use IMergeComponentSignatures for multiple components.
+ * - The second is to supply the component itself as a self-reference
  */
 export abstract class Component<
   E extends IComponentSignaturesGeneric = IComponent,
