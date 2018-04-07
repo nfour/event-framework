@@ -15,8 +15,8 @@
 ## About
 
 A framework designed to:
-- Leverage TypeScript to make event signatures clear
-- Be fundamentally simple
+- Be fundamentally concise
+- Leverage TypeScript to make event signatures clear and easy
 - Support cross-process messaging for arbitrary code
 
 See:
