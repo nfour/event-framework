@@ -4,6 +4,7 @@
   - [Concepts](#concepts)
   - [Components](#components)
     - [Component Signatures](#component-signatures)
+    - [Proxy Components & the Registry](#proxy-components-the-registry)
 
 ## Concepts
 
@@ -154,4 +155,22 @@ void (async () => {
 
   await blue.emit('request', 1234 /* TS error, {} does not match MyRequest */)
 })
+```
+
+### Proxy Components & the Registry
+
+Proxy components simply allow you mimic a component even though you do not own a line of its code.
+
+Imagine this scenario:
+- Component `Red` is in process 1
+- Component `Blue` is in process 2
+- Component `Green` is also in process 2
+- Component `Spectrum` is in process 3
+
+> Spectrum:
+
+```ts
+
+... TODO
+
 ```
