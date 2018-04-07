@@ -7,7 +7,6 @@
 - [Reaco](#reaco)
   - [About](#about)
   - [Contributing](#contributing)
-  - [To Do & Concepts](#to-do-concepts)
 
 
 ----------
@@ -27,6 +26,3 @@ See:
 Want to contribute? Read: [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 
-## To Do & Concepts
-
-See: [TODO.md](./TODO.md)
