@@ -4,6 +4,8 @@ Based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+- Added ability to launch `function-action-module` ModuleProxy components.
+
 ## [0.1.0-beta][] - 2018-03-28
 
 ## [0.0.2-6][] - 2018-01-06
