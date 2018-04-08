@@ -7,9 +7,9 @@ import { HttpRequestEvent } from './HttpRequestEvent';
 
 /**
  * Responsible for:
- * - Ingesting HttpRequestEvents
+ * - Ingesting HttpRequestEvents.prepare
  * - Triggering its lifecycle
- * - Emitting HttpRequestEvent to subscribers
+ * - Emitting HttpRequestEvent
  */
 export class HttpRequest extends Component<
   IMergeComponentSignatures<HttpServer, HttpLambda, HttpRequestEvent>,
