@@ -23,7 +23,11 @@ export class Action<E, R> extends Component<IComponentExecutor<E>, Action<E, R>>
 
   Declared: 'execute.complete';
 
-  callback: (event: E) => R;
+  /**
+   * FIXME: Only when TypeScript supports variadic arguments, we can fix this assignment
+   * - https://github.com/Microsoft/TypeScript/issues/5453
+   */
+  callback: (...args: E[]) => R;
 
   constructor (callback: Action<E, R>['callback']) {
     super();
@@ -36,13 +40,11 @@ export class Action<E, R> extends Component<IComponentExecutor<E>, Action<E, R>>
     this.on('execute', this.execute);
   }
 
-  private execute = async (event: E) => {
-    const result = await Promise.resolve(this.callback(event));
+  private execute = async (...args: E[]) => {
+    const result = await Promise.resolve(this.callback(...args));
 
     await this.emit('execute.complete', result);
 
     return result;
   }
 }
-
-new Action<any, any>(() => { /**/ }).emit('execute');

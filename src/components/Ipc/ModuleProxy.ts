@@ -3,8 +3,13 @@ import { fork } from 'child_process';
 import { Component } from '../..';
 import { deferredPromise, IDefferedPromise } from '../../test/lib';
 import { IComponentModuleConfig } from '../../types';
+import { Action } from '../Action';
 import { ProcessComponent } from './ProcessComponent';
 import { ProxyComponent } from './ProxyComponent';
+
+export interface IActionableFunction<In = any, Out = any> { (input: In): Out; }
+
+export interface IModuleProxyImport { [member: string]: Component<any>|IActionableFunction; }
 
 /**
  * Provides an abstraction to a component via a module import based on a config.
@@ -12,7 +17,8 @@ import { ProxyComponent } from './ProxyComponent';
  * If the config describes `fork`, which causes the module to be forked as a child process instead.
  */
 export class ModuleProxy extends ProxyComponent {
-  type: 'module';
+  type: 'module' | 'function-action-module';
+
   private config: IComponentModuleConfig;
   private component: IDefferedPromise<Component<any>>;
 
@@ -45,9 +51,18 @@ export class ModuleProxy extends ProxyComponent {
     } else {
       // Local component
 
-      const module: Component<any> = await import(path);
+      const module: IModuleProxyImport = await import(path);
 
-      this.component.resolve(module[member]);
+      let component = module[member];
+
+      // TODO: refactor into fn
+      if (this.type === 'function-action-module') {
+        const fn = <IActionableFunction> component;
+
+        component = <Component<any, any>> new Action(fn);
+      }
+
+      this.component.resolve(component);
     }
   }
 

@@ -10,14 +10,17 @@ import { ProcessComponent } from './ProcessComponent';
 
 // tslint:disable:no-console
 
-const [, , path, member, name] = process.argv;
+type IExpectedArgs = [
+  string, string, string, string, string, ModuleProxy['type']
+];
+
+const [, , path, member, name, type] = <IExpectedArgs> process.argv;
 
 void (async () => {
   const processProxy = new ProcessComponent(process);
 
   const component = new ModuleProxy({
-    name,
-    type: 'module',
+    name, type,
     fork: false,
     module: { path, member },
   });

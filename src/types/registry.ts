@@ -1,8 +1,11 @@
+import { ModuleProxy } from '../components/Ipc';
+
 export interface IComponentConfig {
   name: string;
   type: string;
 }
 
+// TODO: this must be used by external components to decorate pubsub
 export interface IComponentExternalConfig {
   component: {
     subscriptions: string[];
@@ -11,7 +14,7 @@ export interface IComponentExternalConfig {
 }
 
 export interface IComponentModuleConfig extends IComponentConfig {
-  type: 'module';
+  type: ModuleProxy['type'];
   /** When set, this module may be forked as a child process */
   fork?: boolean;
 
