@@ -52,7 +52,7 @@ export class HttpServer extends Component<Hub, HttpServer> {
     component: Component<any, any>,
   }>;
 
-  protected; app: Koa;
+  protected app: Koa;
   protected router: Router;
   protected server: Server;
 
