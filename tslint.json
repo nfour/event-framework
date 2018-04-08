@@ -3,6 +3,7 @@
   "rules": {
     "max-classes-per-file": false,
     "member-access": [true, "no-public"],
-    "no-console": [true, "log", "error"]
+    "no-console": [true, "log", "error"],
+    "callable-types": [false]
   }
 }

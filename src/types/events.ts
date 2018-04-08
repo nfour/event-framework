@@ -3,7 +3,7 @@ import { HttpRequestEvent } from '../components/HttpRequest/HttpRequestEvent';
 import { IHttpRequestResponse } from './';
 
 export type IOnHttpRequestEvent = IOn<{
-  name: 'http.request' | 'http.request.response',
+  name: 'http.request',
   event: HttpRequestEvent,
   return: Promise<IHttpRequestResponse>|IHttpRequestResponse,
 }>;

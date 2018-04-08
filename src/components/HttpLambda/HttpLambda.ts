@@ -1,5 +1,5 @@
 import { Component } from '../../Component';
-import { IComponent, ILambdaHttpHandler, IOn } from '../../index';
+import { IComponent, IHttpRequestResponse, ILambdaHttpHandler, IOn, IOnHttpRequestEvent } from '../../index';
 import { Action } from '../Action';
 import { HttpRequestEvent } from '../HttpRequest/HttpRequestEvent';
 import { HttpRequest } from '../HttpRequest/index';
@@ -8,24 +8,22 @@ import { createHttpEventFromLambda } from './lib';
 /** A HttpRequest emitter fed by AWS Lambda handlers */
 export class HttpLambda extends Component<IComponent, HttpLambda> {
   Emit: {
-    (name: 'HttpLambda.ready', component: HttpLambda);
     (
-      name: 'HttpLambda.request',
+      name: 'HttpRequestEvent',
       event: HttpRequestEvent,
     ): Promise<HttpRequestEvent>|HttpRequestEvent;
   };
 
   On: (
-    IOn<{ name: 'HttpLambda.ready', event: HttpLambda }> &
     IOn<{
-      name: 'HttpLambda.request',
+      name: 'HttpRequestEvent',
       event: HttpRequestEvent,
       return: Promise<HttpRequestEvent>|HttpRequestEvent;
     }>
   );
 
   Declared: (
-    'HttpLambda.request' | 'HttpLambda.request.response'
+   'HttpRequestEvent'
   );
 
   action: Action<any, any>;
@@ -35,7 +33,7 @@ export class HttpLambda extends Component<IComponent, HttpLambda> {
 
     this.action = action;
 
-    this.declare('HttpLambda.request');
+    this.declare('HttpRequestEvent');
 
     const httpRequest = Array.from(action.components).find((component) => component instanceof HttpRequest);
 
@@ -51,7 +49,7 @@ export class HttpLambda extends Component<IComponent, HttpLambda> {
       const event = createHttpEventFromLambda(inputEvent);
 
       try {
-        await this.emit('HttpLambda.request', event);
+        await this.emit('HttpRequestEvent', event);
       } catch (error) {
         event.error = error;
       }

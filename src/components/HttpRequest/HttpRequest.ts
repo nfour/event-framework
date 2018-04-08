@@ -4,46 +4,30 @@ import { HttpLambda } from '../HttpLambda';
 import { HttpServer } from '../HttpServer';
 import { HttpRequestEvent } from './HttpRequestEvent';
 
-/** Responsible for ingesting HttpRequestEvents and emitting them to subscribers */
+/**
+ * Responsible for:
+ * - Ingesting HttpRequestEvents
+ * - Triggering its lifecycle
+ * - Emitting HttpRequestEvent to subscribers
+ */
 export class HttpRequest extends Component<
   IMergeComponentSignatures<HttpServer, HttpLambda, HttpRequestEvent>,
   HttpRequest
 > {
-  Emit: {
-    (
-      name: 'HttpRequestEvent',
-      event: HttpRequestEvent,
-    );
-  };
-
-  On: (
-    IOnHttpRequestEvent
-  );
-
-  Declared: 'HttpRequestEvent';
-
-  // TODO: this is bad and shouldnt exist. HttpLambda and HttpServer should do this themselves
-  // using a shared emitRequest function
   constructor () {
     super();
 
-    this.declare('HttpRequestEvent');
-    this.subscribe('HttpServer.request', 'HttpLambda.request');
+    this.subscribe('HttpRequestEvent');
 
-    this.on('HttpLambda.request', this.emitRequest);
-    this.on('HttpServer.request', this.emitRequest);
+    this.on('HttpRequestEvent', async (event) => {
+      await event.broadcast();
+
+      return event;
+    });
   }
 
+  /** Connect components to the lifecycle event when it is avaliable */
   connectToEvent (getComponents: () => Array<Component<any, any>>) {
     return this.connectOn('HttpRequestEvent', getComponents);
   }
-
-  private emitRequest = async (event: HttpRequestEvent) => {
-    await this.emit('HttpRequestEvent', event);
-
-    await event.broadcast();
-
-    return event;
-  }
-
 }

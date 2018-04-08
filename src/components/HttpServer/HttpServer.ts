@@ -23,7 +23,7 @@ export class HttpServer extends Component<Hub, HttpServer> {
   Emit: {
     (name: 'HttpServer.ready', component: HttpServer);
     (
-      name: 'HttpServer.request',
+      name: 'HttpRequestEvent',
       event: HttpRequestEvent,
     ): Promise<HttpRequestEvent>|HttpRequestEvent;
   };
@@ -31,14 +31,14 @@ export class HttpServer extends Component<Hub, HttpServer> {
   On: (
     IOn<{ name: 'HttpServer.ready', event: HttpServer }> &
     IOn<{
-      name: 'HttpServer.request',
+      name: 'HttpRequestEvent',
       event: HttpRequestEvent,
       return: Promise<HttpRequestEvent>|HttpRequestEvent;
     }>
   );
 
   Declared: (
-    'HttpServer.request' | 'HttpServer.request.response' |
+    'HttpRequestEvent' |
     'HttpServer.ready'
   );
 
@@ -66,7 +66,7 @@ export class HttpServer extends Component<Hub, HttpServer> {
 
     this.subscribe('start');
 
-    this.declare('HttpServer.request');
+    this.declare('HttpRequestEvent');
     this.declare('HttpServer.ready');
 
     this.router = new Router();
@@ -125,7 +125,7 @@ export class HttpServer extends Component<Hub, HttpServer> {
       const event = createEventFromKoa(ctx);
 
       // Component specific event, useful for instrumentation
-      await component.emit('HttpServer.request', event);
+      await component.emit('HttpRequestEvent', event);
 
       const { response } = event;
 
@@ -134,6 +134,8 @@ export class HttpServer extends Component<Hub, HttpServer> {
       ctx.status = response.statusCode;
       ctx.body = response.body;
       ctx.set(response.headers || {});
+
+      console.log('wew');
     };
   }
 }
