@@ -9,21 +9,21 @@ import { createHttpEventFromLambda } from './lib';
 export class HttpLambda extends Component<IComponent, HttpLambda> {
   Emit: {
     (
-      name: 'HttpRequestEvent',
+      name: 'HttpRequestEvent.prepare',
       event: HttpRequestEvent,
     ): Promise<HttpRequestEvent>|HttpRequestEvent;
   };
 
   On: (
     IOn<{
-      name: 'HttpRequestEvent',
+      name: 'HttpRequestEvent.prepare',
       event: HttpRequestEvent,
       return: Promise<HttpRequestEvent>|HttpRequestEvent;
     }>
   );
 
   Declared: (
-   'HttpRequestEvent'
+   'HttpRequestEvent.prepare'
   );
 
   action: Action<any, any>;
@@ -33,7 +33,7 @@ export class HttpLambda extends Component<IComponent, HttpLambda> {
 
     this.action = action;
 
-    this.declare('HttpRequestEvent');
+    this.declare('HttpRequestEvent.prepare');
 
     const httpRequest = Array.from(action.components).find((component) => component instanceof HttpRequest);
 
@@ -49,7 +49,7 @@ export class HttpLambda extends Component<IComponent, HttpLambda> {
       const event = createHttpEventFromLambda(inputEvent);
 
       try {
-        await this.emit('HttpRequestEvent', event);
+        await this.emit('HttpRequestEvent.prepare', event);
       } catch (error) {
         event.error = error;
       }

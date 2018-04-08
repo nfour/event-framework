@@ -16,9 +16,9 @@ const httpServer = new HttpServer({
 const HttpLoggerAsFactory = () => {
   const component = new (class extends Component<HttpServer> {})();
 
-  component.subscribe('HttpRequestEvent');
+  component.subscribe('HttpRequestEvent.prepare');
 
-  component.tap().on('HttpRequestEvent', ({ request }): any => {
+  component.tap().on('HttpRequestEvent.prepare', ({ request }): any => {
     console.dir(request, { colors: true });
   });
 
@@ -29,9 +29,9 @@ class HttpLoggerAsClass extends Component<HttpServer> {
   constructor () {
     super();
 
-    this.subscribe('HttpRequestEvent');
+    this.subscribe('HttpRequestEvent.prepare');
 
-    this.tap().on('HttpRequestEvent', ({ request }): any => {
+    this.tap().on('HttpRequestEvent.prepare', ({ request }): any => {
       console.dir(request, { colors: true });
     });
   }
