@@ -1,8 +1,8 @@
+import { IComponent, ILambdaHttpHandler, IOn } from '../..';
 import { Component } from '../../Component';
-import { IComponent, IHttpRequestResponse, ILambdaHttpHandler, IOn, IOnHttpRequestEvent } from '../../index';
 import { Action } from '../Action';
+import { HttpRequest } from '../HttpRequest';
 import { HttpRequestEvent } from '../HttpRequest/HttpRequestEvent';
-import { HttpRequest } from '../HttpRequest/index';
 import { createHttpEventFromLambda } from './lib';
 
 /** A HttpRequest emitter fed by AWS Lambda handlers */

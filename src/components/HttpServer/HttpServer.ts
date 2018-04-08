@@ -134,7 +134,8 @@ export class HttpServer extends Component<Hub, HttpServer> {
       ctx.body = response.body;
       ctx.set(response.headers || {});
 
-      console.log('wew');
+      // tslint:disable-next-line:no-console
+      console.log('wew', ctx.body);
     };
   }
 }

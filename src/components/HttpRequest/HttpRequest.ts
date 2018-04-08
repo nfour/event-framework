@@ -1,6 +1,6 @@
 import { IOn } from '../..';
 import { Component } from '../../Component';
-import { IMergeComponentSignatures, IOnHttpRequestEvent } from '../../types/events';
+import { IMergeComponentSignatures } from '../../types/events';
 import { HttpLambda } from '../HttpLambda';
 import { HttpServer } from '../HttpServer';
 import { HttpRequestEvent } from './HttpRequestEvent';
