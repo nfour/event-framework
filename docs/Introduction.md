@@ -167,8 +167,6 @@ Imagine this scenario:
 - Component `Yellow` is also in process 2
 - Component `Spectrum` is in process 3
 
-> Spectrum:
-
 ```ts
 import { Registry } from 'reaco';
 import { configs } from './configs';
