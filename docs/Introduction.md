@@ -164,13 +164,60 @@ Proxy components simply allow you mimic a component even though you do not own a
 Imagine this scenario:
 - Component `Red` is in process 1
 - Component `Blue` is in process 2
-- Component `Green` is also in process 2
+- Component `Yellow` is also in process 2
 - Component `Spectrum` is in process 3
 
 > Spectrum:
 
 ```ts
 
-... TODO
+import { Registry } from 'reaco';
+import { configs } from './configs';
+
+const registry = new Registry(configs);
+
+const red = registry.get('red');
+const blue = registry.get('blue')
+const yellow = registry.get('yellow')
+const spectrum = registry.get('spectrum')
+
+spectrum.connect(red, blue, yellow);
+
+spectrum.emit('color.red');
+spectrum.emit('color.blue');
+
+spectrum.on('yellow', console.log);
+```
+
+> Yellow:
+
+```ts
+
+class Yellow extends Component<any, Red> {
+  constructor () {
+    super();
+
+    let hasRed = false;
+    let hasBlue = false;
+
+    const emitYellow = () => {
+      if (hasRed && hasBlue) {
+        this.emit('yellow');
+      }
+    }
+
+    this.on('color.red', () => {
+      hasRed = true;
+      emitYellow();
+    });
+
+    this.on('color.blue', () => {
+      hasBlue = true;
+      emitYellow();
+    })
+  }
+}
+
+export const yellow = new Yellow();
 
 ```
