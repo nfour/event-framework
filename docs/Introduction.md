@@ -71,7 +71,6 @@ class Habitat extends Component<any, Habitat> {
 Now we can connect them together
 
 ```ts
-and
 const animal = new Animal();
 const habitat = new Habitat();
 
