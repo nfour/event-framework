@@ -177,14 +177,14 @@ import { configs } from './configs';
 const registry = new Registry(configs);
 
 const red = registry.get('red');
-const blue = registry.get('blue')
+const green = registry.get('green')
 const yellow = registry.get('yellow')
 const spectrum = registry.get('spectrum')
 
-spectrum.connect(red, blue, yellow);
+spectrum.connect(red, green, yellow);
 
 spectrum.emit('color.red');
-spectrum.emit('color.blue');
+spectrum.emit('color.green');
 
 spectrum.on('yellow', console.log);
 ```
@@ -192,16 +192,15 @@ spectrum.on('yellow', console.log);
 > Yellow:
 
 ```ts
-
 class Yellow extends Component<any, Red> {
   constructor () {
     super();
 
     let hasRed = false;
-    let hasBlue = false;
+    let hasGreen = false;
 
     const emitYellow = () => {
-      if (hasRed && hasBlue) {
+      if (hasRed && hasGreen) {
         this.emit('yellow');
       }
     }
@@ -211,7 +210,7 @@ class Yellow extends Component<any, Red> {
       emitYellow();
     });
 
-    this.on('color.blue', () => {
+    this.on('color.green', () => {
       hasBlue = true;
       emitYellow();
     })
@@ -219,5 +218,4 @@ class Yellow extends Component<any, Red> {
 }
 
 export const yellow = new Yellow();
-
 ```
