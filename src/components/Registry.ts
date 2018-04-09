@@ -15,12 +15,8 @@ export const proxyConstructorMap = new Map([
 export class Registry {
   private components: Map<string, ProxyComponent> = new Map();
 
-  constructor (
-    public config: IRegistryConfig,
-  ) {
-    this.config = config;
-
-    config.forEach(this.add);
+  constructor (config?: IRegistryConfig) {
+    if (config) { config.forEach(this.add); }
   }
 
   async initialize () {
