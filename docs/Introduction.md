@@ -170,7 +170,6 @@ Imagine this scenario:
 > Spectrum:
 
 ```ts
-
 import { Registry } from 'reaco';
 import { configs } from './configs';
 
