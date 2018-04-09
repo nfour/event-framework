@@ -3,8 +3,8 @@
 - [Introduction](#introduction)
   - [Concepts](#concepts)
   - [Components](#components)
-    - [Component Signatures](#component-signatures)
     - [Proxy Components & the Registry](#proxy-components-the-registry)
+    - [Component Signatures](#component-signatures)
 
 ## Concepts
 
@@ -83,6 +83,70 @@ When the connection occurs:
 - `Habitat` emits **only** `water` and `food` to `Animal`
 - `Habitat` doesn't care about `Animal`, and it remains unchanged
 
+
+### Proxy Components & the Registry
+
+Proxy components simply allow you mimic a component even though you do not own a line of its code.
+
+Imagine this scenario:
+- Component `Red` is in process 1
+- Component `Blue` is in process 2
+- Component `Yellow` is also in process 2
+- Component `Spectrum` is in process 3
+
+```ts
+import { Registry } from 'reaco';
+import { configs } from './configs';
+
+const registry = new Registry(configs);
+
+const red = registry.get('red');
+const green = registry.get('green')
+const yellow = registry.get('yellow')
+const spectrum = registry.get('spectrum')
+
+spectrum.connect(red, green, yellow);
+
+spectrum.emit('color.red');
+spectrum.emit('color.green');
+
+spectrum.on('yellow', console.log);
+```
+
+> Yellow:
+
+```ts
+class Yellow extends Component<Spectrum, Yellow> {
+  constructor () {
+    super();
+
+    let hasRed = false;
+    let hasGreen = false;
+
+    const emitYellow = () => {
+      if (hasRed && hasGreen) {
+        this.emit('yellow');
+      }
+    }
+
+    this.on('color.red', () => {
+      hasRed = true;
+      emitYellow();
+    });
+
+    this.on('color.green', () => {
+      hasBlue = true;
+      emitYellow();
+    });
+  }
+}
+
+export const yellow = new Yellow();
+```
+
+In the above example we are leveraging the Registry in order to message between components, which could be anywhere.
+
+
 ### Component Signatures
 
 It can be confusing dealing with events as their payloads typically must be explicitly defined by the consumer of an event payload.
@@ -156,65 +220,3 @@ void (async () => {
   await blue.emit('request', 1234 /* TS error, {} does not match MyRequest */)
 })
 ```
-
-### Proxy Components & the Registry
-
-Proxy components simply allow you mimic a component even though you do not own a line of its code.
-
-Imagine this scenario:
-- Component `Red` is in process 1
-- Component `Blue` is in process 2
-- Component `Yellow` is also in process 2
-- Component `Spectrum` is in process 3
-
-```ts
-import { Registry } from 'reaco';
-import { configs } from './configs';
-
-const registry = new Registry(configs);
-
-const red = registry.get('red');
-const green = registry.get('green')
-const yellow = registry.get('yellow')
-const spectrum = registry.get('spectrum')
-
-spectrum.connect(red, green, yellow);
-
-spectrum.emit('color.red');
-spectrum.emit('color.green');
-
-spectrum.on('yellow', console.log);
-```
-
-> Yellow:
-
-```ts
-class Yellow extends Component<Spectrum, Yellow> {
-  constructor () {
-    super();
-
-    let hasRed = false;
-    let hasGreen = false;
-
-    const emitYellow = () => {
-      if (hasRed && hasGreen) {
-        this.emit('yellow');
-      }
-    }
-
-    this.on('color.red', () => {
-      hasRed = true;
-      emitYellow();
-    });
-
-    this.on('color.green', () => {
-      hasBlue = true;
-      emitYellow();
-    });
-  }
-}
-
-export const yellow = new Yellow();
-```
-
-In the above example we are leveraging the Registry in order to message between components, which could be anywhere.
