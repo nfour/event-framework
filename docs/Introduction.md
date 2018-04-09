@@ -192,7 +192,7 @@ spectrum.on('yellow', console.log);
 > Yellow:
 
 ```ts
-class Yellow extends Component<any, Red> {
+class Yellow extends Component<Spectrum, Yellow> {
   constructor () {
     super();
 
@@ -213,7 +213,7 @@ class Yellow extends Component<any, Red> {
     this.on('color.green', () => {
       hasBlue = true;
       emitYellow();
-    })
+    });
   }
 }
 
