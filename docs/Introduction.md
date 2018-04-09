@@ -216,3 +216,5 @@ class Yellow extends Component<Spectrum, Yellow> {
 
 export const yellow = new Yellow();
 ```
+
+In the above example we are leveraging the Registry in order to message between components, which could be anywhere.
