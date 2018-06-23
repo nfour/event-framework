@@ -18,6 +18,10 @@
     "version": "yarn changelog:version",
     "postversion": "yarn build"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nfour/reaco"
+  },
   "devDependencies": {
     "@types/jest": "^22.2.0",
     "@types/koa": "^2.0.43",
