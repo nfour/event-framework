@@ -1,8 +1,12 @@
 defaults: &defaults
   working_directory: ~/project
-  docker:
-    - image: 'nfour/circleci-node:9'
+  docker: [ image: 'nfour/circleci-node:9' ]
 
+defaultSteps: &restoreCache
+  restore_cache:
+    keys:
+    - deps-{{ checksum "package.json" }}
+    - deps-
 
 version: 2
 jobs:
@@ -11,36 +15,55 @@ jobs:
 
     steps:
       - checkout
-
-      - restore_cache:
-          keys:
-          - dependencies-{{ checksum "package.json" }}
-          - dependencies-
-
+      - *restoreCache
       - run: yarn install
-
       - save_cache:
-          paths:
-            - node_modules
-          key: dependencies-{{ checksum "package.json" }}
+          paths: [node_modules, build]
+          key: deps-{{ checksum "package.json" }}
 
-      - run: yarn preversion
+  lintTest:
+    <<: *defaults
 
+    steps:
+      - checkout
+      - *restoreCache
+      - run: yarn lint
+
+  unitTest:
+    <<: *defaults
+
+    steps:
+      - checkout
+      - *restoreCache
+      - run: yarn test:coverage
+
+  changelogTest:
+    <<: *defaults
+
+    steps:
+      - checkout
+      - *restoreCache
+      - run: yarn changelog:verify
 
   deploy:
     <<: *defaults
 
-    filters:
-      tags:
-        only: /.+/
-
     steps:
-      - run: pwd
+      - checkout
+      - *restoreCache
       - run: yarn release
 
 workflows:
   version: 2
-  buildAndDeploy:
+  deploy:
     jobs:
       - build
+      - lintTest: { requires: [build] }
+      - unitTest: { requires: [build] }
+      - changelogTest: { requires: [build] }
+      - deploy:
+          requires: [build, lintTest, unitTest, changelogTest]
+          filters:
+            tags: { only: /^v\b.+/ }
+            branches: { ignore: /.*/ }
 

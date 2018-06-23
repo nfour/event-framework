@@ -3,9 +3,7 @@
   "description": "A reactive component evented framework",
   "version": "0.2.0-beta",
   "license": "MIT",
-  "keywords": [
-    "library"
-  ],
+  "keywords": [ "library" ],
   "scripts": {
     "test": "jest",
     "test:coverage": "jest --coverage",
@@ -13,9 +11,12 @@
     "release": "cd build && yarn publish",
     "build": "bash -v -e scripts/build.bash",
     "build:link": "cd build && yarn unlink; yarn link",
-    "preversion": "yarn lint && yarn build && yarn test:coverage",
-    "postversion": "yarn build",
-    "version": "version-changelog CHANGELOG.md && git add CHANGELOG.md"
+
+    "changelog:verify": "changelog-verify CHANGELOG.md",
+    "changelog:version": "version-changelog CHANGELOG.md && git add CHANGELOG.md",
+    "preversion": "yarn lint && yarn build && yarn test:coverage && yarn changelog:verify",
+    "version": "yarn changelog:version",
+    "postversion": "yarn build"
   },
   "devDependencies": {
     "@types/jest": "^22.2.0",
