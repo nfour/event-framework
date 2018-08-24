@@ -16,3 +16,7 @@ export function createEventFromKoa ({
     },
   });
 }
+
+export function createLambdaInputFromKoa () {
+
+}

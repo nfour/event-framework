@@ -44,7 +44,6 @@ export class HttpLambda extends Component<IComponent, HttpLambda> {
     this.connect(httpRequest);
   }
 
-  // TODO: create a function like this, but which wires this handler up to an Action via 'execute'
   handler (): ILambdaHttpHandler {
     return async (inputEvent, context, done) => {
       const event = createHttpEventFromLambda(inputEvent);

@@ -27,7 +27,7 @@ export class Registry {
     );
   }
 
-  add = (config: IComponentConfig): ProxyComponent => {
+  add <Out extends Component<any, any> = ProxyComponent> (config: IComponentConfig): Out {
     const { type } = config;
 
     const Constructor = proxyConstructorMap.get(type)!;
@@ -36,7 +36,7 @@ export class Registry {
 
     this.components.set(component.name, component);
 
-    return component;
+    return component as any;
   }
 
   get <C extends Component<any, any> = ProxyComponent> (key: string) {

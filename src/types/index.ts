@@ -82,8 +82,17 @@ export type ILambdaHandler<G extends ILambdaHandlerGenerics> = (
   done: ILambdaCompleter<G['error'], G['response']>,
 ) => Promise<G['response']>;
 
-export type ILambdaHttpHandler = ILambdaHandler<{
-  event: IInputLambdaHttpEvent,
-  context: IInputLambdaHttpContext,
-  response: IHttpRequestResponse,
-}>;
+export type IGetLambdaHandlerInputArgs<G extends ILambdaHandlerGenerics> = [
+  G['event'],
+  G['context'],
+  ILambdaCompleter<G['error'], G['response']>
+];
+
+export interface ILambdaHttpDefinition {
+  event: IInputLambdaHttpEvent;
+  context: IInputLambdaHttpContext;
+  response: IHttpRequestResponse;
+}
+
+export type ILambdaHttpHandler = ILambdaHandler<ILambdaHttpDefinition>;
+export type ILambdaHandlerInputArgs = IGetLambdaHandlerInputArgs<ILambdaHttpDefinition>;
