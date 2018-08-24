@@ -3,7 +3,9 @@
   "description": "A reactive component evented framework",
   "version": "0.2.0-beta",
   "license": "MIT",
-  "keywords": [ "library" ],
+  "keywords": [
+    "library"
+  ],
   "scripts": {
     "test": "jest",
     "test:coverage": "jest --coverage",
@@ -11,7 +13,6 @@
     "release": "cd build && yarn publish",
     "build": "bash -v -e scripts/build.bash",
     "build:link": "cd build && yarn unlink; yarn link",
-
     "changelog:verify": "changelog-verify CHANGELOG.md",
     "changelog:version": "version-changelog CHANGELOG.md && git add CHANGELOG.md",
     "preversion": "yarn lint && yarn build && yarn test:coverage && yarn changelog:verify",
@@ -23,21 +24,21 @@
     "url": "https://github.com/nfour/reaco"
   },
   "devDependencies": {
-    "@types/jest": "^22.2.0",
+    "@types/jest": "^23.3.1",
     "@types/koa": "^2.0.43",
     "@types/koa-router": "^7.0.27",
     "@types/node": "^9.4.7",
     "@types/node-fetch": "^1.6.7",
     "changelog-verify": "^1.1.0",
-    "jest": "^22.4.2",
-    "jest-spec-reporter": "^1.0.3",
+    "jest": "^23.5.0",
+    "jest-spec-reporter": "^1.0.4",
     "jest-tap-reporter": "^1.9.0",
-    "nodemon": "^1.14.3",
-    "ts-jest": "^22.4.2",
+    "nodemon": "^1.18.3",
+    "ts-jest": "^23.1.4",
     "ts-node": "^5.0.1",
     "tslint": "^5.6.0",
     "tslint-config-temando": "^1.5.0",
-    "typescript": "^2.8.1",
+    "typescript": "^3.0.1",
     "version-changelog": "^2.1.0"
   },
   "dependencies": {
