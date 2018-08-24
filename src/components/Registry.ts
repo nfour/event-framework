@@ -5,6 +5,7 @@ import { ProxyComponent } from './Ipc/ProxyComponent';
 
 export const proxyConstructorMap = new Map([
   ['module', ModuleProxy],
+  ['function-action-module', ModuleProxy],
 ]);
 
 /**
@@ -16,7 +17,7 @@ export class Registry {
   private components: Map<string, ProxyComponent> = new Map();
 
   constructor (config?: IRegistryConfig) {
-    if (config) { config.forEach(this.add); }
+    if (config) { config.forEach((item) => this.add(item)); }
   }
 
   async initialize () {
@@ -27,10 +28,12 @@ export class Registry {
     );
   }
 
-  add <Out extends Component<any, any> = ProxyComponent> (config: IComponentConfig): Out {
+  add<Out extends Component<any, any> = ProxyComponent> (config: IComponentConfig): Out {
     const { type } = config;
 
     const Constructor = proxyConstructorMap.get(type)!;
+
+    if (!Constructor) { throw new Error(`Invaid proxy constructor: ${type}`); }
 
     const component = new Constructor(config as any);
 
@@ -39,7 +42,7 @@ export class Registry {
     return component as any;
   }
 
-  get <C extends Component<any, any> = ProxyComponent> (key: string) {
+  get<C extends Component<any, any> = ProxyComponent> (key: string) {
     return (this.components.get(key) as any) as C;
   }
 }

@@ -25,7 +25,7 @@ export class HttpServer extends Component<Hub, HttpServer> {
     (
       name: 'HttpRequestEvent.prepare',
       event: HttpRequestEvent,
-    ): Promise<HttpRequestEvent>|HttpRequestEvent;
+    ): Promise<HttpRequestEvent> | HttpRequestEvent;
   };
 
   On: (
@@ -33,7 +33,7 @@ export class HttpServer extends Component<Hub, HttpServer> {
     IOn<{
       name: 'HttpRequestEvent.prepare',
       event: HttpRequestEvent,
-      return: Promise<HttpRequestEvent>|HttpRequestEvent;
+      return: Promise<HttpRequestEvent> | HttpRequestEvent;
     }>
   );
 
@@ -50,7 +50,7 @@ export class HttpServer extends Component<Hub, HttpServer> {
     methods: string[],
     path: string,
     component: Component<any, any>,
-  }>;
+  }> = new Map();
 
   protected app: Koa;
   protected router: Router;

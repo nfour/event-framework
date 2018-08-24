@@ -2,7 +2,7 @@ import { ModuleProxy } from '../components/Ipc';
 
 export interface IComponentConfig {
   name: string;
-  type: string;
+  type: IComponentConfigs['type'];
 }
 
 // TODO: this must be used by external components to decorate pubsub
