@@ -40,7 +40,7 @@ export class Action<E, R> extends Component<IComponentExecutor<E>, Action<E, R>>
     this.on('execute', this.execute);
   }
 
-  private execute = async (...args: E[]) => {
+  protected execute = async (...args: E[]) => {
     const result = await Promise.resolve(this.callback(...args));
 
     await this.emit('execute.complete', result);
