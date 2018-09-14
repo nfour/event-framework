@@ -20,6 +20,7 @@ export class Registry {
     if (config) { config.forEach((item) => this.add(item)); }
   }
 
+  // TODO: allow components to self initialize whenever something depends on it?
   async initialize () {
     const components = Array.from(this.components.values());
 

@@ -53,6 +53,8 @@ export class ModuleProxy extends ProxyComponent {
 
       const module: IModuleProxyImport = await import(path);
 
+      console.log({ module });
+
       let component = module[member];
 
       // TODO: refactor into fn
@@ -60,6 +62,13 @@ export class ModuleProxy extends ProxyComponent {
         const fn = <IActionableFunction> component;
 
         component = <Component<any, any>> new Action(fn);
+
+        console.log({ component });
+
+        component.all().on((eventName: string, ...args: []) => {
+          console.log(`ModuleProxy.initialize.component ${eventName}::`, ...args);
+        });
+
       }
 
       this.component.resolve(component);

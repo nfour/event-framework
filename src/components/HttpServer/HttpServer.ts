@@ -52,9 +52,10 @@ export class HttpServer extends Component<Hub, HttpServer> {
     component: Component<any, any>,
   }> = new Map();
 
+  server: Server;
+
   protected app: Koa;
   protected router: Router;
-  protected server: Server;
 
   constructor (config: {
     port: HttpServer['port'],
@@ -123,8 +124,12 @@ export class HttpServer extends Component<Hub, HttpServer> {
     return async (ctx, next) => {
       const event = createEventFromKoa(ctx);
 
+      console.log({ requestIn: event });
+
       // Component specific event, useful for instrumentation
       await component.emit('HttpRequestEvent.prepare', event);
+
+      console.log({ requestOut: event });
 
       const { response } = event;
 
