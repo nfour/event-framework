@@ -4,6 +4,8 @@ Based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [0.3.0-beta][] - 2018-10-02
+
 ## [0.2.0-beta][] - 2018-04-08
 
 - Added ability to launch `function-action-module` ModuleProxy components.
@@ -36,7 +38,8 @@ Based on [Keep a Changelog](http://keepachangelog.com/).
 
 - Init
 
-[Unreleased]: https://github.com/nfour/reaco/compare/v0.2.0-beta...HEAD
+[Unreleased]: https://github.com/nfour/reaco/compare/v0.3.0-beta...HEAD
+[0.3.0-beta]: https://github.com/nfour/reaco/compare/v0.2.0-beta...v0.3.0-beta
 [0.2.0-beta]: https://github.com/nfour/reaco/compare/v0.1.0-beta...v0.2.0-beta
 [0.1.0-beta]: https://github.com/nfour/reaco/compare/v0.0.2-6...v0.1.0-beta
 [0.0.2-6]: https://github.com/nfour/reaco/compare/v0.0.2-5...v0.0.2-6
