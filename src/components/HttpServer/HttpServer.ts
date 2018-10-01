@@ -124,12 +124,8 @@ export class HttpServer extends Component<Hub, HttpServer> {
     return async (ctx, next) => {
       const event = createEventFromKoa(ctx);
 
-      console.log({ requestIn: event });
-
       // Component specific event, useful for instrumentation
       await component.emit('HttpRequestEvent.prepare', event);
-
-      console.log({ requestOut: event });
 
       const { response } = event;
 
@@ -138,9 +134,6 @@ export class HttpServer extends Component<Hub, HttpServer> {
       ctx.status = response.statusCode;
       ctx.body = response.body;
       ctx.set(response.headers || {});
-
-      // tslint:disable-next-line:no-console
-      console.log('wew', ctx.body);
     };
   }
 }
