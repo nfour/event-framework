@@ -1,4 +1,7 @@
 import { fork } from 'child_process';
+import { watch } from 'chokidar';
+import * as decache from 'decache';
+import * as escapeRegex from 'escape-string-regexp';
 
 import { Component } from '../..';
 import { deferredPromise, IDefferedPromise } from '../../test/lib';
@@ -20,7 +23,7 @@ export class ModuleProxy extends ProxyComponent {
   type: 'module' | 'function-action-module';
 
   private config: IComponentModuleConfig;
-  private component: IDefferedPromise<Component<any>>;
+  private component: IDefferedPromise<() => Component<any>>;
 
   constructor (config: IComponentModuleConfig) {
     super(config);
@@ -41,39 +44,86 @@ export class ModuleProxy extends ProxyComponent {
         execArgv: ['-r', 'ts-node/register'],
       });
 
-      this.component.resolve(new ProcessComponent(child));
+      const processComponent = new ProcessComponent(child);
+      this.component.resolve(processComponent);
 
-      const component = <ProcessComponent> await this.component;
+      const component = <() => ProcessComponent> await this.component;
 
-      await new Promise((resolve) => component.once('ready', resolve));
+      await new Promise((resolve) => component().once('ready', resolve));
 
-      await component.loadState();
+      await component().loadState();
     } else {
       // Local component
 
-      const module: IModuleProxyImport = await import(path);
-
-      let component = module[member];
+      watchModule(path);
 
       if (this.type === 'function-action-module') {
-        const fn = <IActionableFunction> component;
+        const component = functionActionModuleGetter(path, member);
 
-        component = <Component<any, any>> new Action(fn);
+        this.component.resolve(component);
+      } else {
+        const component = () => require(path)[member];
+
+        this.component.resolve(component);
       }
 
-      this.component.resolve(component);
     }
   }
 
   on = async (...args: any[]) => {
     const component = await this.component;
 
-    return component.on(...args);
+    return component().on(...args);
   }
 
   emit = async (...args: any[]) => {
     const component = await this.component;
 
-    return component.emit(...args);
+    return component().emit(...args);
   }
+}
+
+/**
+ * Works around require.cache by creating a closure around imported modules
+ * in order to maintain the same Action class reference through consecutive calls
+ */
+function functionActionModuleGetter (modulePath: string, member: string) {
+  let action: Action<any, any>;
+  // tslint:disable-next-line:ban-types
+  let cachedImportFn: Function;
+
+  return () => {
+    const importFn = require(modulePath)[member];
+
+    if (importFn === cachedImportFn) { return action; }
+
+    cachedImportFn = importFn;
+    action = new Action(importFn);
+
+    return action;
+  };
+}
+
+// TODO: this needs to create a dep tree of the watch module and watch that too
+function watchModule (filePath: string) {
+  const watcher = watch(filePath + '.ts');
+
+  console.log(`Watching ${filePath} for changes...`);
+
+  watcher.on('ready', () => {
+    watcher.on('all', (...args) => {
+      Object.keys(require.cache)
+      .filter((path) => !/node_modules/.test(path))
+      .forEach((path) => {
+        const re = new RegExp(escapeRegex(filePath));
+        if (re.test(path)) {
+          console.log(`Hot reloading: ${path}`);
+          // delete require.cache[path];
+          decache(path);
+        }
+      });
+    });
+  });
+
+  return watcher;
 }

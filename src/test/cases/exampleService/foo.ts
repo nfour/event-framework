@@ -14,7 +14,7 @@ export const foo = new HttpAction<IEvent, IMyFancyResponse>((event) => {
   return {
     statusCode: 200,
     body: {
-      foo: 1,
+      foo: '3433',
     },
   };
 });
