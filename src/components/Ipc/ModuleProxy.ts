@@ -1,6 +1,7 @@
 import { fork } from 'child_process';
 import { watch } from 'chokidar';
 import * as decache from 'decache';
+import * as depTree from 'dependency-tree';
 import * as escapeRegex from 'escape-string-regexp';
 
 import { Component } from '../..';
@@ -118,7 +119,7 @@ function watchModule (filePath: string) {
         const re = new RegExp(escapeRegex(filePath));
         if (re.test(path)) {
           console.log(`Hot reloading: ${path}`);
-          // delete require.cache[path];
+
           decache(path);
         }
       });
