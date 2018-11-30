@@ -1,5 +1,5 @@
 import { fork } from 'child_process';
-import { watch } from 'chokidar';
+import { FSWatcher, watch } from 'chokidar';
 import * as decache from 'decache';
 import * as depTree from 'dependency-tree';
 import * as escapeRegex from 'escape-string-regexp';
@@ -25,6 +25,7 @@ export class ModuleProxy extends ProxyComponent {
 
   private config: IComponentModuleConfig;
   private component: IDefferedPromise<() => Component<any>>;
+  private watching: FSWatcher[] = [];
 
   constructor (config: IComponentModuleConfig) {
     super(config);
@@ -56,7 +57,7 @@ export class ModuleProxy extends ProxyComponent {
     } else {
       // Local component
 
-      watchModule(path);
+      this.watching.push(watchModule(path));
 
       if (this.type === 'function-action-module') {
         const component = functionActionModuleGetter(path, member);
@@ -67,7 +68,6 @@ export class ModuleProxy extends ProxyComponent {
 
         this.component.resolve(component);
       }
-
     }
   }
 
@@ -81,6 +81,15 @@ export class ModuleProxy extends ProxyComponent {
     const component = await this.component;
 
     return component().emit(...args);
+  }
+
+  teardown () {
+    this.watching.forEach((watcher) => {
+      watcher.close();
+      watcher.removeAllListeners();
+    });
+
+    this.watching = [];
   }
 }
 
@@ -106,6 +115,7 @@ function functionActionModuleGetter (modulePath: string, member: string) {
 }
 
 // TODO: this needs to create a dep tree of the watch module and watch that too
+// TODO: the file extension needs to be auto-resolved first with require.resolve()
 function watchModule (filePath: string) {
   const watcher = watch(filePath + '.ts');
 
@@ -114,15 +124,16 @@ function watchModule (filePath: string) {
   watcher.on('ready', () => {
     watcher.on('all', (...args) => {
       Object.keys(require.cache)
-      .filter((path) => !/node_modules/.test(path))
-      .forEach((path) => {
-        const re = new RegExp(escapeRegex(filePath));
-        if (re.test(path)) {
-          console.log(`Hot reloading: ${path}`);
+        .filter((path) => !/node_modules/.test(path))
+        .forEach((path) => {
+          const re = new RegExp(escapeRegex(filePath));
 
-          decache(path);
-        }
-      });
+          if (re.test(path)) {
+            console.log(`Hot reloading: ${path}`);
+
+            decache(path);
+          }
+        });
     });
   });
 

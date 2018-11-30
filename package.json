@@ -24,12 +24,14 @@
     "url": "https://github.com/nfour/reaco"
   },
   "devDependencies": {
+    "@types/fs-extra": "^5.0.4",
     "@types/jest": "^23.3.1",
     "@types/koa": "^2.0.43",
     "@types/koa-router": "^7.0.27",
     "@types/node": "^9.4.7",
     "@types/node-fetch": "^1.6.7",
     "changelog-verify": "^1.1.0",
+    "fs-extra": "^7.0.1",
     "jest": "^23.5.0",
     "jest-spec-reporter": "^1.0.4",
     "jest-tap-reporter": "^1.9.0",
