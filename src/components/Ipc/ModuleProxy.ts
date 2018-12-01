@@ -57,8 +57,6 @@ export class ModuleProxy extends ProxyComponent {
     } else {
       // Local component
 
-      this.watching.push(watchModule(path));
-
       if (this.type === 'function-action-module') {
         const component = functionActionModuleGetter(path, member);
 
@@ -68,6 +66,8 @@ export class ModuleProxy extends ProxyComponent {
 
         this.component.resolve(component);
       }
+
+      this.watching.push(watchModule(path));
     }
   }
 
@@ -105,9 +105,11 @@ function functionActionModuleGetter (modulePath: string, member: string) {
   return () => {
     const importFn = require(modulePath)[member];
 
-    if (importFn === cachedImportFn) { return action; }
+    console.log(Date.now(), 'requiring', modulePath);
 
-    cachedImportFn = importFn;
+    // if (importFn === cachedImportFn) { return action; }
+
+    // cachedImportFn = importFn;
     action = new Action(importFn);
 
     return action;
@@ -117,23 +119,19 @@ function functionActionModuleGetter (modulePath: string, member: string) {
 // TODO: this needs to create a dep tree of the watch module and watch that too
 // TODO: the file extension needs to be auto-resolved first with require.resolve()
 function watchModule (filePath: string) {
-  const watcher = watch(filePath + '.ts');
-
-  console.log(`Watching ${filePath} for changes...`);
+  const watcher = watch(filePath);
 
   watcher.on('ready', () => {
+    console.log(Date.now(), `Watching ${filePath} for changes...`);
     watcher.on('all', (...args) => {
-      Object.keys(require.cache)
-        .filter((path) => !/node_modules/.test(path))
-        .forEach((path) => {
-          const re = new RegExp(escapeRegex(filePath));
+      const path = args[1];
+      console.log(...args, Object.keys(require.cache || {}));
+      if (path === filePath) {
+        console.log(Date.now(), `Hot reloading: ${path}`);
 
-          if (re.test(path)) {
-            console.log(`Hot reloading: ${path}`);
-
-            decache(path);
-          }
-        });
+        delete (require.cache || {})[path];
+        decache;// (path);
+      }
     });
   });
 

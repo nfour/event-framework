@@ -1,5 +1,5 @@
 module.exports = {
-  "verbose": true,
+  // "verbose": true,
   "transform": { ".ts": "ts-jest" },
   "testMatch": [ "**/*.(spec|test).(t|j)s?(x)" ],
   "testEnvironment": "node",
@@ -10,7 +10,7 @@ module.exports = {
   "coverageThreshold": {
     "global": { statements: 76, lines: 80, functions: 72 }
   },
-  reporters: [ 'jest-tap-reporter' ],
+  // reporters: [ 'jest-tap-reporter' ],
   "testPathIgnorePatterns": [
     "staging",
     "/node_modules/",

@@ -1,4 +1,5 @@
 import { delay } from 'bluebird';
+import * as expect from 'expect';
 import { emptyDir, mkdirp, readFile, readFileSync, writeFile } from 'fs-extra';
 import { resolve } from 'path';
 
@@ -6,17 +7,8 @@ import { ModuleProxy } from '../ModuleProxy';
 
 const stagingDir = resolve(__dirname, 'modules/staging');
 const components: ModuleProxy[] = [];
-let interval;
 
-afterAll(() => {
-  components.forEach((component) => component.teardown());
-  clearInterval(interval);
-});
-
-it('can modify an imported module and have its changes reflected', async () => {
-  let i = 1;
-  interval = setInterval(() => console.log(++i), 50);
-
+void (async () => {
   await prepareStagingDir();
 
   const originalFooFile = readFileSync(resolve(__dirname, './modules/fixtures/foo.ts'), 'utf8');
@@ -50,13 +42,11 @@ it('can modify an imported module and have its changes reflected', async () => {
   await delay(100);
   console.log(Date.now(), 'testing');
   // expect(
-  await fooProxy.emit('execute');
+  const res = await fooProxy.emit('execute');
   // ).toBe(2);
-  console.log(Date.now(), 'tested');
+  console.log(Date.now(), 'tested', res);
 
-});
-
-it('should reload many times (5)', () => {});
+})();
 
 async function prepareStagingDir () {
   await mkdirp(stagingDir);
