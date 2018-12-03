@@ -10,6 +10,8 @@ const fixturesDir = resolve(__dirname, 'modules/fixtures');
 const components: ModuleProxy[] = [];
 const originalFooFile = readFileSync(resolve(fixturesDir, 'foo.ts'), 'utf8');
 
+process.env.DEBUG_WATCHING = true;
+
 test.after(() => {
   components.forEach((component) => component.teardown());
 });
@@ -109,5 +111,3 @@ test('should reload dependent imports for a provided component', async (t) => {
 
   t.is(await foo.emit('execute'), 4);
 });
-
-test.todo('file with a .js or .ts extension will reload when not provided an extension');
