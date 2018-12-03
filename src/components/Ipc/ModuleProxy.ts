@@ -1,8 +1,10 @@
+import { map } from 'bluebird';
 import { fork } from 'child_process';
 import { FSWatcher, watch } from 'chokidar';
-import * as decache from 'decache';
-import * as depTree from 'dependency-tree';
-import * as escapeRegex from 'escape-string-regexp';
+import { readFile } from 'fs-extra';
+import { flatten } from 'lodash';
+import { dirname, resolve } from 'path';
+import * as getImportDependencies from 'precinct';
 
 import { Component } from '../..';
 import { deferredPromise, IDefferedPromise } from '../../test/lib';
@@ -47,7 +49,7 @@ export class ModuleProxy extends ProxyComponent {
       });
 
       const processComponent = new ProcessComponent(child);
-      this.component.resolve(processComponent);
+      this.component.resolve(() => processComponent);
 
       const component = <() => ProcessComponent> await this.component;
 
@@ -57,21 +59,18 @@ export class ModuleProxy extends ProxyComponent {
     } else {
       // Local component
 
-      if (this.type === 'function-action-module') {
-        const component = functionActionModuleGetter(path, member);
+      const component = this.type === 'function-action-module'
+        ? functionActionModuleGetter(path, member)
+        : () => require(path)[member];
 
-        this.component.resolve(component);
-      } else {
-        const component = () => require(path)[member];
+      const watchers = await watchModule(path);
 
-        this.component.resolve(component);
-      }
+      this.watching.push(...watchers);
 
-      const watcher = await watchModule(path);
-      this.watching.push(watcher);
-
-      return watcher;
+      this.component.resolve(component);
     }
+
+    return this;
   }
 
   on = async (...args: any[]) => {
@@ -86,7 +85,7 @@ export class ModuleProxy extends ProxyComponent {
     return component().emit(...args);
   }
 
-  async teardown () {
+  teardown () {
     this.watching.forEach((watcher) => {
       watcher.close();
       watcher.removeAllListeners();
@@ -108,8 +107,6 @@ function functionActionModuleGetter (modulePath: string, member: string) {
   return () => {
     const importFn = require(modulePath)[member];
 
-    console.log(Date.now(), 'requiring', modulePath);
-
     if (importFn === cachedImportFn) { return action; }
 
     cachedImportFn = importFn;
@@ -119,27 +116,70 @@ function functionActionModuleGetter (modulePath: string, member: string) {
   };
 }
 
-// TODO: this needs to create a dep tree of the watch module and watch that too
-// TODO: the file extension needs to be auto-resolved first with require.resolve()
-function watchModule (filePath: string) {
-  const watcher = watch(filePath);
+/**
+ * TODO: Dependencies must produce a tree in order to walk it backwards and reload all modules
+ * TODO: this should be cached in a single place to prevent watching the same file more than once
+ * TODO: try using the graph library from localdev
+ */
+async function watchModule (entryPath: string, dependentPaths: string[] = []): Promise<FSWatcher[]> {
+  const rootModule = require.resolve(entryPath);
+  const dependencyPaths = getImportDependencies(await readFile(rootModule, 'utf8'));
+  const rootDir = dirname(rootModule);
 
-  return new Promise<FSWatcher>((resolve) => {
+  const dependencies = await map(dependencyPaths, (relPath) => {
+    const dependencyPath = resolve(rootDir, relPath);
+
+    return watchModule(
+      dependencyPath,
+      [...new Set([rootModule, ...dependentPaths])], // Using a Set to ensure uniques
+    );
+  });
+
+  return Promise.all([
+    watchFile(rootModule),
+    ...flatten(dependencies),
+  ]);
+}
+
+function watchFile (entryPath: string, parent?: string) {
+  const watcher = watch(entryPath);
+
+  return new Promise<FSWatcher>((done) => {
     watcher.on('ready', () => {
-      console.log(Date.now(), `Watching ${filePath} for changes...`);
+      // tslint:disable-next-line:no-console
+      console.log(`[Watching]:`, entryPath);
 
       watcher.on('all', (...args) => {
         const path = args[1];
-        console.log(...args, Object.keys(require.cache || {}));
-        if (path === filePath) {
-          console.log(Date.now(), `Hot reloading: ${path}`);
 
-          delete (require.cache || {})[path];
-          decache;// (path);
+        if (path === entryPath) {
+          // tslint:disable-next-line:no-console
+          console.log(`[Watching] [Hot reloading]: ${path}`);
+
+          if (!require.cache) {
+            console.error('[Watching] Missing require cache!');
+            return;
+          }
+          delete require.cache[path];
+          if (parent) { delete require.cache[parent]; }
         }
       });
 
-      resolve(watcher);
+      done(watcher);
     });
   });
+}
+
+function reloadModule (path: string) {
+  // tslint:disable-next-line:no-console
+  console.log(`[Watching] [Reloading]: ${path}`);
+
+  if (!require.cache) {
+    console.error('[Watching] Missing require cache!');
+    return;
+  }
+
+  delete require.cache[path];
+
+  if (parent) { delete require.cache[parent]; }
 }
