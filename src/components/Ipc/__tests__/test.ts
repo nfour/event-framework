@@ -1,6 +1,6 @@
 import { delay } from 'bluebird';
 import * as expect from 'expect';
-import { emptyDir, mkdirp, readFile, readFileSync, writeFile } from 'fs-extra';
+import { emptyDir, mkdirp, readFileSync, writeFile } from 'fs-extra';
 import { resolve } from 'path';
 
 import { ModuleProxy } from '../ModuleProxy';

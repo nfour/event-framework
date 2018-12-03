@@ -67,7 +67,10 @@ export class ModuleProxy extends ProxyComponent {
         this.component.resolve(component);
       }
 
-      this.watching.push(watchModule(path));
+      const watcher = await watchModule(path);
+      this.watching.push(watcher);
+
+      return watcher;
     }
   }
 
@@ -83,7 +86,7 @@ export class ModuleProxy extends ProxyComponent {
     return component().emit(...args);
   }
 
-  teardown () {
+  async teardown () {
     this.watching.forEach((watcher) => {
       watcher.close();
       watcher.removeAllListeners();
@@ -121,19 +124,22 @@ function functionActionModuleGetter (modulePath: string, member: string) {
 function watchModule (filePath: string) {
   const watcher = watch(filePath);
 
-  watcher.on('ready', () => {
-    console.log(Date.now(), `Watching ${filePath} for changes...`);
-    watcher.on('all', (...args) => {
-      const path = args[1];
-      console.log(...args, Object.keys(require.cache || {}));
-      if (path === filePath) {
-        console.log(Date.now(), `Hot reloading: ${path}`);
+  return new Promise<FSWatcher>((resolve) => {
+    watcher.on('ready', () => {
+      console.log(Date.now(), `Watching ${filePath} for changes...`);
 
-        delete (require.cache || {})[path];
-        decache;// (path);
-      }
+      watcher.on('all', (...args) => {
+        const path = args[1];
+        console.log(...args, Object.keys(require.cache || {}));
+        if (path === filePath) {
+          console.log(Date.now(), `Hot reloading: ${path}`);
+
+          delete (require.cache || {})[path];
+          decache;// (path);
+        }
+      });
+
+      resolve(watcher);
     });
   });
-
-  return watcher;
 }

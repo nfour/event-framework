@@ -23,7 +23,6 @@ it('can modify an imported module and have its changes reflected', async () => {
   const targetFilePath = resolve(stagingDir, './foo.ts');
 
   await writeFile(targetFilePath, originalFooFile);
-  await delay(40); // Wait for the file to be saved etc.
 
   const fooProxy = new ModuleProxy({
     fork: false,
@@ -39,8 +38,6 @@ it('can modify an imported module and have its changes reflected', async () => {
 
   await fooProxy.initialize();
 
-  await delay(100);
-
   expect(await fooProxy.emit('execute')).toBe(1);
 
   const modifiedFooFile = originalFooFile.replace(/1/, '2');
@@ -48,10 +45,10 @@ it('can modify an imported module and have its changes reflected', async () => {
   await writeFile(targetFilePath, modifiedFooFile);
 
   console.log(Date.now(), 'testing');
+  console.log(Date.now(), 'tested', await fooProxy.emit('execute'));
   expect(
   await fooProxy.emit('execute'),
   ).toBe(2);
-  console.log(Date.now(), 'tested');
 
 });
 
