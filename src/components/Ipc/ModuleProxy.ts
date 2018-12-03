@@ -132,24 +132,27 @@ async function watchModule ({ entryPath, watcher, originPath = entryPath }: {
   originPath?: string,
   watcher: FSWatcher,
 }): Promise<FSWatcher> {
-  const originResolvedPath = resolveRequire(originPath);
-  const modulePath = resolveRequire(entryPath, { basedir: originResolvedPath });
+  /**
+   * We dont need to use resolveRequire. require.resolve will suffice for non-node-module scopes (as is ours atm)
+   * But... It will let us deal with node_modules in future so im going to leave it for now...
+   */
+  const modulePath = resolveRequire(
+    require.resolve(entryPath), // <-- ensures there is a file extension
+    { basedir: originPath }, // <-- Ensures the module is resolved from where it would normally be required
+  );
+
   const moduleDir = dirname(modulePath);
 
-  const dependencyPaths = getImportDependencies(await readFile(modulePath, 'utf8'));
-
   watcher.add(modulePath);
+
+  const dependencyPaths = getImportDependencies(await readFile(modulePath, 'utf8'));
 
   await map(dependencyPaths, (importPath): any => {
     const isRelative = /^\./.test(importPath);
 
     if (!isRelative) { return; }
 
-    const dependencyPath = isRelative
-      ? resolve(moduleDir, importPath)
-      : importPath;
-
-    return watchModule({ watcher, entryPath: dependencyPath, originPath: modulePath });
+    return watchModule({ watcher, entryPath: resolve(moduleDir, importPath) });
   });
 
   return watcher;
@@ -157,19 +160,15 @@ async function watchModule ({ entryPath, watcher, originPath = entryPath }: {
 
 function reloadOnChanges ({ watcher, log }: { watcher: FSWatcher, log: typeof console.log }) {
   return watcher
-    .on('all', (...args) => {
-      const path = args[1];
-
+    .on('change', (path) => {
       if (!require.cache) {
         log('[Watch] Error: Missing require cache!');
         return;
       }
 
-      if (path in require.cache) {
-        log(`[Watch] Reloading: ${path}`);
+      log(`[Watch] Reloading: ${path}`);
 
-        Object.keys(require.cache).forEach((key) => delete require.cache[key]);
-      }
+      Object.keys(require.cache).forEach((key) => delete require.cache[key]);
     })
     .on('add', (path) => log(`[Watch] Added: ${path}`));
 }

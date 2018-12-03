@@ -21,7 +21,7 @@ test.before(async () => {
   await emptyDir(stagingDir);
 });
 
-test('can modify an imported module and have its changes reflected', async (t) => {
+test.serial('can modify an imported module and have its changes reflected', async (t) => {
   const targetFilePath = resolve(stagingDir, './foo.ts');
   await writeFile(targetFilePath, originalFooFile);
 
@@ -49,7 +49,7 @@ test('can modify an imported module and have its changes reflected', async (t) =
   t.is(await foo.emit('execute'), 2);
 });
 
-test('should reload 5 times concecutively', async (t) => {
+test.serial('should reload 5 times concecutively', async (t) => {
   const targetFilePath = resolve(stagingDir, './baz.ts');
   await writeFile(targetFilePath, originalFooFile);
 
@@ -75,7 +75,7 @@ test('should reload 5 times concecutively', async (t) => {
   }
 });
 
-test('should reload dependent imports for a provided component', async (t) => {
+test.serial('should reload dependent imports for a provided component', async (t) => {
   const depOfEntry = readFileSync(resolve(fixturesDir, 'deep/depOfEntry.ts'), 'utf8');
   const depOfDep = readFileSync(resolve(fixturesDir, 'deep/depOfDep.ts'), 'utf8');
 
@@ -110,4 +110,33 @@ test('should reload dependent imports for a provided component', async (t) => {
   await delay(200);
 
   t.is(await foo.emit('execute'), 4);
+});
+
+test.serial('can hot reload .js files', async (t) => {
+  const targetFilePath = resolve(stagingDir, './blob.js');
+
+  const file = `exports.foo = () => 1`;
+
+  await writeFile(targetFilePath, file);
+
+  const foo = await new ModuleProxy({
+    fork: false,
+    name: 'foo',
+    type: 'function-action-module',
+    module: {
+      path: targetFilePath.replace(/\.\w+$/, ''), // Removed extension
+      member: 'foo',
+      watch: true,
+    },
+  }).initialize();
+
+  components.push(foo);
+
+  t.is(await foo.emit('execute'), 1);
+
+  await writeFile(targetFilePath, file.replace(/1/, '2'));
+
+  await delay(200);
+
+  t.is(await foo.emit('execute'), 2);
 });
