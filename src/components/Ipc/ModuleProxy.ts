@@ -107,9 +107,9 @@ function functionActionModuleGetter (modulePath: string, member: string) {
 
     console.log(Date.now(), 'requiring', modulePath);
 
-    // if (importFn === cachedImportFn) { return action; }
+    if (importFn === cachedImportFn) { return action; }
 
-    // cachedImportFn = importFn;
+    cachedImportFn = importFn;
     action = new Action(importFn);
 
     return action;

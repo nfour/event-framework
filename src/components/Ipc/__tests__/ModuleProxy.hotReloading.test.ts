@@ -47,11 +47,10 @@ it('can modify an imported module and have its changes reflected', async () => {
 
   await writeFile(targetFilePath, modifiedFooFile);
 
-  await delay(100);
   console.log(Date.now(), 'testing');
-  // expect(
-  await fooProxy.emit('execute');
-  // ).toBe(2);
+  expect(
+  await fooProxy.emit('execute'),
+  ).toBe(2);
   console.log(Date.now(), 'tested');
 
 });

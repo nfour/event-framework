@@ -31,21 +31,15 @@ void (async () => {
 
   await fooProxy.initialize();
 
-  await delay(100);
-
   expect(await fooProxy.emit('execute')).toBe(1);
 
   const modifiedFooFile = originalFooFile.replace(/1/, '2');
 
   await writeFile(targetFilePath, modifiedFooFile);
 
-  await delay(100);
-  console.log(Date.now(), 'testing');
-  // expect(
-  const res = await fooProxy.emit('execute');
-  // ).toBe(2);
-  console.log(Date.now(), 'tested', res);
-
+  expect(
+   await fooProxy.emit('execute'),
+  ).toBe(2);
 })();
 
 async function prepareStagingDir () {
