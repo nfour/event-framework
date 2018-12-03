@@ -4,6 +4,8 @@ Based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [0.5.0-beta][] - 2018-12-04
+
 ## [0.4.0-beta][] - 2018-12-03
 
 - Added hot reloading to modules defined with `watch: true` in the module definition of ModuleProxy/Registry
@@ -44,7 +46,8 @@ Based on [Keep a Changelog](http://keepachangelog.com/).
 
 - Init
 
-[Unreleased]: https://github.com/nfour/reaco/compare/v0.4.0-beta...HEAD
+[Unreleased]: https://github.com/nfour/reaco/compare/v0.5.0-beta...HEAD
+[0.5.0-beta]: https://github.com/nfour/reaco/compare/v0.4.0-beta...v0.5.0-beta
 [0.4.0-beta]: https://github.com/nfour/reaco/compare/v0.3.0-beta...v0.4.0-beta
 [0.3.0-beta]: https://github.com/nfour/reaco/compare/v0.2.0-beta...v0.3.0-beta
 [0.2.0-beta]: https://github.com/nfour/reaco/compare/v0.1.0-beta...v0.2.0-beta
