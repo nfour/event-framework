@@ -4,7 +4,7 @@ import { http, IEvent } from './middlewares';
 
 export interface IMyFancyResponse extends IHttpRequestResponse {
   body: {
-    foo: number;
+    foo: string;
   };
 }
 

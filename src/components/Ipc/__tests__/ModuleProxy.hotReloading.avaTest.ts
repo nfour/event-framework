@@ -10,7 +10,7 @@ const fixturesDir = resolve(__dirname, 'modules/fixtures');
 const components: ModuleProxy[] = [];
 const originalFooFile = readFileSync(resolve(fixturesDir, 'foo.ts'), 'utf8');
 
-process.env.DEBUG_WATCHING = true;
+process.env.DEBUG_WATCHING = '1';
 
 test.after(() => {
   components.forEach((component) => component.teardown());

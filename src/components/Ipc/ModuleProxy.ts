@@ -2,7 +2,6 @@ import { map } from 'bluebird';
 import { fork } from 'child_process';
 import { FSWatcher, watch } from 'chokidar';
 import { readFile } from 'fs-extra';
-import { flatten } from 'lodash';
 import { dirname, resolve } from 'path';
 import * as getImportDependencies from 'precinct';
 
