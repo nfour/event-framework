@@ -9,9 +9,11 @@ const hub = new Hub();
 
 hub.connect(httpServer);
 
-registry.initialize().then(() => {
+void (async () => {
+  await registry.initialize();
+
   hub.start();
-});
+})();
 
 setInterval(async () => {
   console.info('-------------------------- FETCH');
@@ -23,5 +25,6 @@ setInterval(async () => {
     }),
   });
 
+  // tslint:disable-next-line:no-console
   console.log(await response.json());
 }, 2000);

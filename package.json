@@ -33,7 +33,6 @@
     "@types/node-fetch": "^1.6.7",
     "ava": "^1.0.0-rc.2",
     "changelog-verify": "^1.1.0",
-    "fs-extra": "^7.0.1",
     "jest": "^23.5.0",
     "jest-spec-reporter": "^1.0.4",
     "jest-tap-reporter": "^1.9.0",
@@ -48,6 +47,7 @@
   "dependencies": {
     "@types/bluebird": "^3.5.8",
     "@types/chalk": "^2.2.0",
+    "fs-extra": "^7.0.1",
     "@types/chokidar": "^1.7.5",
     "@types/dependency-tree": "^6.1.0",
     "@types/escape-string-regexp": "^1.0.0",

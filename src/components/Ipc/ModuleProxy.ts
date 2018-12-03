@@ -39,9 +39,9 @@ export class ModuleProxy extends ProxyComponent {
       this.watcher = watch([]);
 
       // TODO: use a centralized logger!
-      // tslint:disable-next-line no-console no-empty
       reloadOnChanges({
         watcher: this.watcher,
+        // tslint:disable-next-line no-console no-empty
         log: process.env.DEBUG_WATCHING ? console.log : () => {},
       });
     }

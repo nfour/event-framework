@@ -4,6 +4,7 @@
     "max-classes-per-file": false,
     "member-access": [true, "no-public"],
     "no-console": [true, "log", "error"],
-    "callable-types": [false]
+    "callable-types": [false],
+    "no-implicit-dependencies": [true, "dev"]
   }
 }

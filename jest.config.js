@@ -8,7 +8,7 @@ module.exports = {
   "coverageDirectory": ".coverage",
   "coverageReporters": ['text', 'text-summary', 'json', 'lcov'],
   "coverageThreshold": {
-    "global": { statements: 76, lines: 80, functions: 72 }
+    "global": { statements: 60, lines: 60, functions: 60 }
   },
   // reporters: [ 'jest-tap-reporter' ],
   "testPathIgnorePatterns": [
