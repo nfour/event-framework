@@ -4,6 +4,7 @@ import { FSWatcher, watch } from 'chokidar';
 import { readFile } from 'fs-extra';
 import { dirname, resolve } from 'path';
 import * as getImportDependencies from 'precinct';
+import { sync as resolveRequire } from 'resolve';
 
 import { Component } from '../..';
 import { deferredPromise, IDefferedPromise } from '../../test/lib';
@@ -73,7 +74,7 @@ export class ModuleProxy extends ProxyComponent {
         : () => require(path)[member];
 
       if (this.config.module.watch) {
-        await watchModule(path, this.watcher!);
+        await watchModule({ watcher: this.watcher!, entryPath: path, originPath: path });
       }
 
       this.component.resolve(component);
@@ -126,18 +127,29 @@ function functionActionModuleGetter (modulePath: string, member: string) {
 /**
  * Watches a given module path then looks for its module dependencies and watches those too.
  */
-async function watchModule (entryPath: string, watcher: FSWatcher): Promise<FSWatcher> {
-  const modulePath = require.resolve(entryPath);
+async function watchModule ({ entryPath, watcher, originPath = entryPath }: {
+  entryPath: string,
+  originPath?: string,
+  watcher: FSWatcher,
+}): Promise<FSWatcher> {
+  const originResolvedPath = resolveRequire(originPath);
+  const modulePath = resolveRequire(entryPath, { basedir: originResolvedPath });
   const moduleDir = dirname(modulePath);
 
   const dependencyPaths = getImportDependencies(await readFile(modulePath, 'utf8'));
 
   watcher.add(modulePath);
 
-  await map(dependencyPaths, (relPath) => {
-    const dependencyPath = resolve(moduleDir, relPath);
+  await map(dependencyPaths, (importPath): any => {
+    const isRelative = /^\./.test(importPath);
 
-    return watchModule(dependencyPath, watcher);
+    if (!isRelative) { return; }
+
+    const dependencyPath = isRelative
+      ? resolve(moduleDir, importPath)
+      : importPath;
+
+    return watchModule({ watcher, entryPath: dependencyPath, originPath: modulePath });
   });
 
   return watcher;
