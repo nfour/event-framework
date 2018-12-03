@@ -22,6 +22,7 @@ export interface IComponentModuleConfig extends IComponentConfig {
   module: {
     path: string;
     member?: string;
+    watch?: boolean;
   };
 }
 

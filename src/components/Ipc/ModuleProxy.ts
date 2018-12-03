@@ -27,14 +27,21 @@ export class ModuleProxy extends ProxyComponent {
 
   private config: IComponentModuleConfig;
   private component: IDefferedPromise<() => Component<any>>;
-  private watching: FSWatcher[] = [];
+  private watcher?: FSWatcher;
 
   constructor (config: IComponentModuleConfig) {
     super(config);
 
     this.config = config;
-
     this.component = deferredPromise();
+
+    if (config.module.watch) {
+      this.watcher = watch([]);
+
+      // TODO: use a centralized logger!
+      // tslint:disable-next-line:no-console
+      reloadOnChanges({ watcher: this.watcher, log: console.log });
+    }
   }
 
   async initialize () {
@@ -53,7 +60,7 @@ export class ModuleProxy extends ProxyComponent {
 
       const component = <() => ProcessComponent> await this.component;
 
-      await new Promise((resolve) => component().once('ready', resolve));
+      await new Promise((done) => component().once('ready', done));
 
       await component().loadState();
     } else {
@@ -63,9 +70,9 @@ export class ModuleProxy extends ProxyComponent {
         ? functionActionModuleGetter(path, member)
         : () => require(path)[member];
 
-      const watchers = await watchModule(path);
-
-      this.watching.push(...watchers);
+      if (this.config.module.watch) {
+        await watchModule(path, this.watcher!);
+      }
 
       this.component.resolve(component);
     }
@@ -86,12 +93,10 @@ export class ModuleProxy extends ProxyComponent {
   }
 
   teardown () {
-    this.watching.forEach((watcher) => {
-      watcher.close();
-      watcher.removeAllListeners();
-    });
-
-    this.watching = [];
+    if (this.watcher) {
+      this.watcher.close();
+      this.watcher.removeAllListeners();
+    }
   }
 }
 
@@ -117,69 +122,40 @@ function functionActionModuleGetter (modulePath: string, member: string) {
 }
 
 /**
- * TODO: Dependencies must produce a tree in order to walk it backwards and reload all modules
- * TODO: this should be cached in a single place to prevent watching the same file more than once
- * TODO: try using the graph library from localdev
+ * Watches a given module path then looks for its module dependencies and watches those too.
  */
-async function watchModule (entryPath: string, dependentPaths: string[] = []): Promise<FSWatcher[]> {
-  const rootModule = require.resolve(entryPath);
-  const dependencyPaths = getImportDependencies(await readFile(rootModule, 'utf8'));
-  const rootDir = dirname(rootModule);
+async function watchModule (entryPath: string, watcher: FSWatcher): Promise<FSWatcher> {
+  const modulePath = require.resolve(entryPath);
+  const moduleDir = dirname(modulePath);
 
-  const dependencies = await map(dependencyPaths, (relPath) => {
-    const dependencyPath = resolve(rootDir, relPath);
+  const dependencyPaths = getImportDependencies(await readFile(modulePath, 'utf8'));
 
-    return watchModule(
-      dependencyPath,
-      [...new Set([rootModule, ...dependentPaths])], // Using a Set to ensure uniques
-    );
+  watcher.add(modulePath);
+
+  await map(dependencyPaths, (relPath) => {
+    const dependencyPath = resolve(moduleDir, relPath);
+
+    return watchModule(dependencyPath, watcher);
   });
 
-  return Promise.all([
-    watchFile(rootModule),
-    ...flatten(dependencies),
-  ]);
+  return watcher;
 }
 
-function watchFile (entryPath: string, parent?: string) {
-  const watcher = watch(entryPath);
+function reloadOnChanges ({ watcher, log }: { watcher: FSWatcher, log: typeof console.log }) {
+  return watcher
+    .on('all', (...args) => {
+      const path = args[1];
 
-  return new Promise<FSWatcher>((done) => {
-    watcher.on('ready', () => {
-      // tslint:disable-next-line:no-console
-      console.log(`[Watching]:`, entryPath);
+      if (!require.cache) {
+        log('[Watch] Error: Missing require cache!');
+        return;
+      }
 
-      watcher.on('all', (...args) => {
-        const path = args[1];
+      if (path in require.cache) {
+        log(`[Watch] Reloading: ${path}`);
 
-        if (path === entryPath) {
-          // tslint:disable-next-line:no-console
-          console.log(`[Watching] [Hot reloading]: ${path}`);
-
-          if (!require.cache) {
-            console.error('[Watching] Missing require cache!');
-            return;
-          }
-          delete require.cache[path];
-          if (parent) { delete require.cache[parent]; }
-        }
-      });
-
-      done(watcher);
-    });
-  });
-}
-
-function reloadModule (path: string) {
-  // tslint:disable-next-line:no-console
-  console.log(`[Watching] [Reloading]: ${path}`);
-
-  if (!require.cache) {
-    console.error('[Watching] Missing require cache!');
-    return;
-  }
-
-  delete require.cache[path];
-
-  if (parent) { delete require.cache[parent]; }
+        Object.keys(require.cache).forEach((key) => delete require.cache[key]);
+      }
+    })
+    .on('add', (path) => log(`[Watch] Added: ${path}`));
 }

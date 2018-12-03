@@ -30,6 +30,7 @@ test('can modify an imported module and have its changes reflected', async (t) =
     module: {
       path: targetFilePath,
       member: 'foo',
+      watch: true,
     },
   }).initialize();
 
@@ -57,6 +58,7 @@ test('should reload 5 times concecutively', async (t) => {
     module: {
       path: targetFilePath,
       member: 'foo',
+      watch: true,
     },
   }).initialize();
 
@@ -71,7 +73,7 @@ test('should reload 5 times concecutively', async (t) => {
   }
 });
 
-test.only('should reload dependent imports for a provided component', async (t) => {
+test('should reload dependent imports for a provided component', async (t) => {
   const depOfEntry = readFileSync(resolve(fixturesDir, 'deep/depOfEntry.ts'), 'utf8');
   const depOfDep = readFileSync(resolve(fixturesDir, 'deep/depOfDep.ts'), 'utf8');
 
@@ -88,6 +90,7 @@ test.only('should reload dependent imports for a provided component', async (t) 
     module: {
       path: entryPath,
       member: 'foo',
+      watch: true,
     },
   }).initialize();
 
