@@ -4,7 +4,11 @@ Based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+- Added hot reloading to modules defined with `watch: true` in the module definition of ModuleProxy/Registry
+
 ## [0.3.0-beta][] - 2018-10-02
+
+- Various changes
 
 ## [0.2.0-beta][] - 2018-04-08
 
