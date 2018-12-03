@@ -1,4 +1,10 @@
+import { map } from 'bluebird';
 import { fork } from 'child_process';
+import { FSWatcher, watch } from 'chokidar';
+import { readFile } from 'fs-extra';
+import { dirname, resolve } from 'path';
+import * as getImportDependencies from 'precinct';
+import { sync as resolveRequire } from 'resolve';
 
 import { Component } from '../..';
 import { deferredPromise, IDefferedPromise } from '../../test/lib';
@@ -20,14 +26,25 @@ export class ModuleProxy extends ProxyComponent {
   type: 'module' | 'function-action-module';
 
   private config: IComponentModuleConfig;
-  private component: IDefferedPromise<Component<any>>;
+  private component: IDefferedPromise<() => Component<any>>;
+  private watcher?: FSWatcher;
 
   constructor (config: IComponentModuleConfig) {
     super(config);
 
     this.config = config;
-
     this.component = deferredPromise();
+
+    if (config.module.watch) {
+      this.watcher = watch([]);
+
+      // TODO: use a centralized logger!
+      // tslint:disable-next-line no-console no-empty
+      reloadOnChanges({
+        watcher: this.watcher,
+        log: process.env.DEBUG_WATCHING ? console.log : () => {},
+      });
+    }
   }
 
   async initialize () {
@@ -41,39 +58,118 @@ export class ModuleProxy extends ProxyComponent {
         execArgv: ['-r', 'ts-node/register'],
       });
 
-      this.component.resolve(new ProcessComponent(child));
+      const processComponent = new ProcessComponent(child);
+      this.component.resolve(() => processComponent);
 
-      const component = <ProcessComponent> await this.component;
+      const component = <() => ProcessComponent> await this.component;
 
-      await new Promise((resolve) => component.once('ready', resolve));
+      await new Promise((done) => component().once('ready', done));
 
-      await component.loadState();
+      await component().loadState();
     } else {
       // Local component
 
-      const module: IModuleProxyImport = await import(path);
+      const component = this.type === 'function-action-module'
+        ? functionActionModuleGetter(path, member)
+        : () => require(path)[member];
 
-      let component = module[member];
-
-      if (this.type === 'function-action-module') {
-        const fn = <IActionableFunction> component;
-
-        component = <Component<any, any>> new Action(fn);
+      if (this.config.module.watch) {
+        await watchModule({ watcher: this.watcher!, entryPath: path, originPath: path });
       }
 
       this.component.resolve(component);
     }
+
+    return this;
   }
 
   on = async (...args: any[]) => {
     const component = await this.component;
 
-    return component.on(...args);
+    return component().on(...args);
   }
 
   emit = async (...args: any[]) => {
     const component = await this.component;
 
-    return component.emit(...args);
+    return component().emit(...args);
   }
+
+  teardown () {
+    if (this.watcher) {
+      this.watcher.close();
+      this.watcher.removeAllListeners();
+    }
+  }
+}
+
+/**
+ * Works around require.cache by creating a closure around imported modules
+ * in order to maintain the same Action class reference through consecutive calls
+ */
+function functionActionModuleGetter (modulePath: string, member: string) {
+  let action: Action<any, any>;
+  // tslint:disable-next-line:ban-types
+  let cachedImportFn: Function;
+
+  return () => {
+    const importFn = require(modulePath)[member];
+
+    if (importFn === cachedImportFn) { return action; }
+
+    cachedImportFn = importFn;
+    action = new Action(importFn);
+
+    return action;
+  };
+}
+
+/**
+ * Watches a given module path then looks for its module dependencies and watches those too.
+ */
+async function watchModule ({ entryPath, watcher, originPath = entryPath }: {
+  entryPath: string,
+  originPath?: string,
+  watcher: FSWatcher,
+}): Promise<FSWatcher> {
+  const originResolvedPath = resolveRequire(originPath);
+  const modulePath = resolveRequire(entryPath, { basedir: originResolvedPath });
+  const moduleDir = dirname(modulePath);
+
+  const dependencyPaths = getImportDependencies(await readFile(modulePath, 'utf8'));
+
+  watcher.add(modulePath);
+
+  await map(dependencyPaths, (importPath): any => {
+    const isRelative = /^\./.test(importPath);
+
+    if (!isRelative) { return; }
+
+    const dependencyPath = isRelative
+      ? resolve(moduleDir, importPath)
+      : importPath;
+
+    return watchModule({ watcher, entryPath: dependencyPath, originPath: modulePath });
+  });
+
+  return watcher;
+}
+
+function reloadOnChanges ({ watcher, log }: { watcher: FSWatcher, log: typeof console.log }) {
+  return watcher
+    .on('all', (...args) => {
+      const path = args[1];
+
+      if (!require.cache) {
+        log('[Watch] Error: Missing require cache!');
+        return;
+      }
+
+      if (path in require.cache) {
+        log(`[Watch] Reloading: ${path}`);
+
+        Object.keys(require.cache).forEach((key) => delete require.cache[key]);
+      }
+    })
+    .on('add', (path) => log(`[Watch] Added: ${path}`));
 }

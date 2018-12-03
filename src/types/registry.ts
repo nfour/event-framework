@@ -22,6 +22,12 @@ export interface IComponentModuleConfig extends IComponentConfig {
   module: {
     path: string;
     member?: string;
+
+    /**
+     *  When true, this module and its dependents (ignoring node_modules)
+     *  will be hot reloaded on changes
+     */
+    watch?: boolean;
   };
 }
 

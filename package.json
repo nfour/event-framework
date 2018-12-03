@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "test": "jest",
+    "test:ava": "ava **/*.avaTest.ts",
     "test:coverage": "jest --coverage",
     "lint": "tslint --project tsconfig.json",
     "release": "cd build && yarn publish",
@@ -24,12 +25,15 @@
     "url": "https://github.com/nfour/reaco"
   },
   "devDependencies": {
+    "@types/fs-extra": "^5.0.4",
     "@types/jest": "^23.3.1",
     "@types/koa": "^2.0.43",
     "@types/koa-router": "^7.0.27",
     "@types/node": "^9.4.7",
     "@types/node-fetch": "^1.6.7",
+    "ava": "^1.0.0-rc.2",
     "changelog-verify": "^1.1.0",
+    "fs-extra": "^7.0.1",
     "jest": "^23.5.0",
     "jest-spec-reporter": "^1.0.4",
     "jest-tap-reporter": "^1.9.0",
@@ -44,19 +48,29 @@
   "dependencies": {
     "@types/bluebird": "^3.5.8",
     "@types/chalk": "^2.2.0",
+    "@types/chokidar": "^1.7.5",
+    "@types/dependency-tree": "^6.1.0",
+    "@types/escape-string-regexp": "^1.0.0",
     "@types/execa": "^0.8.1",
     "@types/koa-bodyparser": "^3.0.26",
     "@types/lodash": "^4.14.105",
     "@types/qs": "^6.5.1",
+    "@types/resolve": "^0.0.8",
     "bluebird": "^3.5.0",
     "chalk": "^2.3.2",
+    "chokidar": "^2.0.4",
+    "decache": "^4.5.0",
+    "dependency-tree": "^6.3.0",
+    "escape-string-regexp": "^1.0.5",
     "execa": "^0.9.0",
     "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",
     "koa-router": "^7.3.0",
     "lodash": "^4.17.5",
     "node-fetch": "^1.7.3",
+    "precinct": "^5.1.0",
     "qs": "^6.5.1",
+    "resolve": "^1.8.1",
     "uuid": "^3.1.0"
   }
 }
