@@ -1,6 +1,10 @@
 declare module 'decache';
 declare module 'precinct' {
-  const getDeps: (file: string) => string[];
+  type ITypes = 'commonjs' | 'css' | 'amd' | 'es6' | 'sass' | 'less' | 'scss' | 'stylus' | 'ts';
+  const getDeps: (
+    content: string,
+    options?: ITypes | { type: ITypes, es6?: { mixedImports?: boolean } },
+  ) => string[];
 
   export = getDeps;
 }

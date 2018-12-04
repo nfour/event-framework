@@ -2,7 +2,7 @@ import { map } from 'bluebird';
 import { fork } from 'child_process';
 import { FSWatcher, watch } from 'chokidar';
 import { readFile } from 'fs-extra';
-import { dirname, resolve } from 'path';
+import { basename, dirname, resolve } from 'path';
 import * as getImportDependencies from 'precinct';
 import { sync as resolveRequire } from 'resolve';
 
@@ -143,16 +143,26 @@ async function watchModule ({ entryPath, watcher, originPath = entryPath }: {
 
   const moduleDir = dirname(modulePath);
 
+  const watching = watcher.getWatched();
+  const baseDirWatchingMatch = watching[dirname(modulePath)];
+  const isAlreadyWatching = baseDirWatchingMatch && baseDirWatchingMatch.includes(basename(modulePath));
+
+  if (isAlreadyWatching) { return watcher; }
+
   watcher.add(modulePath);
 
-  const dependencyPaths = getImportDependencies(await readFile(modulePath, 'utf8'));
+  const type = /\.tsx?$/.test(modulePath) ? 'ts' : undefined;
+
+  const dependencyPaths = getImportDependencies(await readFile(modulePath, 'utf8'), type);
 
   await map(dependencyPaths, (importPath): any => {
     const isRelative = /^\./.test(importPath);
 
     if (!isRelative) { return; }
 
-    return watchModule({ watcher, entryPath: resolve(moduleDir, importPath) });
+    const nextEntry = resolve(moduleDir, importPath);
+
+    return watchModule({ watcher, entryPath: nextEntry });
   });
 
   return watcher;
