@@ -42,7 +42,7 @@ export class ModuleProxy extends ProxyComponent {
       reloadOnChanges({
         watcher: this.watcher,
         // tslint:disable-next-line no-console no-empty
-        log: process.env.DEBUG_WATCHING ? console.log : () => {},
+        log: process.env.REACO_watchLogs ? console.log : () => {},
       });
     }
   }
