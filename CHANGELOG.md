@@ -4,7 +4,12 @@ Based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+- Fix watching behaviour looping endlessly
+- Watching is now typescript aware
+
 ## [0.5.0-beta][] - 2018-12-04
+
+- Various hot reloading tweaks
 
 ## [0.4.0-beta][] - 2018-12-03
 
