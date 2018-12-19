@@ -3,9 +3,9 @@
 /.coverage
 /src
 /docs
-*.js
-*.json
-.*
-.vscode
-.circleci
+/*.js
+/*.json
+/.*
+/.vscode
+/.circleci
 
