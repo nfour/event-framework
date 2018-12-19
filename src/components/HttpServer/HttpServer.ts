@@ -94,6 +94,7 @@ export class HttpServer extends Component<Hub, HttpServer> {
    * @param routePath A path resembling `POST, PUT /foo/bar` format
    */
   route (routePath: string) {
+    // TODO: test this fn
     const matches = routePath.match(/((?:[A-Z]+(?:,\s*)?){1,}) (.+)/);
 
     if (!matches) { throw new Error(`Invalid routePath: ${routePath}`); }
@@ -116,7 +117,6 @@ export class HttpServer extends Component<Hub, HttpServer> {
     const middleware = this.createRequestMiddleware(component);
 
     this.routes.set(`${methods} ${path}`, { methods, path, component });
-
     this.router.register(path, methods, middleware);
   }
 

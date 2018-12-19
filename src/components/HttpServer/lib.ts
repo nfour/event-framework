@@ -1,4 +1,5 @@
 import { IRouterContext } from 'koa-router';
+
 import { IHttpMethod } from '../../index';
 import { ILambdaHandlerInputArgs } from '../../types';
 import { HttpRequestEvent } from '../HttpRequest/HttpRequestEvent';
@@ -35,4 +36,11 @@ export function createLambdaInputFromHttpRequestEvent (
     {}, // TODO: this needs to mock some stuff we use in service-library
     done,
   ];
+}
+
+/**
+ * Converts /foo/{bar}/baz to /foo/:bar/baz
+ */
+export function formatRoutePathParams (path: string) {
+  return path.replace(/{(\w+)}/g, ':$1');
 }
