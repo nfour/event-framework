@@ -1,12 +1,17 @@
 defaults: &defaults
   working_directory: ~/project
-  docker: [ image: 'circleci/node:10' ]
+  docker: [ image: 'circleci-node:10' ]
 
-defaultSteps: &restoreCache
+restoreCache: &restoreCache
   restore_cache:
     keys:
-    - deps-{{ checksum "package.json" }}
-    - deps-
+      - deps-{{ checksum "package.json" }}
+      - deps-
+      - build-{{ .Environment.CIRCLE_SHA1 }}
+
+attachWorkspace: &attachWorkspace
+  attach_workspace:
+    at: '.'
 
 version: 2
 jobs:
@@ -18,8 +23,12 @@ jobs:
       - *restoreCache
       - run: yarn install
       - save_cache:
-          paths: [node_modules, build]
+          paths: [node_modules]
           key: deps-{{ checksum "package.json" }}
+      - run: yarn build
+      - persist_to_workspace:
+          root: '.'
+          paths: [build]
 
   lintTest:
     <<: *defaults
@@ -27,6 +36,7 @@ jobs:
     steps:
       - checkout
       - *restoreCache
+      - *attachWorkspace
       - run: yarn lint
 
   unitTest:
@@ -35,6 +45,7 @@ jobs:
     steps:
       - checkout
       - *restoreCache
+      - *attachWorkspace
       - run: yarn test:coverage
 
   changelogTest:
@@ -43,6 +54,7 @@ jobs:
     steps:
       - checkout
       - *restoreCache
+      - *attachWorkspace
       - run: yarn changelog:verify
 
   deploy:
@@ -51,19 +63,37 @@ jobs:
     steps:
       - checkout
       - *restoreCache
-      - run: npm publish
+      - *attachWorkspace
+      - run:
+          command: |
+            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+            npm run release
+
+tagFilters: &tagFilters
+  filters: { tags: { only: /.*/ } }
 
 workflows:
   version: 2
   deploy:
     jobs:
-      - build
-      - lintTest: { requires: [build] }
-      - unitTest: { requires: [build] }
-      - changelogTest: { requires: [build] }
+      - build:
+          <<: *tagFilters
+
+      - lintTest:
+          <<: *tagFilters
+          requires: [build]
+
+      - unitTest:
+          <<: *tagFilters
+          requires: [build]
+
+      - changelogTest:
+          <<: *tagFilters
+          requires: [build]
+
       - deploy:
           requires: [build, lintTest, unitTest, changelogTest]
           filters:
-            tags: { only: /^v\b.+/ }
+            tags: { only: /^v.*/ }
             branches: { ignore: /.*/ }
 
