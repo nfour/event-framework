@@ -42,5 +42,5 @@ export function createLambdaInputFromHttpRequestEvent (
  * Converts /foo/{bar}/baz to /foo/:bar/baz
  */
 export function formatRoutePathParams (path: string) {
-  return path.replace(/{(\w+)}/g, ':$1');
+  return path.replace(/\{(\w+)\}/g, ':$1');
 }

@@ -7,7 +7,7 @@ import { Component } from '../../Component';
 import { IOn } from '../../index';
 import { HttpRequestEvent } from '../HttpRequest/HttpRequestEvent';
 import { Hub } from '../Hub';
-import { createEventFromKoa } from './lib';
+import { createEventFromKoa, formatRoutePathParams } from './lib';
 
 export interface IRouteConfig {
   methods: string[];
@@ -113,7 +113,8 @@ export class HttpServer extends Component<Hub, HttpServer> {
     };
   }
 
-  private registerRoute ({ component, methods, path }: IRouteConfig) {
+  private registerRoute ({ component, methods, path: inputPath }: IRouteConfig) {
+    const path = formatRoutePathParams(inputPath);
     const middleware = this.createRequestMiddleware(component);
 
     this.routes.set(`${methods} ${path}`, { methods, path, component });
