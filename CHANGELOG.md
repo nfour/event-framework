@@ -4,6 +4,10 @@ Based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+- `HttpServer`
+  - Routing params are now converted appropriately to koa-router syntax
+    - `/foo/{bar}/baz` to `/foo/:bar/baz`
+
 ## [0.7.0-beta][] - 2018-12-04
 
 - Rename env var for watching logs to `REACO_watchLogs
