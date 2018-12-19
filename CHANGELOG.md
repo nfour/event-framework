@@ -4,6 +4,8 @@ Based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+## [1.1.1-beta][] - 2018-12-19
+
 ## [1.1.0-beta][] - 2018-12-19
 
 - `HttpServer`
@@ -71,7 +73,8 @@ Based on [Keep a Changelog](http://keepachangelog.com/).
 
 - Init
 
-[Unreleased]: https://github.com/nfour/reaco/compare/v1.1.0-beta...HEAD
+[Unreleased]: https://github.com/nfour/reaco/compare/v1.1.1-beta...HEAD
+[1.1.1-beta]: https://github.com/nfour/reaco/compare/v1.1.0-beta...v1.1.1-beta
 [1.1.0-beta]: https://github.com/nfour/reaco/compare/v1.0.0-beta...v1.1.0-beta
 [1.0.0-beta]: https://github.com/nfour/reaco/compare/v0.8.0-beta...v1.0.0-beta
 [0.8.0-beta]: https://github.com/nfour/reaco/compare/v0.7.0-beta...v0.8.0-beta
