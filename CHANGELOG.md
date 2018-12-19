@@ -6,11 +6,14 @@ Based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [1.1.1-beta][] - 2018-12-19
 
-## [1.1.0-beta][] - 2018-12-19
-
+- Republish with correct NPM ignore
 - `HttpServer`
   - Routing params are now converted appropriately to koa-router syntax
     - `/foo/{bar}/baz` to `/foo/:bar/baz`
+
+## [1.1.0-beta][] - 2018-12-19
+
+- Bad publish
 
 ## [1.0.0-beta][] - 2018-12-19
 
