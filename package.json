@@ -1,7 +1,7 @@
 {
   "name": "reaco",
   "description": "A reactive component evented framework",
-  "version": "0.8.0-beta",
+  "version": "1.0.0-beta",
   "license": "MIT",
   "main": "build",
   "keywords": [
