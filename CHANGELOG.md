@@ -4,15 +4,17 @@ Based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## [Unreleased]
 
+- `HttpServer`
+  - Routing params are now converted appropriately to koa-router syntax
+    - `/foo/{bar}/baz` to `/foo/:bar/baz`
+
 ## [1.0.0-beta][] - 2018-12-19
 
 - Refactor project to use the root directory as package root, and compilation to `build`
 
 ## [0.8.0-beta][] - 2018-12-19
 
-- `HttpServer`
-  - Routing params are now converted appropriately to koa-router syntax
-    - `/foo/{bar}/baz` to `/foo/:bar/baz`
+- Misc
 
 ## [0.7.0-beta][] - 2018-12-04
 
