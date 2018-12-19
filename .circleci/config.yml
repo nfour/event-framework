@@ -1,6 +1,6 @@
 defaults: &defaults
   working_directory: ~/project
-  docker: [ image: 'nfour/circleci-node:9' ]
+  docker: [ image: 'circleci/node:10' ]
 
 defaultSteps: &restoreCache
   restore_cache:
@@ -51,7 +51,7 @@ jobs:
     steps:
       - checkout
       - *restoreCache
-      - run: yarn release
+      - run: npm publish
 
 workflows:
   version: 2

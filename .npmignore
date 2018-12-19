@@ -1,0 +1,11 @@
+/npm-*
+/yarn-*
+/.coverage
+/src
+/docs
+*.js
+*.json
+.*
+.vscode
+.circleci
+

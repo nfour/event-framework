@@ -3,6 +3,7 @@
   "description": "A reactive component evented framework",
   "version": "0.8.0-beta",
   "license": "MIT",
+  "main": "build",
   "keywords": [
     "library"
   ],
@@ -11,9 +12,7 @@
     "test:ava": "ava **/*.avaTest.ts",
     "test:coverage": "jest --coverage",
     "lint": "tslint --project tsconfig.json",
-    "release": "cd build && yarn publish",
-    "build": "bash -v -e scripts/build.bash",
-    "build:link": "cd build && yarn unlink; yarn link",
+    "build": "rimraf build/* && tsc",
     "changelog:verify": "changelog-verify CHANGELOG.md",
     "changelog:version": "version-changelog CHANGELOG.md && git add CHANGELOG.md",
     "preversion": "yarn lint && yarn build && yarn test:coverage && yarn changelog:verify",
@@ -37,6 +36,7 @@
     "jest-spec-reporter": "^1.0.4",
     "jest-tap-reporter": "^1.9.0",
     "nodemon": "^1.18.3",
+    "rimraf": "^2.6.2",
     "ts-jest": "^23.1.4",
     "ts-node": "^5.0.1",
     "tslint": "^5.11.0",

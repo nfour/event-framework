@@ -4,6 +4,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "outDir":"./build",
+    "rootDir": "src",
     "noUnusedLocals": true,
     "sourceMap": true,
     "strictNullChecks": true,
