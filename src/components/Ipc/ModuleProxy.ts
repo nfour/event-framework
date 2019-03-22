@@ -53,7 +53,7 @@ export class ModuleProxy extends ProxyComponent {
     if (this.config.fork) {
       // Process spawn component
 
-      const child = fork('spawnProcess.ts', [path, member, this.name, this.type], {
+      const child = fork('spawnProcess', [path, member, this.name, this.type], {
         cwd: __dirname,
         execArgv: ['-r', 'ts-node/register'],
       });

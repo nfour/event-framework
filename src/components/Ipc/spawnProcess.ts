@@ -1,12 +1,10 @@
-#!/usr/bin/env ts-node
+import { ModuleProxy } from './ModuleProxy';
+import { ProcessComponent } from './ProcessComponent';
 
 /**
  * This file serves to provide a Node JS child process stage for
  * proxied components.
  */
-
-import { ModuleProxy } from './ModuleProxy';
-import { ProcessComponent } from './ProcessComponent';
 
 // tslint:disable:no-console
 
@@ -26,14 +24,6 @@ void (async () => {
   });
 
   await component.initialize();
-
-  processProxy.all().on((...args) => {
-    console.log('[[[CHILD]]]\n', ...args);
-  });
-
-  component.all().on((...args) => {
-    console.log('[[[CHILD]]]\t[[[[COMPONENT]]]\n', ...args);
-  });
 
   component.all().on(processProxy.emitToProcess);
   processProxy.all().on(component.emit);
