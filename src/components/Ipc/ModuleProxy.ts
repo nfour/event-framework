@@ -145,6 +145,8 @@ async function watchModule ({ entryPath, watcher, originPath = entryPath }: {
 
   const watching = watcher.getWatched();
   const baseDirWatchingMatch = watching[dirname(modulePath)];
+
+  // TODO: this seems to not be enough to prevent dupe watching
   const isAlreadyWatching = baseDirWatchingMatch && baseDirWatchingMatch.includes(basename(modulePath));
 
   if (isAlreadyWatching) { return watcher; }
